@@ -3,17 +3,37 @@
   flex-direction: column;
   width: 100%;
   background-image: url('../assets/bg.png');
+  >.breadcrumb{
+    display: flex;
+    margin: 0;
+    padding-top: 20px;
+    padding-left: calc(50% - 610px);
+    @media (max-width:1300px){
+      padding-left: calc(50% - 440px);
+    }
+    @media (max-width:1000px){
+      padding-left: calc(50% - 45vw + 10px);
+    }
+    >.breadcrumbItem{
+      >*{
+        margin: 0 4px;
+      }
+    }
+  }
   >.main{
     position: relative;
     flex-grow: 1;
     display: flex;
     justify-content: center;
-    padding: 20px;
+    padding: 8px 20px;
   }
 }
 @media (max-width: 500px) {
   .app{
-    background: #f6f6f6;
+    background: #f5f5f5;
+    >.breadcrumb{
+      display: none;
+    }
     >.main{
       padding: 0;
     }

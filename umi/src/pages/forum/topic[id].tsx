@@ -42,12 +42,9 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
               type: 'breadcrumb/info',
               payload: [
                 { index: 1, pathname: result.data.href, name: result.data.name },
-                { index: 2, pathname: location.pathname, name: result.data.name }
               ]
             })
         })
-    } else {
-      props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 2, pathname: location.pathname, name: breadcrumb[1].name }] })
     }
     request('/topic/' + topicId)
       .then(result => {
@@ -61,6 +58,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
           })
           setTopic(data)
           setFloors([data].concat(data.replies))
+          props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 2, pathname: location.pathname, name: data.title }] })
         } else {
           history.push('/404')
         }
@@ -71,6 +69,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
       <h1 className={styles.title}>
         {topic.title}
       </h1>
+      <hr className={styles.separator} />
       {
         floors.slice(10 * (+selectedPage - 1), 10 * +selectedPage).map((floor: any, index: number) => (
           <Floor topic={floor} key={floor.id} index={index + 10 * +selectedPage - 9} />
