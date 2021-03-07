@@ -1,0 +1,21 @@
+.app{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-image: url('../assets/bg.png');
+  >.main{
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+}
+.mobile{
+  &.app{
+    background: #f6f6f6;
+    >.main{
+      padding: 0;
+    }
+  }
+}

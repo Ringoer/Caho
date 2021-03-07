@@ -1,0 +1,43 @@
+.main{
+  display: flex;
+  >*{
+    margin: 20px;
+  }
+  >.sidebar{
+    width: 480px;
+    max-width: 20vw;
+    min-width: 260px;
+    >*{
+      margin-bottom: 10px;
+      background: white;
+    }
+    .user{
+      display: flex;
+      >.avatar{
+        border: 1px solid #ECECEC;
+        padding: 4px;
+        margin-right: 16px;
+        >img{
+          height: 120px;
+          width: 120px;
+        }
+      }
+      >.info{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+    .recommend{
+      padding: 8px;
+      min-height: 200px;
+    }
+  }
+}
+.mobile{
+  &.main{
+    >*{
+      margin: 0;
+    }
+  }
+}

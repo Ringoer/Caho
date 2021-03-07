@@ -1,0 +1,38 @@
+.content{
+  width: 898px;
+  @media (max-width:900px) {
+    width: 100vw;
+  }
+  >*{
+    background: white;
+  }
+  .forums{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .forum{
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #ececec;
+      padding: 7px;
+      >img{
+        display: block;
+        width: 200px;
+        height: 200px;
+        @media (max-width:500px) {
+          width: 35vw;
+          height: 35vw;
+        }
+        margin-bottom: 12px;
+      }
+    }
+  }
+  .default{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -1,0 +1,104 @@
+.floor{
+  width: 100%;
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  >.author{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 16px;
+    >*{
+      margin: 8px 0;
+    }
+    >.img{
+      grid-area: img;
+      >img{
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+      }
+    }
+    >.authorInfo{
+      grid-area: author;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      >.createTime{
+        color: #ACACAC;
+        font-size: 12px;
+      }
+    }
+    >.buttons{
+      grid-area: btn;
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column-reverse;
+      width: 100%;
+      >button{
+        width: 100%;
+        padding: 8px;
+        margin: 4px;
+        outline: none;
+        border-radius: 8px;
+      }
+      >.hide{
+        background: white;
+        border: 1px solid #ACACAC;
+      }
+      >.follow{
+        background: #5CD1F0;
+        border: 1px solid #ECECEC;
+        color: white;
+      }
+    }
+  }
+  .floorInfo{
+    position: relative;
+    margin-bottom: 8px;
+    >.sign{
+      position: absolute;
+      right: 0;
+      top: 8px;
+      font-size: 32px;
+      color: #ACACAC;
+    }
+    >.createTime{
+      margin-bottom: 32px;
+      color: #ACACAC;
+    }
+  }
+  .content{
+    overflow: hidden;
+  }
+}
+.mobile {
+  &.floor{
+    margin: 4px 0;
+    background: white;
+    grid-template-columns:auto;
+    >.author{
+      padding: 0 12px;
+      margin-right: 0;
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      grid-template-areas: 
+      "img author btn";
+      >.img{
+        margin-right: 8px;
+        >img{
+          height: 36px;
+          width: 36px;
+        }
+      }
+      >.buttons{
+        flex-direction: row;
+        width: auto;
+        >button{
+          width: auto;
+        }
+      }
+    }
+  }
+}
