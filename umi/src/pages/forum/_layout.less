@@ -4,6 +4,9 @@
     margin: 20px;
   }
   >.sidebar{
+    @media (max-width:1200px) {
+      display: none;
+    }
     width: 480px;
     max-width: 20vw;
     min-width: 260px;
@@ -34,8 +37,8 @@
     }
   }
 }
-.mobile{
-  &.main{
+@media (max-width: 500px) {
+  .main{
     >*{
       margin: 0;
     }

@@ -67,7 +67,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
       })
   }, [])
   return (
-    <div className={styles.container + (localStorage.getItem('device') === 'pc' ? '' : ' ' + styles.mobile)}>
+    <div className={styles.container}>
       <h1 className={styles.title}>
         {topic.title}
       </h1>

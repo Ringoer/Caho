@@ -54,7 +54,7 @@
       z-index: 10;
     }
     >.forumName{
-      display: flex;
+      display: none;
       align-items: center;
       >*{
         font-size: larger;
@@ -69,12 +69,23 @@
       height: 32px;
       width: 32px;
     }
-    > .logo{
+    > .goto{
       width: 96px;
       margin-left: 8px;
+      >.logo{
+        display: block;
+      }
+      >.back{
+        display: none;
+      }
     }
     > .menu{
-      display: flex;
+      > .pcMenu{
+        display: flex;
+      }
+      >.mobileMenu{
+        display: none;
+      }
       .link{
         display: block;
         position: relative;
@@ -112,8 +123,8 @@
     }
   }  
 }
-.mobile {
-  &.header{
+@media (max-width: 500px) {
+  .header{
     max-width: 900px;
     height: 60px;
     @media (min-width:900px) {
@@ -128,14 +139,29 @@
       &::after{
         display: none;
       }
-      >.logo{
+      >.goto{
         display: flex;
         align-items: center;
+        >.logo{
+          display: none;
+        }
+        >.back{
+          display: block;
+        }
+      }
+      >.forumName{
+        display: flex;
       }
       >.menu{
-        margin-right: 4px;
-        .link{
-          padding:16px 4px;
+        >.pcMenu{
+          display: none;
+        }
+        >.mobileMenu{
+          display: flex;
+          margin-right: 4px;
+          .link{
+            padding:16px 4px;
+          }
         }
       }
     }

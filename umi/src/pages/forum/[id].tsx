@@ -57,7 +57,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
       })
   }, [selectedPage])
   return (
-    <div className={styles.container + (localStorage.getItem('device') === 'pc' ? '' : ' ' + styles.mobile)}>
+    <div className={styles.container}>
       <div className={styles.topics}>
         {content.map((topic: any) => (
           <Note key={topic.id}>

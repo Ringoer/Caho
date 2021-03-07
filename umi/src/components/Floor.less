@@ -25,7 +25,8 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
-      >.createTime{
+      >.mobileFloorInfo{
+        display: none;
         color: #ACACAC;
         font-size: 12px;
       }
@@ -43,7 +44,7 @@
         outline: none;
         border-radius: 8px;
       }
-      >.hide{
+      >.shrink{
         background: white;
         border: 1px solid #ACACAC;
       }
@@ -54,7 +55,7 @@
       }
     }
   }
-  .floorInfo{
+  .pcFloorInfo{
     position: relative;
     margin-bottom: 8px;
     >.sign{
@@ -72,9 +73,12 @@
   .content{
     overflow: hidden;
   }
+  .hide{
+    height: 204.01px;
+  }
 }
-.mobile {
-  &.floor{
+@media (max-width: 500px) {
+  .floor{
     margin: 4px 0;
     background: white;
     grid-template-columns:auto;
@@ -92,6 +96,11 @@
           width: 36px;
         }
       }
+      >.authorInfo{
+        >.mobileFloorInfo{
+          display: block;
+        }
+      }
       >.buttons{
         flex-direction: row;
         width: auto;
@@ -99,6 +108,12 @@
           width: auto;
         }
       }
+    }
+    .pcFloorInfo{
+      display: none;
+    }
+    .hide{
+      height: 40px;
     }
   }
 }

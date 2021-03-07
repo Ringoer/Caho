@@ -31,7 +31,7 @@ export default (props: any) => {
     action(target.toString())
   }
   return (
-    <ul className={styles.pagination + (localStorage.getItem('device') === 'pc' ? '' : ' ' + styles.mobile)}>
+    <ul className={styles.pagination}>
       <li>
         <a onClick={() => turnTo(+selectedPage - 1)}>&lt;</a>
       </li>

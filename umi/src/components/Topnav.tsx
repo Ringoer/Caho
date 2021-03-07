@@ -42,49 +42,50 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
       })
   }, [])
   return (
-    <header className={styles.header + (localStorage.getItem('device') === 'pc' ? '' : ' ' + styles.mobile)}>
+    <header className={styles.header}>
       <div className={styles.topnav}>
-        <div className={styles.logo}>
-          {localStorage.getItem('device') === 'pc' ?
-            (<a href="/"><img src={require('@/assets/logo.png')} alt="logo" /></a>) :
-            (breadcrumb.length > 1 ? (
-              <Link to={breadcrumb[breadcrumb.length - 2].pathname}>
-                <svg className="icon" aria-hidden="true">
-                  <use xlinkHref="#icon-left"></use>
-                </svg>
-              </Link>) : undefined)}
+        <div className={styles.goto}>
+          <a href="/" className={styles.logo}>
+            <img src={require('@/assets/logo.png')} alt="logo" />
+          </a>
+          {breadcrumb.length > 1 ? (
+            <Link to={breadcrumb[breadcrumb.length - 2].pathname} className={styles.back}>
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#icon-left"></use>
+              </svg>
+            </Link>) : undefined}
         </div>
-        {localStorage.getItem('device') === 'pc' ? undefined :
-          (<div className={styles.forumName}>
-            <span>{breadcrumb[breadcrumb.length - 1] && breadcrumb[breadcrumb.length - 1].name}</span>
-          </div>)}
-        <ul className={styles.menu}>
-          {localStorage.getItem('device') === 'pc' ?
-            (topmenu.map((item: any) => (
+        <div className={styles.forumName}>
+          <span>{breadcrumb[breadcrumb.length - 1] && breadcrumb[breadcrumb.length - 1].name}</span>
+        </div>
+        <div className={styles.menu}>
+          <ul className={styles.pcMenu}>
+            {topmenu.map((item: any) => (
               <li className={styles.menuItem} key={item.id}>
                 <Link to={item.href} className={styles.link}>
                   <div className={styles.mask}></div>
                   <span>{item.name}</span>
                 </Link>
               </li>
-            ))) :
-            (<>
-              <li className={styles.menuItem}>
-                <Link to="/search" className={styles.link}>
-                  <svg className="icon" aria-hidden="true">
-                    <use xlinkHref="#icon-search"></use>
-                  </svg>
-                </Link>
-              </li>
-              <li className={styles.menuItem}>
-                <Link to="/message" className={styles.link}>
-                  <svg className="icon" aria-hidden="true">
-                    <use xlinkHref="#icon-ring"></use>
-                  </svg>
-                </Link>
-              </li>
-            </>)}
-        </ul>
+            ))}
+          </ul>
+          <ul className={styles.mobileMenu}>
+            <li className={styles.menuItem}>
+              <Link to="/search" className={styles.link}>
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref="#icon-search"></use>
+                </svg>
+              </Link>
+            </li>
+            <li className={styles.menuItem}>
+              <Link to="/message" className={styles.link}>
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref="#icon-ring"></use>
+                </svg>
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <div className={styles.banner}>
         <img src={require('@/assets/bg_pic.jpg')} alt="首页头图" />

@@ -3,13 +3,8 @@ import Topnav from '@/components/Topnav'
 import Footer from '@/components/Footer'
 
 export default (props: any) => {
-  if (document.body.clientWidth > 500) {
-    localStorage.setItem('device', 'pc')
-  } else {
-    localStorage.setItem('device', 'mobile')
-  }
   return (
-    <div className={styles.app + (localStorage.getItem('device') === 'pc' ? '' : ' ' + styles.mobile)}>
+    <div className={styles.app}>
       <Topnav></Topnav>
       <main className={styles.main}>
         {props.children}
