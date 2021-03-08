@@ -1,5 +1,6 @@
 import styles from './index.less';
 import Section from '@/components/Section'
+import Loading from '@/components/Loading'
 import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 
@@ -31,6 +32,7 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
   }, [])
   return (
     <div className={styles.content}>
+      {forums ? undefined : <Loading />}
       <Section color="#5CD1F0" title="关注">
         {forums.length === 0 ? (
           <div className={styles.default}>

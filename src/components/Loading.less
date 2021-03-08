@@ -1,0 +1,14 @@
+.loading{
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  >svg{
+    animation: loading 2s linear infinite running;
+    height: 100px;
+    width: 100px;
+  }
+}
+@keyframes loading {
+    0% {transform: rotate(0);}
+    100% {transform: rotate(360deg);}
+}

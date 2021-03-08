@@ -4,6 +4,7 @@ import request from '@/util/request'
 
 import Floor from '@/components/Floor'
 import Pagination from '@/components/Pagination'
+import Loading from '@/components/Loading'
 import { connect, history } from 'umi';
 import { changeTime } from '@/util/time';
 
@@ -66,6 +67,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [])
   return (
     <div className={styles.container}>
+      {topic ? undefined : <Loading />}
       <h1 className={styles.title}>
         {topic.title}
       </h1>

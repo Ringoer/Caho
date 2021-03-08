@@ -5,6 +5,7 @@ import { connect, history, Link } from 'umi'
 
 import Note from '@/components/Note'
 import Pagination from '@/components/Pagination'
+import Loading from '@/components/Loading'
 import { changeTime } from '@/util/time';
 
 const parts = {
@@ -64,6 +65,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [selectedPage])
   return (
     <div className={styles.container}>
+      {forum ? undefined : <Loading />}
       {forum.banner ? (
         <img src={require('@/assets/' + forum.banner)} alt="版块背景" className={styles.banner} />
       ) : undefined}
