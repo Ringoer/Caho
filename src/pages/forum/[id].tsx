@@ -18,7 +18,13 @@ const parts = {
 const getForum1 = new Promise(resolve => {
   resolve({
     json: () => ({
-      data: { id: 1, src: 'http://pic.ringoer.com/64928049_p0.png', name: 'CNODE社区', href: '/forum/1' }
+      data: {
+        id: 1,
+        src: 'http://pic.ringoer.com/64928049_p0.png',
+        name: 'CNODE社区',
+        href: '/forum/1',
+        banner: 'cnode_banner.png'
+      }
     })
   })
 })
@@ -26,7 +32,7 @@ const getForum1 = new Promise(resolve => {
 export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
   const [content, setContent] = useState([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
-  const [forum, setForum] = useState({ name: '' })
+  const [forum, setForum] = useState({ src: '', name: '', banner: '' })
   useEffect(() => {
     setPage((history.location.query && history.location.query.page) || 1)
   }, [history.location.query])
@@ -58,6 +64,9 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [selectedPage])
   return (
     <div className={styles.container}>
+      {forum.banner ? (
+        <img src={require('@/assets/' + forum.banner)} alt="版块背景" className={styles.banner} />
+      ) : undefined}
       <div className={styles.topics}>
         {content.map((topic: any) => (
           <Note key={topic.id}>
