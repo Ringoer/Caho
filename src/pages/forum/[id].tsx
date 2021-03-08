@@ -107,7 +107,9 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
           </Note>
         ))}
       </div>
-      <Pagination selectedPage={selectedPage} action={(target: string) => history.push(history.location.pathname + '?page=' + target)} />
+      <div className={styles.pagination}>
+        <Pagination selectedPage={selectedPage} action={(target: string) => history.push(history.location.pathname + '?page=' + target)} />
+      </div>
     </div>
   );
 })
