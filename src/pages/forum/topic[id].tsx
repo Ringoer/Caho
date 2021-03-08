@@ -67,17 +67,20 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [])
   return (
     <div className={styles.container}>
-      {topic ? undefined : <Loading />}
-      <h1 className={styles.title}>
-        {topic.title}
-      </h1>
-      <hr className={styles.separator} />
-      {
-        floors.slice(10 * (+selectedPage - 1), 10 * +selectedPage).map((floor: any, index: number) => (
-          <Floor topic={floor} key={floor.id} index={index + 10 * +selectedPage - 9} />
-        ))
-      }
-      <Pagination selectedPage={selectedPage} maxPage={parseInt(((floors.length + 9) / 10).toString()) || -1} action={(target: string) => setPage(target)} />
+      {topic === baseTopic ? <Loading /> : (
+        <>
+          <h1 className={styles.title}>
+            {topic.title}
+          </h1>
+          <hr className={styles.separator} />
+          {
+            floors.slice(10 * (+selectedPage - 1), 10 * +selectedPage).map((floor: any, index: number) => (
+              <Floor topic={floor} key={floor.id} index={index + 10 * +selectedPage - 9} />
+            ))
+          }
+          <Pagination selectedPage={selectedPage} maxPage={parseInt(((floors.length + 9) / 10).toString()) || -1} action={(target: string) => setPage(target)} />
+        </>
+      )}
     </div>
   );
 })

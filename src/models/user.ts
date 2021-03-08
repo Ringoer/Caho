@@ -16,7 +16,7 @@ const defaultUser: User = {
 
 export default {
   namespace: 'user',
-  state: {},
+  state: null,
   reducers: {
     info(state: any, { payload }: { payload: any }) {
       return payload;

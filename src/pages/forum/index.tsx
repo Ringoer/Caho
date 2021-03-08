@@ -28,31 +28,31 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
       .then((res: any) => res.json())
       .then(result => setForums(result.data))
     props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 0, pathname: '/', name: '首页' }] })
-
   }, [])
   return (
     <div className={styles.content}>
-      {forums ? undefined : <Loading />}
-      <Section color="#5CD1F0" title="关注">
-        {forums.length === 0 ? (
-          <div className={styles.default}>
-            <span>暂无关注的版块</span>
-          </div>
-        ) : (
-          <ul className={styles.forums}>
-            {forums.map((item: any) => {
-              return (
-                <li key={item.id}>
-                  <Link to={item.href} className={styles.forum}>
-                    <img src={item.src} alt="版块头像" />
-                    <div>{item.name}</div>
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-      </Section>
+      {forums.length === 0 ? <Loading /> : (
+        <Section color="#5CD1F0" title="关注">
+          {forums.length === 0 ? (
+            <div className={styles.default}>
+              <span>暂无关注的版块</span>
+            </div>
+          ) : (
+            <ul className={styles.forums}>
+              {forums.map((item: any) => {
+                return (
+                  <li key={item.id}>
+                    <Link to={item.href} className={styles.forum}>
+                      <img src={item.src} alt="版块头像" />
+                      <div>{item.name}</div>
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </Section>
+      )}
     </div>
   );
 })
