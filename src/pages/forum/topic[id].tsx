@@ -22,7 +22,7 @@ const baseArray: any[] = []
 const getForum1 = new Promise(resolve => {
   resolve({
     json: () => ({
-      data: { id: 1, src: 'http://pic.ringoer.com/64928049_p0.png', name: 'CNODE社区', href: '/forum/1' }
+      data: { id: 0, src: 'http://pic.ringoer.com/64928049_p0.png', name: 'CNODE社区', href: '/forum/0' }
     })
   })
 })

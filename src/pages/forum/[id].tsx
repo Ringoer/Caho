@@ -20,10 +20,10 @@ const getForum1 = new Promise(resolve => {
   resolve({
     json: () => ({
       data: {
-        id: 1,
+        id: 0,
         src: 'http://pic.ringoer.com/64928049_p0.png',
         name: 'CNODE社区',
-        href: '/forum/1',
+        href: '/forum/0',
         banner: 'cnode_banner.png'
       }
     })
@@ -38,7 +38,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
     setPage((history.location.query && history.location.query.page) || 1)
   }, [history.location.query])
   useEffect(() => {
-    // fetch('/api/topic/' + id)
+    // fetch('/api/forum/' + id)
     getForum1
       .then((res: any) => res.json())
       .then(result => {
@@ -48,7 +48,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
         if (!(typeof target === 'number' && target % 1 === 0 && target > 0)) {
           history.push('?page=1')
         }
-        request('/topics?limit=10&page=' + selectedPage)
+        request('/topic?forum=' + result.data.id + '&limit=10&page=' + selectedPage)
           .then(result => {
             const { data } = result
             if (!data || data.length === 0) {

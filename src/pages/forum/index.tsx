@@ -9,10 +9,10 @@ const getForums = new Promise(resolve => {
     json: () => ({
       data: [
         {
-          id: 1,
+          id: 0,
           src: 'http://pic.ringoer.com/64928049_p0.png',
           name: 'CNODE社区',
-          href: '/forum/1',
+          href: '/forum/0',
           banner: 'cnode_banner.png'
         },
       ]

@@ -3,7 +3,7 @@ import { defineConfig } from 'umi';
 export default defineConfig({
   title: 'Caho - 和谐的ACGN社区',
   links: [
-    { rel: 'icon', href: './favicon.ico' },
+    { rel: 'icon', href: '/favicon.ico' },
   ],
   nodeModulesTransform: {
     type: 'none',
