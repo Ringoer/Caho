@@ -16,66 +16,53 @@ const parts = {
   'dev': '测试',
 }
 
-const getForum1 = new Promise(resolve => {
-  resolve({
-    json: () => ({
-      data: {
-        id: 0,
-        src: 'http://pic.ringoer.com/64928049_p0.png',
-        name: 'CNODE社区',
-        href: '/forum/0',
-        banner: 'cnode_banner.png'
-      }
-    })
-  })
-})
-
 export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
-  const [content, setContent] = useState([])
+  const [topics, setTopics] = useState<Topic[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
-  const [forum, setForum] = useState({ src: '', name: '', banner: '' })
+  const [forum, setForum] = useState({ avatarUrl: '', forumName: '', bannerUrl: '' })
   useEffect(() => {
     setPage((history.location.query && history.location.query.page) || 1)
   }, [history.location.query])
   useEffect(() => {
     // fetch('/api/forum/' + id)
-    getForum1
-      .then((res: any) => res.json())
+    request(location.pathname)
       .then(result => {
         setForum(result.data)
-        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: result.data.href, name: result.data.name }] })
+        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: result.data.forumName }] })
+
         const target = parseInt(selectedPage.toString())
         if (!(typeof target === 'number' && target % 1 === 0 && target > 0)) {
           history.push('?page=1')
         }
-        request('/topic?forum=' + result.data.id + '&limit=10&page=' + selectedPage)
+        request('/topic?forum=' + result.data.id + '&page=' + selectedPage)
           .then(result => {
             const { data } = result
             if (!data || data.length === 0) {
               history.push('/404')
+              return
             }
-            data.map((topic: any) => {
-              topic.last_reply_at = changeTime(topic.last_reply_at)
+            data.map((topic: Topic) => {
+              topic.lastReplyAt = changeTime(topic.lastReplyAt)
               return topic
             })
             console.log(data)
-            setContent(data)
+            setTopics(data)
           })
       })
   }, [selectedPage])
   return (
     <div className={styles.container}>
-      {forum.banner ? (
-        <img src={require('@/assets/' + forum.banner)} alt="版块背景" className={styles.banner} />
+      {forum.bannerUrl ? (
+        <img src={forum.bannerUrl} alt="版块背景" className={styles.banner} />
       ) : undefined}
-      {!forum || content.length === 0 ? <Loading /> : (
+      {!forum || topics.length === 0 ? <Loading /> : (
         <>
           <div className={styles.topics}>
-            {content.map((topic: any) => (
+            {topics.map((topic: Topic) => (
               <Note key={topic.id}>
                 <div className={styles.topic}>
-                  <Link to={'/user/' + topic.author.loginname} className={styles.img}>
-                    <img src={topic.author.avatar_url} alt="楼主头像" />
+                  <Link to={'/user/' + topic.userId} className={styles.img}>
+                    <img src={topic.userAvatarUrl} alt="楼主头像" />
                   </Link>
                   <div className={styles.title}>
                     {topic.top ?
@@ -88,17 +75,17 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
                   </div>
                   <div className={styles.content} dangerouslySetInnerHTML={{ __html: topic.content }} />
                   <div className={styles.date}>
-                    <Link to={'/user/' + topic.author.loginname}>
+                    <Link to={'/user/' + topic.userId}>
                       <svg className="icon" aria-hidden="true">
                         <use xlinkHref="#icon-person"></use>
                       </svg>
-                      {topic.author.loginname}
+                      {topic.userNickname}
                     </Link>
                     <span>
                       <svg className="icon" aria-hidden="true">
                         <use xlinkHref="#icon-date"></use>
                       </svg>
-                  回复于{topic.last_reply_at}
+                  回复于{topic.lastReplyAt}
                     </span>
                   </div>
                   <div className={styles.comment}>
@@ -106,13 +93,13 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
                       <svg className="icon" aria-hidden="true">
                         <use xlinkHref="#icon-comment"></use>
                       </svg>
-                      {topic.reply_count}
+                      {topic.replyCount}
                     </span>
                     <span>
                       <svg className="icon" aria-hidden="true">
                         <use xlinkHref="#icon-view"></use>
                       </svg>
-                      {topic.visit_count}
+                      {topic.visitCount}
                     </span>
                   </div>
                 </div>

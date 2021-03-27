@@ -9,6 +9,8 @@ const headers = {
 export default (uri: string, options?: RequestInit | undefined) => {
   return fetch(baseUrl + uri, {
     // headers,
+    // body,
+    // method,
     ...options
   })
     .then(res => res.json())

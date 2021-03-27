@@ -2,6 +2,7 @@ import styles from './Topnav.less'
 import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
+import Loading from './Loading';
 
 const getTopmenu = new Promise(resolve => {
   resolve({
@@ -20,7 +21,11 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
   const [user, setUser] = useState(defaultUser)
   const [topmenu, setTopmenu] = useState([])
   useEffect(() => {
-    request('/user/Ringoer')
+    const cookie = localStorage.getItem('cookie')
+    if (cookie) {
+      console.log(`cookie: ${cookie}`)
+    }
+    request('/user/1')
       .then(result => {
         const { data } = result
         console.log(data)
@@ -35,7 +40,10 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
           .then(result => {
             const { data } = result
             setTopmenu(data.map((item: any) => {
-              if (item.name === 'username') item.name = user.loginname
+              if (item.name === 'username') {
+                item.name = user.nickname
+                item.href = `/user/${user.id}`
+              }
               return item
             }))
           })
@@ -56,7 +64,9 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
             </Link>) : undefined}
         </div>
         <div className={styles.forumName}>
-          <span>{breadcrumb[breadcrumb.length - 1] && breadcrumb[breadcrumb.length - 1].name}</span>
+          {!breadcrumb[breadcrumb.length - 1] ? <Loading /> : (
+            <span>{breadcrumb[breadcrumb.length - 1].name}</span>
+          )}
         </div>
         <div className={styles.menu}>
           <ul className={styles.pcMenu}>

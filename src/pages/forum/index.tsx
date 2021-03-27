@@ -3,29 +3,14 @@ import Section from '@/components/Section'
 import Loading from '@/components/Loading'
 import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
-
-const getForums = new Promise(resolve => {
-  resolve({
-    json: () => ({
-      data: [
-        {
-          id: 0,
-          src: 'http://pic.ringoer.com/64928049_p0.png',
-          name: 'CNODE社区',
-          href: '/forum/0',
-          banner: 'cnode_banner.png'
-        },
-      ]
-    })
-  })
-})
+import request from '@/util/request';
 
 export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
-  const [forums, setForums] = useState([])
+  const [forums, setForums] = useState<Forum[]>([])
   useEffect(() => {
     // fetch('/api/forums')
-    getForums
-      .then((res: any) => res.json())
+    // getForums
+    request('/forum')
       .then(result => setForums(result.data))
     props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 0, pathname: '/', name: '首页' }] })
   }, [])
@@ -39,12 +24,12 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
             </div>
           ) : (
             <ul className={styles.forums}>
-              {forums.map((item: any) => {
+              {forums.map((forum: Forum) => {
                 return (
-                  <li key={item.id}>
-                    <Link to={item.href} className={styles.forum}>
-                      <img src={item.src} alt="版块头像" />
-                      <div>{item.name}</div>
+                  <li key={forum.id}>
+                    <Link to={`/forum/${forum.id}`} className={styles.forum}>
+                      <img src={forum.avatarUrl} alt="版块头像" />
+                      <div>{forum.forumName}</div>
                     </Link>
                   </li>
                 )

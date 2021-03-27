@@ -1,0 +1,101 @@
+@color:linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 90%, #5CD1F0 90%, #5CD1F0 100%);
+.main{
+  width: 1240px;
+  >.topbar{
+    position: relative;
+    background-color: white;
+    >.banner{
+      position: absolute;
+      height: 240px;
+      width: 100%;
+      overflow: hidden;
+      >img{
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    >.userInfo{
+      position: relative;
+      color:white;
+      padding: 40px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 180px auto;
+      grid-template-rows: 1fr auto auto;
+      grid-template-areas: "avatar _"
+      "avatar nickname"
+      "avatar signature";
+      >.avatar{
+        grid-area: avatar;
+        border-radius: 50%;
+        height: 160px;
+      }
+      >.nickname{
+        margin-bottom: 10px;
+        grid-area: nickname;
+        font-weight: bold;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+      }
+      >.signature{
+        margin-bottom: 10px;
+        grid-area: signature;
+        display: flex;
+        align-items: center;
+      }
+    }
+    >.options{
+      position: relative;
+      max-width: 600px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      >.option{
+        flex-grow: 1;
+        >.action{
+          width: 100%;
+          outline: none;
+          background: none;
+          border: none;
+          &:focus{
+            outline: none;
+          }
+          padding: 12px 0;
+          &:hover{
+            background: @color;
+          }
+          &.active{
+            background: @color;
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width:650px) {
+  .main{
+    >.topbar{
+      >.banner{
+        height: 100px;
+      }
+      >.userInfo{
+        color: black;
+        grid-template-columns: 100px;
+        grid-template-rows: 110px auto auto;
+        grid-template-areas: "avatar"
+        "nickname"
+        "signature";
+        padding-bottom: 0;
+        >*{
+          justify-content: center;
+        }
+        >.avatar{
+          height: 100px;
+        }
+      }
+    }
+  }
+}

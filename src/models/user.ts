@@ -1,5 +1,5 @@
 const defaultUser: User = {
-  avatar: "",
+  avatarUrl: "",
   beDeleted: false,
   birthday: "",
   email: "",
@@ -12,6 +12,7 @@ const defaultUser: User = {
   roleId: 0,
   signature: "",
   username: "",
+  score: 0,
 }
 
 export default {

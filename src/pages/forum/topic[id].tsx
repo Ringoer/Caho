@@ -8,35 +8,15 @@ import Loading from '@/components/Loading'
 import { connect, history } from 'umi';
 import { changeTime } from '@/util/time';
 
-const baseTopic: any = {
-  author: {
-    avatar_url: '',
-    loginname: ''
-  },
-  title: '标题',
-  replies: [],
-}
-
-const baseArray: any[] = []
-
-const getForum1 = new Promise(resolve => {
-  resolve({
-    json: () => ({
-      data: { id: 0, src: 'http://pic.ringoer.com/64928049_p0.png', name: 'CNODE社区', href: '/forum/0' }
-    })
-  })
-})
-
 export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
   const { breadcrumb } = props
   const { id: topicId } = props.match.params
-  const [topic, setTopic] = useState(baseTopic)
-  const [floors, setFloors] = useState(baseArray)
+  const [topic, setTopic] = useState<Topic>()
+  const [floors, setFloors] = useState(new Array<Reply>())
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
   useEffect(() => {
     if (breadcrumb.length < 2) {
-      getForum1
-        .then((res: any) => res.json())
+      request('/forum')
         .then(result => {
           props.dispatch(
             {
@@ -52,10 +32,10 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
         const { data } = result
         console.log(data)
         if (data && data.content) {
-          data.create_at = changeTime(data.create_at)
-          data.replies = data.replies.map((item: any) => {
-            item.create_at = changeTime(item.create_at)
-            return item
+          data.gmtCreate = changeTime(data.gmtCreate)
+          data.replies = (data.replies || []).map((reply: Reply) => {
+            reply.gmtCreate = changeTime(reply.gmtCreate)
+            return reply
           })
           setTopic(data)
           setFloors([data].concat(data.replies))
@@ -67,7 +47,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [])
   return (
     <div className={styles.container}>
-      {topic === baseTopic ? <Loading /> : (
+      {!topic ? <Loading /> : (
         <>
           <h1 className={styles.title}>
             {topic.title}

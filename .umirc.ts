@@ -19,6 +19,12 @@ export default defineConfig({
           { component: '@/pages/404' },
         ]
       },
+      {
+        exact: false, path: '/user', component: '@/pages/user/_layout', routes: [
+          { exact: true, path: '/user/:id', component: '@/pages/user/[id]' },
+          { component: '@/pages/404' },
+        ]
+      },
       { exact: true, path: '/404', component: '@/pages/404' },
       { component: '@/pages/404' },
     ]

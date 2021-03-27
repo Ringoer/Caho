@@ -1,7 +1,7 @@
 import styles from './_layout.less';
 import Section from '@/components/Section'
 import Loading from '@/components/Loading'
-import { connect } from 'umi';
+import { connect, Link } from 'umi';
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user } = props
@@ -13,10 +13,14 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
           <Section color="#FFCF4B" title="个人信息">
             <div className={styles.user}>
               <div className={styles.avatar}>
-                <img src={user.avatar_url} alt="头像" />
+                <Link to={`/user/${user.id}`}>
+                  <img src={user.avatarUrl} alt="头像" />
+                </Link>
               </div>
               <div className={styles.info}>
-                <span>{user.githubUsername}</span>
+                <Link to={`/user/${user.id}`}>
+                  <span>{user.nickname}</span>
+                </Link>
                 <br />
                 <span>积分：0</span>
               </div>
