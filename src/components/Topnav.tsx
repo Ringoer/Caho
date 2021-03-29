@@ -24,6 +24,8 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
     const cookie = localStorage.getItem('cookie')
     if (cookie) {
       console.log(`cookie: ${cookie}`)
+    } else {
+      console.log('no cookie found')
     }
     request('/user/1')
       .then(result => {

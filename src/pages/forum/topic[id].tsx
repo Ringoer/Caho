@@ -12,37 +12,43 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   const { breadcrumb } = props
   const { id: topicId } = props.match.params
   const [topic, setTopic] = useState<Topic>()
-  const [floors, setFloors] = useState(new Array<Reply>())
+  const [floors, setFloors] = useState<Reply[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
   useEffect(() => {
-    if (breadcrumb.length < 2) {
-      request('/forum')
-        .then(result => {
-          props.dispatch(
-            {
-              type: 'breadcrumb/info',
-              payload: [
-                { index: 1, pathname: result.data.href, name: result.data.name },
-              ]
-            })
-        })
-    }
     request('/topic/' + topicId)
       .then(result => {
         const { data } = result
         console.log(data)
-        if (data && data.content) {
-          data.gmtCreate = changeTime(data.gmtCreate)
-          data.replies = (data.replies || []).map((reply: Reply) => {
-            reply.gmtCreate = changeTime(reply.gmtCreate)
-            return reply
-          })
-          setTopic(data)
-          setFloors([data].concat(data.replies))
-          props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 2, pathname: location.pathname, name: data.title }] })
-        } else {
+        if (!data) {
           history.push('/404')
+          return
         }
+        if (breadcrumb.length < 2) {
+          request(`/forum/${data.forumId}`)
+            .then(result => {
+              const { data: forum }: { data: Forum } = result
+              if (!forum) {
+                history.push('/404')
+                return
+              }
+              props.dispatch(
+                {
+                  type: 'breadcrumb/info',
+                  payload: [
+                    { index: 1, pathname: `/forum/${forum.id}`, name: forum.forumName },
+                    { index: 2, pathname: location.pathname, name: data.title }
+                  ]
+                })
+            })
+        }
+        data.gmtCreate = changeTime(data.gmtCreate)
+        data.replies = (data.replies || []).map((reply: Reply) => {
+          reply.gmtCreate = changeTime(reply.gmtCreate)
+          return reply
+        })
+        setTopic(data)
+        setFloors([data].concat(data.replies))
+        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 2, pathname: location.pathname, name: data.title }] })
       })
   }, [])
   return (
