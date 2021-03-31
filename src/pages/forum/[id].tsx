@@ -41,9 +41,8 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
               history.push('/404')
               return
             }
-            data.map((topic: Topic) => {
+            data.forEach((topic: Topic) => {
               topic.lastReplyAt = changeTime(topic.lastReplyAt)
-              return topic
             })
             console.log(data)
             setTopics(data)

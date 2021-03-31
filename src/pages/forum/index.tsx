@@ -11,7 +11,13 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
     // fetch('/api/forums')
     // getForums
     request('/forum')
-      .then(result => setForums(result.data))
+      .then(result => {
+        if (result.errno === 0) {
+          console.log('forum')
+          console.log(result.data)
+          setForums(result.data)
+        }
+      })
     props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 0, pathname: '/', name: '首页' }] })
   }, [])
   return (

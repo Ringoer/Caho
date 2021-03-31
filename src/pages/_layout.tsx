@@ -2,7 +2,8 @@ import styles from './_layout.less';
 import Topnav from '@/components/Topnav'
 import Breadcrumb from '@/components/Breadcrumb'
 import Footer from '@/components/Footer'
-import { connect } from 'react-redux';
+import Bottomnav from '@/components/Bottomnav'
+import { connect } from 'umi';
 import { useEffect } from 'react';
 
 export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
@@ -18,10 +19,11 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
       <div className={styles.breadcrumb}>
         <Breadcrumb />
       </div>
-      <main className={styles.main}>
+      <main className={styles.main} key={location.pathname}>
         {props.children}
       </main>
       <Footer />
+      <Bottomnav />
     </div>
   );
 })

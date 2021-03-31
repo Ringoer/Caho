@@ -1,0 +1,29 @@
+.bottom{
+  display: none;
+}
+@media (max-width:500px){
+  .bottom{
+    display: block;
+    height: 60px;
+    >.bottomNav{
+      z-index: 1;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      >.navList{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        margin: 0;
+        svg{
+          height: 32px;
+          width: 32px;
+        }
+      }
+    }
+  }
+}

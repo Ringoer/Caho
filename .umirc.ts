@@ -25,6 +25,9 @@ export default defineConfig({
           { component: '@/pages/404' },
         ]
       },
+      { exact: true, path: '/login', component: '@/pages/action/login' },
+      { exact: true, path: '/register', component: '@/pages/action/register' },
+      { exact: true, path: '/register/verify', component: '@/pages/action/register.verify' },
       { exact: true, path: '/404', component: '@/pages/404' },
       { component: '@/pages/404' },
     ]

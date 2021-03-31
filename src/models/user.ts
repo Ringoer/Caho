@@ -1,18 +1,18 @@
 const defaultUser: User = {
-  avatarUrl: "",
-  beDeleted: false,
-  birthday: "",
-  email: "",
-  gender: 0,
-  gmtCreate: "",
-  gmtModified: "",
   id: 0,
-  nickname: "",
+  username: "",
   password: "",
   roleId: 0,
+  nickname: "",
+  avatarUrl: "",
   signature: "",
-  username: "",
+  email: "",
+  gender: 0,
+  birthday: "",
   score: 0,
+  gmtCreate: "",
+  gmtModified: "",
+  beDeleted: false,
 }
 
 export default {

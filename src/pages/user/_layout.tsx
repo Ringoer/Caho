@@ -41,7 +41,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
             </div>
             <ul className={styles.options}>
               {options.map(item => (
-                <li className={styles.option}>
+                <li className={styles.option} key={item}>
                   <button className={styles.action + (item === option ? ` ${styles.active}` : '')} onClick={() => setOption(item)}>{item}</button>
                 </li>
               ))}

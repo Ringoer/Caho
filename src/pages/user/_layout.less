@@ -83,7 +83,7 @@
       }
       >.userInfo{
         color: black;
-        grid-template-columns: 100px;
+        grid-template-columns: auto;
         grid-template-rows: 110px auto auto;
         grid-template-areas: "avatar"
         "nickname"
@@ -94,6 +94,9 @@
         }
         >.avatar{
           height: 100px;
+          position: absolute;
+          left:50%;
+          transform: translateX(-50%);
         }
       }
     }

@@ -15,7 +15,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   const [floors, setFloors] = useState<Reply[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
   useEffect(() => {
-    request('/topic/' + topicId)
+    request(`/topic/${topicId}`)
       .then(result => {
         const { data } = result
         console.log(data)

@@ -1,56 +1,32 @@
 import styles from './Topnav.less'
-import { connect, Link } from 'umi';
+import { connect, history, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 import Loading from './Loading';
 
-const getTopmenu = new Promise(resolve => {
-  resolve({
-    json: () => ({
-      data: [
-        { id: 1, name: 'username', href: '/home' },
-        { id: 2, name: '设置', href: '/settings' },
-      ]
-    })
-  })
-})
-
-export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
-  const { breadcrumb } = props
-  const defaultUser = Object.assign({}, props.user)
-  const [user, setUser] = useState(defaultUser)
-  const [topmenu, setTopmenu] = useState([])
+export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
+  const { user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] } = props
+  const cookie = localStorage.getItem('cookie')
   useEffect(() => {
-    const cookie = localStorage.getItem('cookie')
-    if (cookie) {
+    if (cookie && !user) {
       console.log(`cookie: ${cookie}`)
+      document.cookie = 'jwt='
+      document.cookie = cookie
+      request('/user/info')
+        .then(result => {
+          console.log(result)
+          const { data } = result
+
+          console.log(data)
+          if (!data) {
+            return data
+          }
+          props.dispatch({ type: 'user/info', payload: data })
+        })
     } else {
-      console.log('no cookie found')
+      console.log(`no cookie found`)
     }
-    request('/user/1')
-      .then(result => {
-        const { data } = result
-        console.log(data)
-        setUser(data || defaultUser)
-        props.dispatch({ type: 'user/info', payload: data })
-        return data
-      })
-      .then(user => {
-        // fetch('/api/topmenu')
-        getTopmenu
-          .then((res: any) => res.json())
-          .then(result => {
-            const { data } = result
-            setTopmenu(data.map((item: any) => {
-              if (item.name === 'username') {
-                item.name = user.nickname
-                item.href = `/user/${user.id}`
-              }
-              return item
-            }))
-          })
-      })
-  }, [])
+  }, [cookie])
   return (
     <header className={styles.header}>
       <div className={styles.topnav}>
@@ -72,30 +48,50 @@ export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrum
         </div>
         <div className={styles.menu}>
           <ul className={styles.pcMenu}>
-            {topmenu.map((item: any) => (
-              <li className={styles.menuItem} key={item.id}>
-                <Link to={item.href} className={styles.link}>
+            <li className={styles.menuItem}>
+              {user ?
+                <Link to={`/user/${user.id}`} className={styles.link}>
                   <div className={styles.mask}></div>
-                  <span>{item.name}</span>
-                </Link>
-              </li>
-            ))}
+                  <span>{user.nickname}</span>
+                </Link> :
+                <Link to='/login' className={styles.link}>
+                  <div className={styles.mask}></div>
+                  <span>登录</span>
+                </Link>}
+            </li>
+            <li className={styles.menuItem}>
+              <Link to='/settings' className={styles.link}>
+                <div className={styles.mask}></div>
+                <span>设置</span>
+              </Link>
+            </li>
+            {user ?
+              <li className={styles.menuItem}>
+                <a className={styles.link} onClick={() => {
+                  document.cookie = 'jwt='
+                  localStorage.removeItem('cookie')
+                  props.dispatch({ type: 'user/info', payload: null })
+                  history.push('/')
+                }}>
+                  <div className={styles.mask}></div>
+                  <span>退出</span>
+                </a>
+              </li> : undefined}
           </ul>
           <ul className={styles.mobileMenu}>
-            <li className={styles.menuItem}>
-              <Link to="/search" className={styles.link}>
-                <svg className="icon" aria-hidden="true">
-                  <use xlinkHref="#icon-search"></use>
-                </svg>
-              </Link>
-            </li>
-            <li className={styles.menuItem}>
-              <Link to="/message" className={styles.link}>
-                <svg className="icon" aria-hidden="true">
-                  <use xlinkHref="#icon-ring"></use>
-                </svg>
-              </Link>
-            </li>
+            {user ?
+              <li className={styles.menuItem}>
+                <a className={styles.link} onClick={() => {
+                  document.cookie = 'jwt='
+                  localStorage.removeItem('cookie')
+                  props.dispatch({ type: 'user/info', payload: null })
+                  history.push('/')
+                }}>
+                  <svg className="icon" aria-hidden="true">
+                    <use xlinkHref="#icon-exit"></use>
+                  </svg>
+                </a>
+              </li> : undefined}
           </ul>
         </div>
       </div>

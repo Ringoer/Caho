@@ -9,8 +9,14 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
     <div className={styles.main}>
       {props.children}
       <div className={styles.sidebar}>
-        {!user ? <Loading /> : (
-          <Section color="#FFCF4B" title="个人信息">
+        <Section color="#FFCF4B" title="个人信息">
+          {!user ? (
+            <p>
+              还没登录？立即
+              <Link to='/login' className={styles.login}> 登录 </Link>
+            ！
+            </p>
+          ) : (
             <div className={styles.user}>
               <div className={styles.avatar}>
                 <Link to={`/user/${user.id}`}>
@@ -24,8 +30,8 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                 <br />
                 <span>积分：0</span>
               </div>
-            </div>
-          </Section>)}
+            </div>)}
+        </Section>
         <Section color="#FC83A3" title="推荐内容">
           <div className={styles.recommend}>推荐的内容</div>
         </Section>
