@@ -5,6 +5,7 @@ import request from '@/util/request'
 import Floor from '@/components/Floor'
 import Pagination from '@/components/Pagination'
 import Loading from '@/components/Loading'
+import Editor from '@/components/Editor'
 import { connect, history } from 'umi';
 import { changeTime } from '@/util/time';
 
@@ -14,6 +15,24 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   const [topic, setTopic] = useState<Topic>()
   const [floors, setFloors] = useState<Reply[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
+
+  function onSubmit(value: string) {
+    request('/topic/reply', {
+      method: 'post',
+      body: JSON.stringify({
+        topicId,
+        content: value.split('\n').join('\n\n')
+      })
+    }).then(result => {
+      if (result.errno === 0) {
+        alert('回复帖子成功！')
+        location.reload()
+      } else {
+        alert(result.errmsg)
+      }
+    })
+  }
+
   useEffect(() => {
     request(`/topic/${topicId}`)
       .then(result => {
@@ -67,6 +86,8 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
           <Pagination selectedPage={selectedPage} maxPage={parseInt(((floors.length + 9) / 10).toString()) || -1} action={(target: string) => setPage(target)} />
         </>
       )}
+      <br />
+      <Editor onSubmit={onSubmit} />
     </div>
   );
 })
