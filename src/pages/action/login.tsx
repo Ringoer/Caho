@@ -36,8 +36,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         })
       }).then(result => {
         if (result.errno === 0) {
-          localStorage.setItem('cookie', result.data)
-          history.push('/')
+          location.href = '/'
           return
         } else {
           alert(result.errmsg)

@@ -6,12 +6,17 @@ import Loading from './Loading';
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] } = props
-  const cookie = localStorage.getItem('cookie')
+
+  function logout() {
+    props.dispatch({ type: 'user/info', payload: null })
+    request('/user/logout', {
+      method: 'post'
+    })
+    history.push('/')
+  }
+
   useEffect(() => {
-    if (cookie && !user) {
-      console.log(`cookie: ${cookie}`)
-      document.cookie = 'jwt='
-      document.cookie = cookie
+    if (!user) {
       request('/user/info')
         .then(result => {
           console.log(result)
@@ -26,7 +31,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
     } else {
       console.log(`no cookie found`)
     }
-  }, [cookie])
+  }, [])
   return (
     <header className={styles.header}>
       <div className={styles.topnav}>
@@ -67,12 +72,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
             </li>
             {user ?
               <li className={styles.menuItem}>
-                <a className={styles.link} onClick={() => {
-                  document.cookie = 'jwt='
-                  localStorage.removeItem('cookie')
-                  props.dispatch({ type: 'user/info', payload: null })
-                  history.push('/')
-                }}>
+                <a className={styles.link} onClick={logout}>
                   <div className={styles.mask}></div>
                   <span>退出</span>
                 </a>
@@ -81,12 +81,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           <ul className={styles.mobileMenu}>
             {user ?
               <li className={styles.menuItem}>
-                <a className={styles.link} onClick={() => {
-                  document.cookie = 'jwt='
-                  localStorage.removeItem('cookie')
-                  props.dispatch({ type: 'user/info', payload: null })
-                  history.push('/')
-                }}>
+                <a className={styles.link} onClick={logout}>
                   <svg className="icon" aria-hidden="true">
                     <use xlinkHref="#icon-exit"></use>
                   </svg>

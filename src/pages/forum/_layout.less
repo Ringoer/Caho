@@ -34,9 +34,15 @@
         justify-content: center;
       }
     }
-    .recommend{
-      padding: 8px;
-      min-height: 200px;
+    .recommends{
+      margin: 0;
+      padding: 0 8px;
+      >.recommend{
+        margin: 8px 0;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
     }
   }
 }

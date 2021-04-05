@@ -10,13 +10,15 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
   const [profile, setProfile] = useState('暂无更多')
   useEffect(() => {
     if (tab === '主页') {
-      request(`/forum`).then(result => {
-        const { data } = result
-        if (!data) {
-          return
-        }
-        setForums(data)
-      })
+      const userId = location.pathname.substring('/user/'.length)
+      request(`/forum/collect?userid=${userId}`)
+        .then(result => {
+          const { data } = result
+          if (!data) {
+            return
+          }
+          setForums(data)
+        })
     } else if (tab === '资料') {
       request(`${location.pathname}/profile`).then(result => {
         const { data } = result
@@ -35,7 +37,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
             <Section title="关注版块">
               <ul className={styles.forums}>
                 {forums.length === 0 ?
-                  <li className={styles.forum}>暂无关注版块</li> :
+                  <li>暂无关注版块</li> :
                   forums.map(forum => (
                     <li className={styles.forum} key={forum.id}>
                       <Link to={`/forum/${forum.id}`}>

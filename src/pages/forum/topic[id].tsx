@@ -9,23 +9,26 @@ import Editor from '@/components/Editor'
 import { connect, history } from 'umi';
 import { changeTime } from '@/util/time';
 
-export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
-  const { breadcrumb } = props
+export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
+  const { user, breadcrumb } = props
   const { id: topicId } = props.match.params
   const [topic, setTopic] = useState<Topic>()
   const [floors, setFloors] = useState<Reply[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
 
-  function onSubmit(value: string) {
+  function onSubmit(content: string) {
+    if (!topic) {
+      return
+    }
     request('/topic/reply', {
       method: 'post',
       body: JSON.stringify({
-        topicId,
-        content: value.split('\n').join('\n\n')
+        topicId: topic.id,
+        content: content.split('\n').join('\n\n')
       })
     }).then(result => {
       if (result.errno === 0) {
-        alert('回复帖子成功！')
+        alert('回复主题成功！')
         location.reload()
       } else {
         alert(result.errmsg)
@@ -84,10 +87,18 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
             ))
           }
           <Pagination selectedPage={selectedPage} maxPage={parseInt(((floors.length + 9) / 10).toString()) || -1} action={(target: string) => setPage(target)} />
+          <br />
+          <Editor
+            disabled={
+              user ? (
+                topic.forumId === 1 ? true : false
+              ) : true
+            }
+            description='发表新回复'
+            onSubmit={onSubmit}
+          />
         </>
       )}
-      <br />
-      <Editor onSubmit={onSubmit} />
     </div>
   );
 })

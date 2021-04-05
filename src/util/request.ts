@@ -24,12 +24,4 @@ export default (uri: string, options?: RequestInit): Promise<Response> => {
     credentials: 'include'
   })
     .then(res => res.json())
-    .then(res => {
-      if (res.errno === 202) {
-        res.errno = 0
-        document.cookie = 'jwt='
-        document.cookie = res.cookie
-      }
-      return res
-    })
 }

@@ -7,6 +7,7 @@ import Note from '@/components/Note'
 import Pagination from '@/components/Pagination'
 import Loading from '@/components/Loading'
 import { changeTime } from '@/util/time';
+import Editor from '@/components/Editor';
 
 const parts = {
   'share': '分享',
@@ -16,10 +17,33 @@ const parts = {
   'dev': '测试',
 }
 
-export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
+export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
+  const { user } = props
   const [topics, setTopics] = useState<Topic[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
-  const [forum, setForum] = useState({ avatarUrl: '', forumName: '', bannerUrl: '' })
+  const [forum, setForum] = useState<Forum>()
+
+  function onSubmit(content: string, title: string) {
+    if (!forum) {
+      return
+    }
+    request('/topic', {
+      method: 'post',
+      body: JSON.stringify({
+        forumId: forum.id,
+        title,
+        content: content.split('\n').join('\n\n')
+      })
+    }).then(result => {
+      if (result.errno === 0) {
+        alert('发表主题成功！')
+        location.reload()
+      } else {
+        alert(result.errmsg)
+      }
+    })
+  }
+
   useEffect(() => {
     setPage((history.location.query && history.location.query.page) || 1)
   }, [history.location.query])
@@ -51,7 +75,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [selectedPage])
   return (
     <div className={styles.container}>
-      {forum.bannerUrl ? (
+      {forum && forum.bannerUrl ? (
         <img src={forum.bannerUrl} alt="版块背景" className={styles.banner} />
       ) : undefined}
       {!forum || topics.length === 0 ? <Loading /> : (
@@ -106,8 +130,23 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
             ))}
           </div>
           <div className={styles.pagination}>
-            <Pagination selectedPage={selectedPage} action={(target: string) => history.push(history.location.pathname + '?page=' + target)} />
+            <Pagination
+              selectedPage={selectedPage}
+              action={(target: string) => {
+                history.push(history.location.pathname + '?page=' + target)
+              }}
+            />
           </div>
+          <Editor
+            disabled={
+              user ? (
+                forum.id === 1 ? true : false
+              ) : true
+            }
+            description='发表新主题'
+            hasTitle
+            onSubmit={onSubmit}
+          />
         </>
       )}
     </div>

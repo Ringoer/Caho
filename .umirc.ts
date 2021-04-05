@@ -14,6 +14,7 @@ export default defineConfig({
       {
         exact: false, path: '/forum', component: '@/pages/forum/_layout', routes: [
           { exact: true, path: '/forum', component: '@/pages/forum/index' },
+          { exact: true, path: '/forum/add', component: '@/pages/forum/add' },
           { exact: true, path: '/forum/:id', component: '@/pages/forum/[id]' },
           { exact: true, path: '/forum/topic/:id', component: '@/pages/forum/topic[id]' },
           { component: '@/pages/404' },

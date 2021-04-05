@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Editor.less'
 import ReactMarkdown from 'react-markdown';
 import Button from './Button'
@@ -6,11 +6,22 @@ import Tabs from './Tabs'
 import Tab from './Tab'
 
 export default (props: any) => {
-  const { disabled, onSubmit } = props
+  const { disabled, description, hasTitle, onSubmit } = props
+  const [title, setTitle] = useState('')
   const [text, setText] = useState('')
   const [_, fresh] = useState(0)
+  const textarea = useRef<HTMLTextAreaElement>(null)
+  useEffect(() => fresh(Math.random()), [])
   return (
     <div className={styles.editor}>
+      <p className={styles.description}>{description}</p>
+      {hasTitle ? (
+        <div className={styles.title}>
+          <p>标题</p>
+          <input type="text" onChange={(event) => setTitle(event.target.value)} />
+        </div>
+      ) : undefined}
+      <p>正文</p>
       <Tabs onChange={() => fresh(Math.random())}>
         <Tab title="编辑" name="edit">
           <textarea
@@ -19,6 +30,7 @@ export default (props: any) => {
             id="textarea"
             defaultValue={text}
             onChange={(event) => setText(event.target.value)}
+            ref={textarea}
           />
         </Tab>
         <Tab title="预览" name="preview">
@@ -28,7 +40,17 @@ export default (props: any) => {
         </Tab>
       </Tabs>
       <div className={styles.action}>
-        <Button backgroundColor="white" color="black" onClick={() => setText('')}>重置</Button>
+        <Button
+          backgroundColor="white"
+          color="black"
+          onClick={() => {
+            setText('')
+            if (!textarea.current) {
+              return
+            }
+            textarea.current.value = ''
+          }}
+        >重置</Button>
         <Button onClick={() => {
           if (disabled) {
             console.error('您在当前环境下没有权限进行编辑')
@@ -37,7 +59,7 @@ export default (props: any) => {
             console.error('传入的提交函数非法')
             return
           }
-          onSubmit(text)
+          onSubmit(text, title)
         }}>提交</Button>
       </div>
       {disabled ? (
