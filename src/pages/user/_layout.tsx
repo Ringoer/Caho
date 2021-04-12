@@ -21,7 +21,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
         }
         console.log(data)
         setUser(data)
-        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: data.username }] })
+        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: `[用户] ${data.username}` }] })
       })
   }, [])
   return (

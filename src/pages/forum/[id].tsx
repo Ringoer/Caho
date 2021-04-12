@@ -3,6 +3,7 @@ import styles from './[id].less';
 import request from '@/util/request'
 import { connect, history, Link } from 'umi'
 
+import Button from '@/components/Button'
 import Note from '@/components/Note'
 import Pagination from '@/components/Pagination'
 import Loading from '@/components/Loading'
@@ -15,13 +16,36 @@ const parts = {
   'job': '招聘',
   'good': '精华',
   'dev': '测试',
+  'test': '测试',
 }
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user } = props
   const [topics, setTopics] = useState<Topic[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
+  const [selectedTab, setTab] = useState((history.location.query && history.location.query.page) || 'all')
   const [forum, setForum] = useState<Forum>()
+  const [collected, setCollected] = useState(false)
+
+  function collectForum() {
+    if (!forum) {
+      return
+    }
+    request('/forum/collect', {
+      method: 'post',
+      body: JSON.stringify({
+        id: forum.id,
+        collect: !collected
+      })
+    }).then(result => {
+      if (result.errno === 0) {
+        location.reload()
+      } else {
+        alert(`操作失败！\n原因：${result.errmsg}`)
+        console.error(result.errmsg)
+      }
+    })
+  }
 
   function onSubmit(content: string, title: string) {
     if (!forum) {
@@ -45,20 +69,35 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   }
 
   useEffect(() => {
-    setPage((history.location.query && history.location.query.page) || 1)
-  }, [history.location.query])
+    request('/forum/collect')
+      .then(result => {
+        if (!forum) {
+          return
+        }
+        const { data }: { data: Forum[] } = result
+        const collectForum = data.find(item => item.id === forum.id)
+        if (collectForum) {
+          setCollected(true)
+        }
+      })
+  }, [forum])
+
   useEffect(() => {
-    // fetch('/api/forum/' + id)
+    setPage((history.location.query && history.location.query.page) || 1)
+    setTab((history.location.query && history.location.query.tab) || 'all')
+  }, [history.location.query])
+
+  useEffect(() => {
     request(location.pathname)
       .then(result => {
         setForum(result.data)
-        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: result.data.forumName }] })
+        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: `[版块] ${result.data.forumName}` }] })
 
         const target = parseInt(selectedPage.toString())
         if (!(typeof target === 'number' && target % 1 === 0 && target > 0)) {
           history.push('?page=1')
         }
-        request('/topic?forum=' + result.data.id + '&page=' + selectedPage)
+        request(`/topic?forum=${result.data.id}&page=${selectedPage}&tab=${selectedTab}`)
           .then(result => {
             const { data } = result
             if (!data || data.length === 0) {
@@ -72,11 +111,30 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
             setTopics(data)
           })
       })
-  }, [selectedPage])
+  }, [selectedPage, selectedTab])
   return (
     <div className={styles.container}>
-      {forum && forum.bannerUrl ? (
-        <img src={forum.bannerUrl} alt="版块背景" className={styles.banner} />
+      {forum ? (
+        <div className={styles.forumTop}>
+          { forum.bannerUrl ? (
+            <img src={forum.bannerUrl} alt="版块背景" className={styles.banner} />
+          ) : undefined}
+          <div className={styles.forumInfoWrapper}>
+            <div className={styles.forumInfo}>
+              <img className={styles.avatar} src={forum.avatarUrl || ''} alt="版块头像" />
+              <span className={styles.forumName}>{forum.forumName || '版块名称'}</span>
+              <span className={styles.description}>{forum.description || '版块描述'}</span>
+              <div className={styles.collect}>
+                <Button className={styles.collect} onClick={collectForum}>
+                  {collected ? '取消关注' : '关注'}
+                </Button>
+              </div>
+              <div className={styles.sign}>
+                <Button className={styles.sign}>签到</Button>
+              </div>
+            </div>
+          </div>
+        </div>
       ) : undefined}
       {!forum || topics.length === 0 ? <Loading /> : (
         <>
@@ -89,9 +147,12 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                   </Link>
                   <div className={styles.title}>
                     {topic.top ?
-                      (<button className={styles.isTop}>置顶</button>) :
+                      (<span className={styles.isTop}>置顶</span>) :
                       undefined}
-                    <button className={styles.part}>{parts[topic.tab] || '其它'}</button>
+                    <button className={styles.part} onClick={() => {
+                      setPage(1)
+                      setTab(topic.tab)
+                    }}>{parts[topic.tab] || '其它'}</button>
                     <Link to={'/forum/topic/' + topic.id} className={styles.link} >
                       {topic.title}
                     </Link>
@@ -133,10 +194,11 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
             <Pagination
               selectedPage={selectedPage}
               action={(target: string) => {
-                history.push(history.location.pathname + '?page=' + target)
+                history.push('?page=' + target)
               }}
             />
           </div>
+          <br />
           <Editor
             disabled={
               user ? (

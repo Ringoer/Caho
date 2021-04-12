@@ -2,8 +2,64 @@
   width: 900px;
   background: white;
   max-width: 90vw;
-  >.banner{
-    width: 100%;
+  >.forumTop{
+    position: relative;
+    >.banner{
+      width: 100%;
+    }
+    >.forumInfoWrapper{
+      position: relative;
+      height: 80px;
+      >.forumInfo{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 10px 20px;
+        height: 200%;
+        width: 100%;
+        display: grid;
+        grid-template-areas:
+        "avatar space space space"
+        "avatar forumName collect sign"
+        "avatar description collect sign";
+        grid-template-columns: 160px 1fr 120px 120px;
+        grid-template-rows: 2fr 1fr 1fr;
+        >.avatar{
+          grid-area: avatar;
+          height: 100%;
+          border: 1px solid #DCDCDC;
+          background: white;
+          padding: 4px;
+        }
+        >.forumName,>.description{
+          margin-top: 8px;
+          height: 20px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+        >.forumName{
+          grid-area: forumName;
+          font-weight: bold;
+        }
+        >.description{
+          grid-area: description;
+        }
+        >.collect,>.sign{
+          display: flex;
+          align-items: center;
+          padding-left: 20px;
+        }
+        >.collect{
+          grid-area: collect;
+        }
+        >.sign{
+          grid-area: sign;
+        }
+      }
+    }
   }
   >.topics{
     padding: 16px;
@@ -44,6 +100,7 @@
           }
         }
         >.isTop,>.part{
+          font-weight: normal;
           width: 50px;
           padding: 4px 8px;
           border: none;
@@ -96,6 +153,28 @@
     background: none;
     padding-bottom: 8px;
     max-width: 100vw;
+    >.forumTop{
+      >.forumInfoWrapper{
+        height: 60px;
+        >.forumInfo{
+          display: flex;
+          padding: 0 20px;
+          height: 100%;
+          >.avatar{
+            display: none;
+          }
+          >.forumName{
+            display: none;
+          }
+          >.description{
+            display: none;
+          }
+          >.collect,>.sign{
+            width: 40vw;
+          }
+        }
+      }
+    }
     >.topics{
       padding: 4px;
       .topic{

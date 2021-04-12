@@ -1,3 +1,11 @@
+interface CollectForum {
+  id: number;
+  forumId: number;
+  userId: number;
+  gmtCreate: string;
+  gmtModified: string;
+  beDeleted: boolean;
+}
 interface Forum {
   id: number;
   forumName: string;

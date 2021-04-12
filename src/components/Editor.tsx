@@ -6,9 +6,9 @@ import Tabs from './Tabs'
 import Tab from './Tab'
 
 export default (props: any) => {
-  const { disabled, description, hasTitle, onSubmit } = props
+  const { disabled, description, hasTitle, onSubmit, defaultValue } = props
   const [title, setTitle] = useState('')
-  const [text, setText] = useState('')
+  const [text, setText] = useState(defaultValue || '')
   const [_, fresh] = useState(0)
   const textarea = useRef<HTMLTextAreaElement>(null)
   useEffect(() => fresh(Math.random()), [])
@@ -28,7 +28,7 @@ export default (props: any) => {
             className={styles.textarea}
             name="textarea"
             id="textarea"
-            defaultValue={text}
+            defaultValue={disabled ? '' : text}
             onChange={(event) => setText(event.target.value)}
             ref={textarea}
           />

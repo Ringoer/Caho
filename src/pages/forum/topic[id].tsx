@@ -15,6 +15,25 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   const [topic, setTopic] = useState<Topic>()
   const [floors, setFloors] = useState<Reply[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
+  const [defaultValue, setDefaultValue] = useState('')
+
+  function onReply(userId: number, userNickname: string) {
+    setDefaultValue(`[@${userNickname}](/user/${userId}) `)
+  }
+
+  function onReport(userId: number) {
+    request('/user/report', {
+      method: 'post',
+      body: JSON.stringify({ reportId: userId })
+    }).then(res => {
+      if (res.errno === 0) {
+        alert('举报成功')
+      } else {
+        alert('举报失败')
+        console.error(res.errmsg)
+      }
+    })
+  }
 
   function onSubmit(content: string) {
     if (!topic) {
@@ -70,7 +89,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         })
         setTopic(data)
         setFloors([data].concat(data.replies))
-        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 2, pathname: location.pathname, name: data.title }] })
+        props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 2, pathname: location.pathname, name: `[主题] ${data.title}` }] })
       })
   }, [])
   return (
@@ -82,8 +101,14 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           </h1>
           <hr className={styles.separator} />
           {
-            floors.slice(10 * (+selectedPage - 1), 10 * +selectedPage).map((floor: any, index: number) => (
-              <Floor topic={floor} key={floor.id} index={index + 10 * +selectedPage - 9} />
+            floors.slice(10 * (+selectedPage - 1), 10 * +selectedPage).map((floor: Reply, index: number) => (
+              <Floor
+                reply={floor}
+                key={floor.id}
+                index={index + 10 * +selectedPage - 9}
+                onReply={onReply}
+                onReport={onReport}
+              />
             ))
           }
           <Pagination selectedPage={selectedPage} maxPage={parseInt(((floors.length + 9) / 10).toString()) || -1} action={(target: string) => setPage(target)} />
@@ -94,6 +119,8 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                 topic.forumId === 1 ? true : false
               ) : true
             }
+            key={defaultValue}
+            defaultValue={defaultValue}
             description='发表新回复'
             onSubmit={onSubmit}
           />

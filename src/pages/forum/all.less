@@ -1,4 +1,4 @@
-.content{
+.container{
   width: 898px;
   @media (max-width:900px) {
     width: 100vw;
@@ -36,6 +36,13 @@
           height: 35vw;
         }
         margin-bottom: 12px;
+      }
+      >.forumName{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
       }
     }
   }

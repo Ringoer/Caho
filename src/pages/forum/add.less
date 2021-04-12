@@ -1,0 +1,59 @@
+.container{
+  display: flex;
+  justify-content: center;
+  width: 900px;
+  >.addForumForm{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    max-width: 90vw;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    >.wrapper{
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
+      >input{
+        outline: none;
+        border: 1px solid #ACACAC;
+        border-radius: 4px;
+        padding: 4px 8px;
+      }
+      >.warning{
+        position: absolute;
+        right: 0;
+        color: red;
+        text-align: right;
+      }
+    }
+    >.action{
+      display: flex;
+      justify-content: space-between;
+      >button{
+        width: 45%;
+        outline: none;
+        padding: 8px;
+        border-radius: 4px;
+      }
+      >.submit{
+        background: #39cbf3;
+        border: 1px solid #ECECEC;
+        color: white;
+        &:hover{
+          transition: background-color 250ms;
+          background-color: #5CD1F0;
+        }
+      }
+      >.reset{
+        background: white;
+        border: 1px solid #ACACAC;
+        &:hover{
+          transition: all 250ms;
+          color: #5CD1F0;
+          border-color: #5CD1F0;
+        }
+      }
+    }
+  }
+}

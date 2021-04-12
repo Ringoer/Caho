@@ -31,27 +31,15 @@
         font-size: 12px;
       }
     }
-    >.buttons{
+    >.userAction{
       grid-area: btn;
       display: flex;
       justify-content: flex-end;
       flex-direction: column-reverse;
       width: 100%;
       >button{
-        width: 100%;
-        padding: 8px;
         margin: 4px;
-        outline: none;
         border-radius: 8px;
-      }
-      >.shrink{
-        background: white;
-        border: 1px solid #ACACAC;
-      }
-      >.follow{
-        background: #5CD1F0;
-        border: 1px solid #ECECEC;
-        color: white;
       }
     }
   }
@@ -72,10 +60,25 @@
   }
   .content{
     overflow: hidden;
-    min-height: 100px;
+    min-height: 160px;
+    a{
+      color: #4ac4e6;
+    }
   }
   .hide{
     height: 212px;
+  }
+  .replyAction{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    background: white;
+    >button{
+      width: auto;
+    }
   }
 }
 @media (max-width: 500px) {
@@ -103,11 +106,12 @@
           display: block;
         }
       }
-      >.buttons{
+      >.userAction{
         flex-direction: row;
         width: auto;
         >button{
-          width: auto;
+          padding: 8px;
+          width: 50px;
         }
       }
     }
