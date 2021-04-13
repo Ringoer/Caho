@@ -12,7 +12,7 @@ interface Response {
   errmsg: string;
 }
 
-export default (uri: string, options?: RequestInit): Promise<Response> => {
+function myFetch(uri: string, options?: RequestInit): Promise<Response> {
   return fetch(baseUrl + uri, {
     // headers,
     // body,
@@ -24,4 +24,15 @@ export default (uri: string, options?: RequestInit): Promise<Response> => {
     credentials: 'include'
   })
     .then(res => res.json())
+}
+
+export default (uri: string, options?: RequestInit): Promise<Response> => {
+  return myFetch(uri, options)
+    .then(result => {
+      if (result.errno !== 0) {
+        alert(result.errmsg)
+        console.error(result.errmsg)
+      }
+      return result
+    })
 }

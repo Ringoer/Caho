@@ -19,14 +19,14 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
     if (!user) {
       request('/user/info')
         .then(result => {
-          console.log(result)
-          const { data } = result
-
-          console.log(data)
-          if (!data) {
-            return data
+          if (result.errno === 0) {
+            const { data } = result
+            data.score = 0
+            props.dispatch({ type: 'user/info', payload: data })
+          } else {
+            alert(result.errmsg)
+            console.error(result.errmsg)
           }
-          props.dispatch({ type: 'user/info', payload: data })
         })
     } else {
       console.log(`no cookie found`)

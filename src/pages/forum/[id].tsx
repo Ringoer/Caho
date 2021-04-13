@@ -26,6 +26,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   const [selectedTab, setTab] = useState((history.location.query && history.location.query.page) || 'all')
   const [forum, setForum] = useState<Forum>()
   const [collected, setCollected] = useState(false)
+  const [sign, setSign] = useState(true)
 
   function collectForum() {
     if (!forum) {
@@ -64,6 +65,23 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         location.reload()
       } else {
         alert(result.errmsg)
+      }
+    })
+  }
+
+  function onSign() {
+    if (!forum) {
+      return
+    }
+    request('/forum/sign', {
+      method: 'post',
+      body: JSON.stringify({
+        id: forum.id,
+      })
+    }).then(result => {
+      if (result.errno === 0) {
+        alert('签到成功！')
+        setSign(true)
       }
     })
   }
@@ -112,6 +130,19 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           })
       })
   }, [selectedPage, selectedTab])
+
+  useEffect(() => {
+    if (!user || !forum) {
+      return
+    }
+    request(`/forum/sign?id=${forum.id}`)
+      .then(result => {
+        if (result.errno === 0) {
+          setSign(result.data)
+        }
+      })
+  }, [user, forum])
+
   return (
     <div className={styles.container}>
       {forum ? (
@@ -130,7 +161,13 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                 </Button>
               </div>
               <div className={styles.sign}>
-                <Button className={styles.sign}>签到</Button>
+                {sign ?
+                  <Button
+                    backgroundColor='white'
+                    color='black'
+                    className={styles.sign}>已签到</Button>
+                  :
+                  <Button className={styles.sign} onClick={onSign}>签到</Button>}
               </div>
             </div>
           </div>
