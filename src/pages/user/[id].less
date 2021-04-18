@@ -1,3 +1,6 @@
+.sectionList{
+  margin: 4px;
+}
 .container{
   background: white;
   padding: 20px;
@@ -7,6 +10,7 @@
       .forums{
         display: flex;
         margin: 0;
+        flex-wrap: wrap;
         >.forum{
           border: 1px solid #ACACAC;
           border-radius: 4px;
@@ -14,6 +18,15 @@
           >a{
             display: block;
             padding: 8px 12px;
+          }
+          .exp{
+            color: chocolate;
+            @media (max-width:500px){
+              display: none;
+            }
+          }
+          .level{
+            color: burlywood;
           }
         }
       }

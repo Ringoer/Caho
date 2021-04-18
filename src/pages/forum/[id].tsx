@@ -42,8 +42,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       if (result.errno === 0) {
         location.reload()
       } else {
-        alert(`操作失败！\n原因：${result.errmsg}`)
-        console.error(result.errmsg)
+        alert(`操作失败，请先登录！`)
       }
     })
   }
@@ -63,14 +62,16 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       if (result.errno === 0) {
         alert('发表主题成功！')
         location.reload()
-      } else {
-        alert(result.errmsg)
       }
     })
   }
 
   function onSign() {
-    if (!forum) {
+    if (!forum || !user) {
+      return
+    }
+    if (!collected) {
+      alert('请先关注本版块')
       return
     }
     request('/forum/sign', {
@@ -87,18 +88,24 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   }
 
   useEffect(() => {
-    request('/forum/collect')
+    if (!user) {
+      return
+    }
+    request(`/forum/collect?userid=${user.id}`)
       .then(result => {
         if (!forum) {
           return
         }
         const { data }: { data: Forum[] } = result
+        if (!data) {
+          return
+        }
         const collectForum = data.find(item => item.id === forum.id)
         if (collectForum) {
           setCollected(true)
         }
       })
-  }, [forum])
+  }, [user, forum])
 
   useEffect(() => {
     setPage((history.location.query && history.location.query.page) || 1)
@@ -108,6 +115,10 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   useEffect(() => {
     request(location.pathname)
       .then(result => {
+        if (result.errno !== 0) {
+          history.push('/404')
+          return
+        }
         setForum(result.data)
         props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: `[版块] ${result.data.forumName}` }] })
 
@@ -152,7 +163,15 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           ) : undefined}
           <div className={styles.forumInfoWrapper}>
             <div className={styles.forumInfo}>
-              <img className={styles.avatar} src={forum.avatarUrl || ''} alt="版块头像" />
+              <img
+                className={styles.avatar}
+                src={forum.avatarUrl || ''}
+                alt="版块头像"
+                onClick={() => {
+                  setPage(1)
+                  setTab('')
+                }}
+              />
               <span className={styles.forumName}>{forum.forumName || '版块名称'}</span>
               <span className={styles.description}>{forum.description || '版块描述'}</span>
               <div className={styles.collect}>
@@ -167,7 +186,8 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                     color='black'
                     className={styles.sign}>已签到</Button>
                   :
-                  <Button className={styles.sign} onClick={onSign}>签到</Button>}
+                  <Button className={styles.sign} onClick={onSign}>签到</Button>
+                }
               </div>
             </div>
           </div>

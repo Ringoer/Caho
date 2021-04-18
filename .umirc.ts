@@ -27,6 +27,12 @@ export default defineConfig({
           { component: '@/pages/404' },
         ]
       },
+      {
+        exact: false, path: '/admin', component: '@/pages/admin/_layout', routes: [
+          // { exact: true, path: '/admin/:id', component: '@/pages/admin/[id]' },
+          { component: '@/pages/404' },
+        ]
+      },
       { exact: true, path: '/login', component: '@/pages/action/login' },
       { exact: true, path: '/register', component: '@/pages/action/register' },
       { exact: true, path: '/register/verify', component: '@/pages/action/register.verify' },

@@ -12,10 +12,8 @@ interface Forum {
   description: string;
   avatarUrl: string;
   bannerUrl: string;
-  ownerList: string;
-  titleList: string;
-  creamList: string;
-  topList: string;
+  exp?: number;
+  ownerList?: number[];
   gmtCreate: string;
   gmtModified: string;
   beDeleted: boolean;
@@ -79,7 +77,7 @@ interface User {
   email: string;
   gender: number;
   birthday: string;
-  score: number;
+  score?: number;
   gmtCreate: string;
   gmtModified: string;
   beDeleted: boolean;

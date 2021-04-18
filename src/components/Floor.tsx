@@ -10,6 +10,9 @@ export default (props: any) => {
   const [hide, setHide] = useState(false)
 
   function follow() {
+    if (!confirm('您真的要关注该用户吗')) {
+      return
+    }
     request('/user/follow', {
       method: 'post',
       body: JSON.stringify({
@@ -61,10 +64,12 @@ export default (props: any) => {
           className={[styles.content, hide ? styles.hide : null].join(' ')}
           dangerouslySetInnerHTML={{ __html: reply.content }}
         />
-        <div className={styles.replyAction}>
-          <Button type='plain' onClick={() => onReply(reply.userId, reply.userNickname)}>回复</Button>
-          <Button type='plain' onClick={() => onReport(reply.userId)}>举报</Button>
-        </div>
+        {index === 1 ? undefined : (
+          <div className={styles.replyAction}>
+            <Button type='plain' onClick={() => onReply(reply.userId, reply.userNickname)}>回复</Button>
+            <Button type='plain' onClick={() => onReport(reply.id)}>举报</Button>
+          </div>
+        )}
       </Bubble>
     </div>
   )

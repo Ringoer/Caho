@@ -5,22 +5,22 @@ import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 
-let sign: NodeJS.Timeout
-
-export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
-  const { user } = props
+export default connect(({ user, login }: { user: User, login: string }) => ({ user, login }))((props: any) => {
+  const { user, login } = props
   const [recommends, setRecommends] = useState<Topic[]>([])
   const [flag, setFlag] = useState(false)
 
   useEffect(() => {
-    sign = setTimeout(() => setFlag(true), 1000)
-  }, [])
-
-  useEffect(() => {
+    if (!login) {
+      return
+    }
+    if (login === 'unlogin') {
+      setFlag(true)
+      return
+    }
     if (!user) {
       return
     }
-    clearTimeout(sign)
     request('/topic/recommend')
       .then(res => {
         setFlag(true)
@@ -30,7 +30,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
           console.error(res.errmsg)
         }
       })
-  }, [user])
+  }, [user, login])
   return (
     <div className={styles.main}>
       {props.children}
@@ -56,7 +56,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                       <span>{user.nickname}</span>
                     </Link>
                     <br />
-                    <span>积分：0</span>
+                    <span>积分：{user.score}</span>
                   </div>
                 </div>)}
             </Section>

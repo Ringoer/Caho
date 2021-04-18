@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { connect, history } from 'umi';
 import request from '@/util/request';
 
-export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
+export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
   useEffect(() => {
     if (props.user) {
       history.push('/')
@@ -36,10 +36,12 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         })
       }).then(result => {
         if (result.errno === 0) {
-          location.href = '/'
+          props.dispatch({ type: 'login/info', payload: '0' })
+          history.push('/')
           return
         } else {
-          alert(result.errmsg)
+          alert('用户名或密码错误！\n是否尚未确认邮箱的注册链接？')
+          return
         }
       })
       setFlag(false)

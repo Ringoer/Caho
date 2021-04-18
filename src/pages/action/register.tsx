@@ -12,6 +12,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   }, [props.user])
 
   const username = useRef<HTMLInputElement>(null)
+  const nickname = useRef<HTMLInputElement>(null)
   const password = useRef<HTMLInputElement>(null)
   const verify = useRef<HTMLInputElement>(null)
   const email = useRef<HTMLInputElement>(null)
@@ -26,11 +27,11 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       return
     }
     if (flag) {
-      if (!username.current || !password.current || !verify.current || !email.current) {
+      if (!username.current || !nickname.current || !password.current || !verify.current || !email.current) {
         setFlag(false)
         return
       }
-      if (!username.current.value || !password.current.value || !verify.current.value || !email.current.value ||
+      if (!username.current.value || !nickname.current.value || !password.current.value || !verify.current.value || !email.current.value ||
         !(password.current.value === verify.current.value)) {
         fresh(Math.random())
         setFlag(false)
@@ -40,12 +41,13 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         method: 'post',
         body: JSON.stringify({
           username: username.current.value,
+          nickname: nickname.current.value,
           password: password.current.value,
           email: email.current.value,
         })
       }).then(result => {
         if (result.errno === 0) {
-          alert('注册成功！')
+          alert('提交注册成功！\n请前往邮箱，点击注册链接以进行注册验证')
           history.push('/login')
           return
         } else {
@@ -63,6 +65,12 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           <input type="text" name="username" id="username" ref={username} />
           {state !== 0 && !(username.current && username.current.value) ?
             <label htmlFor="username" className={styles.warning}>用户名不能为空！</label> : undefined}
+        </div>
+        <div className={styles.wrapper}>
+          <label htmlFor="nickname">昵称</label>
+          <input type="text" name="nickname" id="nickname" ref={nickname} />
+          {state !== 0 && !(nickname.current && nickname.current.value) ?
+            <label htmlFor="nickname" className={styles.warning}>昵称不能为空！</label> : undefined}
         </div>
         <div className={styles.wrapper}>
           <label htmlFor="password">密码</label>
@@ -89,6 +97,9 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
             event.preventDefault()
             if (username.current) {
               username.current.value = ''
+            }
+            if (nickname.current) {
+              nickname.current.value = ''
             }
             if (password.current) {
               password.current.value = ''

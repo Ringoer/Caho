@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
 import styles from './[id].less';
 import request from '@/util/request'
-import { connect, Link } from 'umi'
+import { connect, Link, history } from 'umi'
 import Section from '@/components/Section';
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user, tab } = props
   const [forums, setForums] = useState<Forum[]>([])
+  const [topics, setTopics] = useState<Topic[]>([])
+  const [replyTo, setReplyTo] = useState<Topic[]>([])
   const [profile, setProfile] = useState('暂无更多')
   useEffect(() => {
+    const userId = location.pathname.substring('/user/'.length)
+    if (userId === '0') {
+      history.push('/404')
+      return
+    }
+    if (!Number.isInteger(+userId)) {
+      return
+    }
     if (tab === '主页') {
-      const userId = location.pathname.substring('/user/'.length)
       request(`/forum/collect?userid=${userId}`)
         .then(result => {
           const { data } = result
@@ -18,6 +27,22 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
             return
           }
           setForums(data)
+        })
+      request(`/topic/latest?userid=${userId}`)
+        .then(result => {
+          const { data } = result
+          if (!data) {
+            return
+          }
+          setTopics(data)
+        })
+      request(`/topic/reply/latest?userid=${userId}`)
+        .then(result => {
+          const { data } = result
+          if (!data) {
+            return
+          }
+          setReplyTo(data)
         })
     } else if (tab === '资料') {
       request(`${location.pathname}/profile`).then(result => {
@@ -41,7 +66,9 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                   forums.map(forum => (
                     <li className={styles.forum} key={forum.id}>
                       <Link to={`/forum/${forum.id}`}>
-                        18&nbsp;&nbsp;{forum.forumName}
+                        <span>{forum.forumName}&nbsp;&nbsp;</span>
+                        <span className={styles.exp}>{forum.exp || 0}&nbsp;经验&nbsp;&nbsp;</span>
+                        <span className={styles.level}>{((forum.exp || 0) / 100 + 1).toFixed()}&nbsp;级</span>
                       </Link>
                     </li>
                   ))}
@@ -49,12 +76,24 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
             </Section>
           </div>
           <div className={styles.second}>
-            <Section color="#FFCF4B" title="最近发帖">
-              暂无更多
-              </Section>
-            <Section color="#FC83A3" title="最近回复">
-              暂无更多
-              </Section>
+            <Section color="#FFCF4B" title="最近发表的帖子">
+              {topics.length === 0 ? '暂无更多' :
+                <ul>
+                  {topics.map(topic => <li key={topic.id} className={styles.sectionList}>
+                    <Link to={`/forum/topic/${topic.id}`}>{topic.title}</Link>
+                  </li>)}
+                </ul>
+              }
+            </Section>
+            <Section color="#FC83A3" title="最近回复的帖子">
+              {replyTo.length === 0 ? '暂无更多' :
+                <ul>
+                  {replyTo.map(topic => <li key={topic.id} className={styles.sectionList}>
+                    <Link to={`/forum/topic/${topic.id}`}>{topic.title}</Link>
+                  </li>)}
+                </ul>
+              }
+            </Section>
           </div>
         </div>
       ) : undefined}

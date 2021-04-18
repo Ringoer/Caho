@@ -4,34 +4,76 @@ import { useEffect, useState } from 'react';
 import request from '@/util/request';
 import Loading from './Loading';
 
-export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
-  const { user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] } = props
+export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
+  const { user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string } = props
+  const [sign, setSign] = useState(false)
 
   function logout() {
     props.dispatch({ type: 'user/info', payload: null })
+    props.dispatch({ type: 'login/info', payload: 'unlogin' })
     request('/user/logout', {
       method: 'post'
+    }).then(() => {
+      history.push('/')
     })
-    history.push('/')
+  }
+
+  function onSign() {
+    if (!user || sign) {
+      return
+    }
+    request('/score/sign', {
+      method: 'post',
+    }).then(result => {
+      if (result.errno === 0) {
+        alert('签到成功！')
+        setSign(true)
+        location.reload()
+      }
+    })
   }
 
   useEffect(() => {
     if (!user) {
-      request('/user/info')
-        .then(result => {
-          if (result.errno === 0) {
-            const { data } = result
-            data.score = 0
-            props.dispatch({ type: 'user/info', payload: data })
-          } else {
-            alert(result.errmsg)
-            console.error(result.errmsg)
-          }
-        })
-    } else {
       console.log(`no cookie found`)
     }
-  }, [])
+    request('/user/info')
+      .then(result => {
+        if (result.errno === 0) {
+          const { data } = result
+          if (!data) {
+            return
+          }
+          request(`/score?userid=${data.id}`)
+            .then(result => {
+              if (result.errno === 0) {
+                const { data: score } = result
+                data.score = score || 0
+                props.dispatch({ type: 'user/info', payload: data })
+                props.dispatch({ type: 'login/info', payload: 'login' })
+              }
+            })
+        } else {
+          props.dispatch({ type: 'login/info', payload: 'unlogin' })
+        }
+      })
+  }, [login])
+
+  useEffect(() => {
+    if (!user) {
+      return
+    }
+    request('/score/sign')
+      .then(result => {
+        if (result.errno === 0) {
+          const { data } = result
+          if (typeof data === 'boolean') {
+            setSign(data)
+          }
+        }
+      })
+  }, [user])
+
   return (
     <header className={styles.header}>
       <div className={styles.topnav}>
@@ -53,30 +95,41 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         </div>
         <div className={styles.menu}>
           <ul className={styles.pcMenu}>
-            <li className={styles.menuItem}>
-              {user ?
-                <Link to={`/user/${user.id}`} className={styles.link}>
-                  <div className={styles.mask}></div>
-                  <span>{user.nickname}</span>
-                </Link> :
+            {user ?
+              <>
+                <li className={styles.menuItem}>
+                  <Link to={`/user/${user.id}`} className={styles.link}>
+                    <div className={styles.mask}></div>
+                    <span>{user.nickname}</span>
+                  </Link>
+                </li>
+                <li className={styles.menuItem}>
+                  <a className={styles.link} onClick={onSign}>
+                    <div className={styles.mask}></div>
+                    <span>{sign ? '已签到' : '签到'}</span>
+                  </a>
+                </li>
+                {/* <li className={styles.menuItem}>
+                  <Link to='/settings' className={styles.link}>
+                    <div className={styles.mask}></div>
+                    <span>设置</span>
+                  </Link>
+                </li> */}
+                <li className={styles.menuItem}>
+                  <a className={styles.link} onClick={logout}>
+                    <div className={styles.mask}></div>
+                    <span>退出</span>
+                  </a>
+                </li>
+              </>
+              :
+              <li className={styles.menuItem}>
                 <Link to='/login' className={styles.link}>
                   <div className={styles.mask}></div>
                   <span>登录</span>
-                </Link>}
-            </li>
-            <li className={styles.menuItem}>
-              <Link to='/settings' className={styles.link}>
-                <div className={styles.mask}></div>
-                <span>设置</span>
-              </Link>
-            </li>
-            {user ?
-              <li className={styles.menuItem}>
-                <a className={styles.link} onClick={logout}>
-                  <div className={styles.mask}></div>
-                  <span>退出</span>
-                </a>
-              </li> : undefined}
+                </Link>
+              </li>
+            }
           </ul>
           <ul className={styles.mobileMenu}>
             {user ?

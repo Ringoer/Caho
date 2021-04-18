@@ -29,7 +29,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
         })
       }).then(result => {
         if (result.errno === 0) {
-          alert('提交新建版块请求成功！\n请等待管理员审核\n审核通过后会自动关注该版块')
+          alert('提交新建版块请求成功！\n请等待管理员审核')
           location.href = '/'
           return
         } else {

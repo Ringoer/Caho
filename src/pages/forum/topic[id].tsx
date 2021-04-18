@@ -21,13 +21,19 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
     setDefaultValue(`[@${userNickname}](/user/${userId}) `)
   }
 
-  function onReport(userId: number) {
-    request('/user/report', {
+  function onReport(replyId: number) {
+    if (!confirm('您真的要举报这个楼层吗')) {
+      return
+    }
+    request('/topic/report', {
       method: 'post',
-      body: JSON.stringify({ reportId: userId })
+      body: JSON.stringify({
+        replyId
+      })
     }).then(res => {
       if (res.errno === 0) {
         alert('举报成功')
+        location.reload()
       } else {
         alert('举报失败')
         console.error(res.errmsg)
@@ -76,8 +82,8 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                 {
                   type: 'breadcrumb/info',
                   payload: [
-                    { index: 1, pathname: `/forum/${forum.id}`, name: forum.forumName },
-                    { index: 2, pathname: location.pathname, name: data.title }
+                    { index: 1, pathname: `/forum/${forum.id}`, name: `[版块] ${forum.forumName}` },
+                    { index: 2, pathname: location.pathname, name: `[主题] ${data.title}` }
                   ]
                 })
             })

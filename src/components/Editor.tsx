@@ -21,7 +21,10 @@ export default (props: any) => {
           <input type="text" onChange={(event) => setTitle(event.target.value)} />
         </div>
       ) : undefined}
-      <p>正文</p>
+      <p>
+        <span>正文</span>&nbsp;
+        <span style={{ color: '#acacac' }}>支持Markdown文本</span>
+      </p>
       <Tabs onChange={() => fresh(Math.random())}>
         <Tab title="编辑" name="edit">
           <textarea

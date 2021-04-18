@@ -5,30 +5,36 @@ import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 
-let sign: NodeJS.Timeout
-
-export default connect(({ user, breadcrumb }: { user: any, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
-  const { user } = props
+export default connect(({ user, breadcrumb, login }: { user: any, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
+  const { user, login } = props
   const [forums, setForums] = useState<Forum[]>([])
   const [flag, setFlag] = useState(false)
 
   useEffect(() => {
     props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 0, pathname: '/', name: '首页' }] })
-    sign = setTimeout(() => setFlag(true), 1000)
   }, [])
   useEffect(() => {
+    if (!login) {
+      return
+    }
+    if (login === 'unlogin') {
+      setFlag(true)
+      return
+    }
     if (!user) {
       return
     }
-    clearTimeout(sign)
-    request('/forum/collect')
+
+    request(`/forum/collect?userid=${user.id}`)
       .then(result => {
         setFlag(true)
         if (result.errno === 0) {
-          setForums(result.data)
+          if (result.data) {
+            setForums(result.data)
+          }
         }
       })
-  }, [user])
+  }, [user, login])
   return (
     <div className={styles.content}>
       <Section color="#5CD1F0" title="关注">
