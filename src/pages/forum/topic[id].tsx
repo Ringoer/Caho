@@ -8,6 +8,7 @@ import Loading from '@/components/Loading'
 import Editor from '@/components/Editor'
 import { connect, history } from 'umi';
 import { changeTime } from '@/util/time';
+import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user, breadcrumb } = props
@@ -19,26 +20,32 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
 
   function onReply(userId: number, userNickname: string) {
     setDefaultValue(`[@${userNickname}](/user/${userId}) `)
+    scrollTo(0, 99999)
   }
 
   function onReport(replyId: number) {
-    if (!confirm('您真的要举报这个楼层吗')) {
-      return
-    }
-    request('/topic/report', {
-      method: 'post',
-      body: JSON.stringify({
-        replyId
+    Swal.confirm('您真的要举报这个楼层吗')
+      .then(res => {
+        if (!res) {
+          return
+        }
+        request('/topic/report', {
+          method: 'post',
+          body: JSON.stringify({
+            replyId
+          })
+        }).then(res => {
+          if (res.errno === 0) {
+            Swal.success('举报成功')
+              .then(() => {
+                location.reload()
+              })
+          } else {
+            Swal.error('举报失败')
+            console.error(res.errmsg)
+          }
+        })
       })
-    }).then(res => {
-      if (res.errno === 0) {
-        alert('举报成功')
-        location.reload()
-      } else {
-        alert('举报失败')
-        console.error(res.errmsg)
-      }
-    })
   }
 
   function onSubmit(content: string) {
@@ -53,10 +60,12 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       })
     }).then(result => {
       if (result.errno === 0) {
-        alert('回复主题成功！')
-        location.reload()
+        Swal.success('回复主题成功！')
+          .then(() => {
+            location.reload()
+          })
       } else {
-        alert(result.errmsg)
+        Swal.error(result.errmsg)
       }
     })
   }
@@ -65,7 +74,6 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
     request(`/topic/${topicId}`)
       .then(result => {
         const { data } = result
-        console.log(data)
         if (!data) {
           history.push('/404')
           return

@@ -100,21 +100,22 @@
             color:#018DFF;
           }
         }
-        >.isTop,>.part{
-          font-weight: normal;
-          width: 50px;
-          padding: 4px 8px;
-          border: none;
-          outline: none;
-          border-radius: 8px;
-          color: white;
-          margin-right: 8px;
-        }
-        >.isTop{
-          background-color: #5CD1F0;
-        }
-        >.part{
-          background-color: #95BE3E;
+        >.tags{
+          >.isTop,>.part{
+            display: inline-block;
+            font-weight: normal;
+            width: 50px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            color: white;
+            margin-right: 8px;
+          }
+          >.isTop{
+            background-color: #5CD1F0;
+          }
+          >.part{
+            background-color: #95BE3E;
+          }
         }
       }
       >.content{
@@ -196,9 +197,6 @@
         }
         >.title{
           grid-template-columns: auto 1fr;
-          >.part{
-            display: none;
-          }
         }
         >.content{
           display: block;

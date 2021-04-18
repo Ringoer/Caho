@@ -2,6 +2,7 @@ import styles from './register.less';
 import { useEffect, useRef, useState } from 'react';
 import { connect, history, Link } from 'umi';
 import request from '@/util/request';
+import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   useEffect(() => {
@@ -47,11 +48,13 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         })
       }).then(result => {
         if (result.errno === 0) {
-          alert('提交注册成功！\n请前往邮箱，点击注册链接以进行注册验证')
-          history.push('/login')
+          Swal.success('提交注册成功！\n请前往邮箱，点击注册链接以进行注册验证')
+            .then(() => {
+              history.push('/login')
+            })
           return
         } else {
-          alert(result.errmsg)
+          Swal.error(result.errmsg)
         }
       })
       setFlag(false)

@@ -9,6 +9,7 @@ import Pagination from '@/components/Pagination'
 import Loading from '@/components/Loading'
 import { changeTime } from '@/util/time';
 import Editor from '@/components/Editor';
+import { Swal } from '@/util/swal';
 
 const parts = {
   'share': '分享',
@@ -22,10 +23,10 @@ const parts = {
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user } = props
   const [topics, setTopics] = useState<Topic[]>([])
+  const [topicsCount, setTopicsCount] = useState(0)
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
-  const [selectedTab, setTab] = useState((history.location.query && history.location.query.page) || 'all')
   const [forum, setForum] = useState<Forum>()
-  const [collected, setCollected] = useState(false)
+  const [collected, setCollected] = useState<boolean>()
   const [sign, setSign] = useState(true)
 
   function collectForum() {
@@ -42,7 +43,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       if (result.errno === 0) {
         location.reload()
       } else {
-        alert(`操作失败，请先登录！`)
+        Swal.error(`操作失败，请先登录！`)
       }
     })
   }
@@ -60,8 +61,10 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       })
     }).then(result => {
       if (result.errno === 0) {
-        alert('发表主题成功！')
-        location.reload()
+        Swal.success('发表主题成功！')
+          .then(() => {
+            location.reload()
+          })
       }
     })
   }
@@ -71,7 +74,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       return
     }
     if (!collected) {
-      alert('请先关注本版块')
+      Swal.info('请先关注本版块')
       return
     }
     request('/forum/sign', {
@@ -81,7 +84,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       })
     }).then(result => {
       if (result.errno === 0) {
-        alert('签到成功！')
+        Swal.success('签到成功！')
         setSign(true)
       }
     })
@@ -103,13 +106,14 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         const collectForum = data.find(item => item.id === forum.id)
         if (collectForum) {
           setCollected(true)
+        } else {
+          setCollected(false)
         }
       })
   }, [user, forum])
 
   useEffect(() => {
     setPage((history.location.query && history.location.query.page) || 1)
-    setTab((history.location.query && history.location.query.tab) || 'all')
   }, [history.location.query])
 
   useEffect(() => {
@@ -126,21 +130,26 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         if (!(typeof target === 'number' && target % 1 === 0 && target > 0)) {
           history.push('?page=1')
         }
-        request(`/topic?forum=${result.data.id}&page=${selectedPage}&tab=${selectedTab}`)
+        request(`/topic?forumId=${result.data.id}&page=${selectedPage}`)
           .then(result => {
             const { data } = result
-            if (!data || data.length === 0) {
+            if (!data) {
               history.push('/404')
               return
             }
-            data.forEach((topic: Topic) => {
+            const { topics, topicsCount } = data
+            if (!topics || topics.length === 0) {
+              history.push('/404')
+              return
+            }
+            topics.forEach((topic: Topic) => {
               topic.lastReplyAt = changeTime(topic.lastReplyAt)
             })
-            console.log(data)
-            setTopics(data)
+            setTopics(topics)
+            setTopicsCount(+topicsCount)
           })
       })
-  }, [selectedPage, selectedTab])
+  }, [selectedPage])
 
   useEffect(() => {
     if (!user || !forum) {
@@ -169,15 +178,20 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                 alt="版块头像"
                 onClick={() => {
                   setPage(1)
-                  setTab('')
                 }}
               />
               <span className={styles.forumName}>{forum.forumName || '版块名称'}</span>
               <span className={styles.description}>{forum.description || '版块描述'}</span>
               <div className={styles.collect}>
-                <Button className={styles.collect} onClick={collectForum}>
-                  {collected ? '取消关注' : '关注'}
-                </Button>
+                {collected === undefined ? (
+                  <Button className={styles.collect}>
+                    加载中
+                  </Button>
+                ) : (
+                  <Button className={styles.collect} onClick={collectForum}>
+                    {collected ? '取消关注' : '关注'}
+                  </Button>
+                )}
               </div>
               <div className={styles.sign}>
                 {sign ?
@@ -203,13 +217,12 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                     <img src={topic.userAvatarUrl} alt="楼主头像" />
                   </Link>
                   <div className={styles.title}>
-                    {topic.top ?
-                      (<span className={styles.isTop}>置顶</span>) :
-                      undefined}
-                    <button className={styles.part} onClick={() => {
-                      setPage(1)
-                      setTab(topic.tab)
-                    }}>{parts[topic.tab] || '其它'}</button>
+                    <div className={styles.tags}>
+                      {topic.top ?
+                        (<span className={styles.isTop}>置顶</span>) :
+                        undefined}
+                      <span className={styles.part}>{parts[topic.tab] || '其它'}</span>
+                    </div>
                     <Link to={'/forum/topic/' + topic.id} className={styles.link} >
                       {topic.title}
                     </Link>
@@ -249,6 +262,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           </div>
           <div className={styles.pagination}>
             <Pagination
+              maxPage={topicsCount > 1 ? (topicsCount + 9) / 10 : undefined}
               selectedPage={selectedPage}
               action={(target: string) => {
                 history.push('?page=' + target)

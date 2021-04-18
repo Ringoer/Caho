@@ -2,6 +2,7 @@ import styles from './login.less';
 import { useEffect, useRef, useState } from 'react';
 import { connect, history } from 'umi';
 import request from '@/util/request';
+import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
   useEffect(() => {
@@ -40,7 +41,7 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
           history.push('/')
           return
         } else {
-          alert('用户名或密码错误！\n是否尚未确认邮箱的注册链接？')
+          Swal.error('用户名或密码错误！\n是否尚未确认邮箱的注册链接？')
           return
         }
       })

@@ -1,5 +1,6 @@
 // const baseUrl = 'http://localhost:7001'
-const baseUrl = '/api'
+const baseUrl = 'http://192.168.1.105:7001'
+// const baseUrl = '/api'
 
 interface Response {
   errno: number;
@@ -21,7 +22,7 @@ function myFetch(uri: string, options?: RequestInit): Promise<Response> {
     .then(
       res => res.json(),
       err => {
-        console.log(err)
+        console.error(err)
         const errResponse: Response = {
           errno: -1,
           data: undefined,

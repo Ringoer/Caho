@@ -10,6 +10,8 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
   const [topics, setTopics] = useState<Topic[]>([])
   const [replyTo, setReplyTo] = useState<Topic[]>([])
   const [profile, setProfile] = useState('暂无更多')
+  const [follows, setFollows] = useState<User[]>([])
+  const [fans, setFans] = useState<User[]>([])
   useEffect(() => {
     const userId = location.pathname.substring('/user/'.length)
     if (userId === '0') {
@@ -52,6 +54,16 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
         }
         setProfile(data.profile)
       })
+    } else if (tab === '关注') {
+      request(`${location.pathname}/follow`).then(result => {
+        const { data } = result
+        if (!data) {
+          return
+        }
+        const { follows, fans } = data
+        setFollows(follows)
+        setFans(fans)
+      })
     }
   }, [tab])
   return (
@@ -68,7 +80,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                       <Link to={`/forum/${forum.id}`}>
                         <span>{forum.forumName}&nbsp;&nbsp;</span>
                         <span className={styles.exp}>{forum.exp || 0}&nbsp;经验&nbsp;&nbsp;</span>
-                        <span className={styles.level}>{((forum.exp || 0) / 100 + 1).toFixed()}&nbsp;级</span>
+                        <span className={styles.level}>{parseInt(((forum.exp || 0) / 100 + 1).toString())}&nbsp;级</span>
                       </Link>
                     </li>
                   ))}
@@ -117,6 +129,37 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
           </div>
         </div>
       ) : undefined}
+      {tab === '关注' ? (
+        <div className={styles.collect}>
+          <div className={styles.first}>
+            <Section title="关注">
+              {follows.length === 0 ? '暂无更多' : (
+                <ul>
+                  {follows.map(follow => (
+                    <li key={follow.id}>
+                      <Link to={`/user/${follow.id}`}>{follow.nickname}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Section>
+          </div>
+          <div className="_"></div>
+          <div className={styles.second}>
+            <Section color="#FFCF4B" title="粉丝">
+              {fans.length === 0 ? '暂无更多' : (
+                <ul>
+                  {fans.map(fan => (
+                    <li key={fan.id}>
+                      <Link to={`/user/${fan.id}`}>{fan.nickname}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </Section>
+          </div>
+        </div>
+      ) : undefined}
       {tab === '动态' ? (
         <div className={styles.dynamics}>
           <p>这里是{tab}功能的子页面，敬请期待！</p>
@@ -124,11 +167,6 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
       ) : undefined}
       {tab === '相册' ? (
         <div className={styles.album}>
-          <p>这里是{tab}功能的子页面，敬请期待！</p>
-        </div>
-      ) : undefined}
-      {tab === '收藏' ? (
-        <div className={styles.colloect}>
           <p>这里是{tab}功能的子页面，敬请期待！</p>
         </div>
       ) : undefined}

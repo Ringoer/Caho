@@ -3,6 +3,7 @@ import { connect, history, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 import Loading from './Loading';
+import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
   const { user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string } = props
@@ -19,16 +20,22 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
   }
 
   function onSign() {
-    if (!user || sign) {
+    if (sign) {
+      Swal.info('您今天已经签过到了！')
+      return
+    }
+    if (!user) {
       return
     }
     request('/score/sign', {
       method: 'post',
     }).then(result => {
       if (result.errno === 0) {
-        alert('签到成功！')
-        setSign(true)
-        location.reload()
+        Swal.success('签到成功！')
+          .then(() => {
+            setSign(true)
+            location.reload()
+          })
       }
     })
   }

@@ -6,7 +6,7 @@ import request from '@/util/request';
 
 import Tab from './[id]'
 
-const options = ['主页', '资料', '动态', '相册', '收藏', '留言板']
+const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
 
 export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
   const [option, setOption] = useState(options[0])

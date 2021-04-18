@@ -4,28 +4,31 @@ import Bubble from './Bubble'
 import Button from './Button'
 import { Link } from 'umi'
 import request from '@/util/request'
+import { Swal } from '@/util/swal'
 
 export default (props: any) => {
   const { reply, index, onReply, onReport }: { reply: Reply, index: number, onReply: Function, onReport: Function } = props
   const [hide, setHide] = useState(false)
 
   function follow() {
-    if (!confirm('您真的要关注该用户吗')) {
-      return
-    }
-    request('/user/follow', {
-      method: 'post',
-      body: JSON.stringify({
-        followId: reply.userId
+    Swal.confirm('您真的要关注该用户吗')
+      .then((res) => {
+        if (!res) {
+          return
+        }
+        request('/user/follow', {
+          method: 'post',
+          body: JSON.stringify({
+            followId: reply.userId
+          })
+        }).then(res => {
+          if (res.errno === 0) {
+            Swal.success('关注成功！')
+          } else {
+            Swal.error(`关注失败！\n原因：${res.errmsg}`)
+          }
+        })
       })
-    }).then(res => {
-      if (res.errno === 0) {
-        alert('关注成功！')
-      } else {
-        alert(`关注失败！\n原因：${res.errmsg}`)
-        console.error(res.errmsg)
-      }
-    })
   }
 
   return (
@@ -64,12 +67,10 @@ export default (props: any) => {
           className={[styles.content, hide ? styles.hide : null].join(' ')}
           dangerouslySetInnerHTML={{ __html: reply.content }}
         />
-        {index === 1 ? undefined : (
-          <div className={styles.replyAction}>
-            <Button type='plain' onClick={() => onReply(reply.userId, reply.userNickname)}>回复</Button>
-            <Button type='plain' onClick={() => onReport(reply.id)}>举报</Button>
-          </div>
-        )}
+        <div className={styles.replyAction}>
+          <Button type='plain' onClick={() => onReply(reply.userId, reply.userNickname)}>回复</Button>
+          {index === 1 ? undefined : <Button type='plain' onClick={() => onReport(reply.id)}>举报</Button>}
+        </div>
       </Bubble>
     </div>
   )
