@@ -25,7 +25,7 @@ export default connect(({ user, breadcrumb, login }: { user: any, breadcrumb: Br
       return
     }
 
-    request(`/forum/collect?userid=${user.id}`)
+    request(`/forum/collect?userId=${user.id}`)
       .then(result => {
         setFlag(true)
         if (result.errno === 0) {

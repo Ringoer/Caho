@@ -1,0 +1,20 @@
+.profile{
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  >.first{
+    margin-right: 20px;
+  }
+}
+@media (max-width: 800px) {
+  .profile{
+    grid-template-columns: 1fr;
+    >.first{
+      margin-right: 0;
+    }
+    >.first,>.second{
+      >*{
+        margin-right: 20px;
+      }
+    }
+  }
+}

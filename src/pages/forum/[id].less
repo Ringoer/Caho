@@ -86,7 +86,7 @@
         grid-area: title;
         position: relative;
         display: grid;
-        grid-template-columns: auto auto 1fr;
+        grid-template-columns: auto 1fr;
         >.link{
           text-overflow: ellipsis;
           overflow: hidden;
@@ -98,23 +98,6 @@
           &:hover{
             transition: color 250ms;
             color:#018DFF;
-          }
-        }
-        >.tags{
-          >.isTop,>.part{
-            display: inline-block;
-            font-weight: normal;
-            width: 50px;
-            padding: 4px 8px;
-            border-radius: 8px;
-            color: white;
-            margin-right: 8px;
-          }
-          >.isTop{
-            background-color: #5CD1F0;
-          }
-          >.part{
-            background-color: #95BE3E;
           }
         }
       }
@@ -179,6 +162,11 @@
     }
     >.topics{
       padding: 4px;
+      >.noteWrapper{
+        border-radius:16px;
+        margin-bottom: 6px;
+        background: white;
+      }
       .topic{
         margin-top: 8px;
         grid-template-columns: auto 1fr;

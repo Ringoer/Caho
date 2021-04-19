@@ -1,18 +1,47 @@
 @color: #5CD1F0;
 .tabs{
   position: relative;
-  >.indicator{
-    position: absolute;
-    top: 24px;
-    border: 2px solid @color;
-    transition: all 250ms;
+  &.row{
+    >.menu{
+      position: relative;
+      display: flex;
+      margin-bottom: 16px;
+      >.indicator{
+        position: absolute;
+        bottom: -4px;
+        border: 2px solid @color;
+        transition: all 250ms;
+      }
+      >.menuItem{
+        padding: 0 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
   }
-  >.menu{
-    display: flex;
-    margin-bottom: 16px;
-    >.menuItem{
-      padding: 0 8px;
-      cursor: pointer;
+  &.column{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    >.menu{
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-right: 16px;
+      >.indicator{
+        position: absolute;
+        right: -4px;
+        border: 2px solid @color;
+        transition: all 250ms;
+      }
+      >.menuItem{
+        padding: 4px 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 }

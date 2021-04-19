@@ -1,17 +1,11 @@
 .main{
   display: flex;
   width: 1240px;
-  @media (max-width:1300px){
-    width: auto;
-  }
   >.sidebar{
-    @media (max-width:1300px) {
-      display: none;
-    }
     margin: 0 20px;
     width: 300px;
     >*{
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       background: white;
     }
     .login{
@@ -36,13 +30,27 @@
     }
     .recommends{
       margin: 0;
-      padding: 0 8px;
       >.recommend{
-        margin: 8px 0;
         &:hover{
           color: #008CFF;
-          text-decoration: underline;
         }
+      }
+    }
+  }
+}
+@media (max-width:1300px){
+  .main{
+    width: auto;
+    flex-direction: column-reverse;
+    >.sidebar{
+      margin: 0;
+      width: 100%;
+      >*{
+        margin: 0;
+      }
+      display: none;
+      &.index{
+        display: block;
       }
     }
   }

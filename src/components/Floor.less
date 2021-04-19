@@ -25,6 +25,20 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
+      >.authorNicknameWrapper{
+        >.authorNickname{
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+      }
+      >.tags{
+        margin-top: 8px;
+        display: flex;
+        justify-content: center;
+      }
       >.mobileFloorInfo{
         display: none;
         color: #ACACAC;
@@ -103,7 +117,25 @@
         }
       }
       >.authorInfo{
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas: 
+        "nickname tags"
+        "floorInfo floorInfo";
+        >.authorNicknameWrapper{
+          grid-area: nickname;
+        }
+        >.tags{
+          grid-area: tags;
+          margin-top: 0;
+          >*{
+            margin-left: 4px;
+            padding: 0 8px;
+          }
+        }
         >.mobileFloorInfo{
+          grid-area: floorInfo;
           display: block;
         }
       }

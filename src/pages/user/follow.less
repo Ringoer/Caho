@@ -1,0 +1,92 @@
+.collect{
+  >.row{
+    display: none;
+  }
+  .follow{
+    width: 100%;
+    >*{
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas: 
+      "avatar nickname btn"
+      "avatar signature btn";
+      >.img{
+        grid-area: avatar;
+        margin-right: 8px;
+        border-radius: 50%;
+        >img{
+          height: 80px;
+          width: 80px;
+        }
+      }
+      >.nickname,>.signature{
+        padding: 8px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+      >.nickname{
+        grid-area: nickname;
+        color: rgb(251, 114, 153);
+      }
+      >.signature{
+        grid-area: signature;
+      }
+      >.action{
+        margin-right: 16px;
+        grid-area: btn;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
+@media (max-width:500px) {
+  .collect{
+    >.row{
+      display: block;
+    }
+    >.column{
+      display: none;
+    }
+    .follow{
+      >*{
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: 1fr;
+        grid-template-areas: 
+        "avatar nickname btn";
+        >.img{
+          grid-area: avatar;
+          margin-right: 8px;
+          border-radius: 50%;
+          >img{
+            height: 80px;
+            width: 80px;
+          }
+        }
+        >.nickname,>.signature{
+          padding: 8px;
+        }
+        >.nickname{
+          grid-area: nickname;
+        }
+        >.signature{
+          grid-area: signature;
+          display: none;
+        }
+        >.action{
+          margin-right: 16px;
+          grid-area: btn;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+  }
+}

@@ -23,7 +23,7 @@ export default defineConfig({
       },
       {
         exact: false, path: '/user', component: '@/pages/user/_layout', routes: [
-          { exact: true, path: '/user/:id', component: '@/pages/user/[id]' },
+          { exact: true, path: '/user/:id', component: '@/pages/user/_layout' },
           { component: '@/pages/404' },
         ]
       },

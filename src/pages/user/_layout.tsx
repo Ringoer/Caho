@@ -4,14 +4,26 @@ import { connect, history } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 
-import Tab from './[id]'
+import Index from './index';
+import Profile from './profile';
+import Follow from './follow';
 
 const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
 
 export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
   const [option, setOption] = useState(options[0])
   const [user, setUser] = useState<User>()
+  const [userId, setUserId] = useState<string>()
   useEffect(() => {
+    const userId = location.pathname.substring('/user/'.length)
+    if (userId === '0') {
+      history.push('/404')
+      return
+    }
+    if (!Number.isInteger(+userId) && +userId > 0) {
+      return
+    }
+    setUserId(userId)
     request(location.pathname)
       .then(result => {
         const { data }: { data: User } = result
@@ -19,7 +31,6 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
           history.push('/404')
           return
         }
-        console.log(data)
         setUser(data)
         props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: `[用户] ${data.username}` }] })
       })
@@ -34,10 +45,10 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
             </div>
             <div className={styles.userInfo}>
               <img src={user.avatarUrl} alt="用户头像" className={styles.avatar} />
-              <p className={styles.nickname}>{user.nickname}</p>
-              <p className={styles.signature}>
+              <span className={styles.nickname}>{user.nickname}</span>
+              <span className={styles.signature}>
                 {user.signature || '这个人很懒，什么也没写...'}
-              </p>
+              </span>
             </div>
             <ul className={styles.options}>
               {options.map(item => (
@@ -47,7 +58,36 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
               ))}
             </ul>
           </div>
-          <Tab tab={option} />
+          <div className={styles.content}>
+            {userId ? (
+              <>
+                {option === '主页' ? (
+                  <Index userId={location.pathname.substring('/user/'.length)} />
+                ) : undefined}
+                {option === '资料' ? (
+                  <Profile userId={location.pathname.substring('/user/'.length)} />
+                ) : undefined}
+                {option === '关注' ? (
+                  <Follow userId={location.pathname.substring('/user/'.length)} />
+                ) : undefined}
+                {option === '动态' ? (
+                  <div className={styles.dynamics}>
+                    <p>这里是{option}功能的子页面，敬请期待！</p>
+                  </div>
+                ) : undefined}
+                {option === '相册' ? (
+                  <div className={styles.album}>
+                    <p>这里是{option}功能的子页面，敬请期待！</p>
+                  </div>
+                ) : undefined}
+                {option === '留言板' ? (
+                  <div className={styles.board}>
+                    <p>这里是{option}功能的子页面，敬请期待！</p>
+                  </div>
+                ) : undefined}
+              </>
+            ) : undefined}
+          </div>
         </>
       )}
     </div>

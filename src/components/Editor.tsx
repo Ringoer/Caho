@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from './Editor.less'
 import ReactMarkdown from 'react-markdown';
 import Button from './Button'
@@ -6,12 +6,10 @@ import Tabs from './Tabs'
 import Tab from './Tab'
 
 export default (props: any) => {
-  const { disabled, description, hasTitle, onSubmit, defaultValue } = props
+  const { disabled, description, hasTitle, onSubmit, defaultValue, wordsLimit = 4095 } = props
   const [title, setTitle] = useState('')
-  const [text, setText] = useState(defaultValue || '')
-  const [_, fresh] = useState(0)
+  const [text, setText] = useState<string>(defaultValue || '')
   const textarea = useRef<HTMLTextAreaElement>(null)
-  useEffect(() => fresh(Math.random()), [])
   return (
     <div className={styles.editor}>
       <p className={styles.description}>{description}</p>
@@ -22,10 +20,13 @@ export default (props: any) => {
         </div>
       ) : undefined}
       <p>
-        <span>正文</span>&nbsp;
+        <span>正文</span>
+        &nbsp;
         <span style={{ color: '#acacac' }}>支持Markdown文本</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>您还可以输入&nbsp;{wordsLimit - text.split('\n').join('\n\n').length}&nbsp;字</span>
       </p>
-      <Tabs onChange={() => fresh(Math.random())}>
+      <Tabs>
         <Tab title="编辑" name="edit">
           <textarea
             className={styles.textarea}

@@ -3,11 +3,14 @@ import styles from './Tabs.less'
 import Tab from './Tab'
 
 export default (props: any) => {
-  const { selected, onChange } = props
+  const { selected, direction = 'row', itemWidth, itemHeight } = props
   const [flag, setFlag] = useState(false)
   const [tabs, setTabs] = useState<any[]>([])
   const [target, setTarget] = useState<string>(selected)
   const li = useRef(null)
+
+  const [_, fresh] = useState(0)
+
   useEffect(() => {
     let tabs = props.children
     if (!(tabs instanceof Array)) {
@@ -31,25 +34,41 @@ export default (props: any) => {
     }
     setTabs(tabs)
     setFlag(true)
+    fresh(Math.random())
   }, [target])
+
   return (
-    <div className={styles.tabs} onClick={onChange}>
+    <div className={[styles.tabs, direction === 'row' ? styles.row : styles.column].join(' ')}>
       {flag ? (
         <>
-          <div className={styles.indicator}
-            style={{
-              //@ts-ignore
-              width: li.current ? li.current.offsetWidth : 'auto',
-              //@ts-ignore
-              left: li.current ? li.current.offsetLeft : 'auto'
-            }} />
           <ul className={styles.menu}>
+            {direction === 'row' ? (
+              <li className={styles.indicator}
+                style={{
+                  //@ts-ignore
+                  width: li.current ? li.current.offsetWidth : 'auto',
+                  //@ts-ignore
+                  left: li.current ? li.current.offsetLeft : 'auto'
+                }} />
+            ) : (
+              <li className={styles.indicator}
+                style={{
+                  //@ts-ignore
+                  height: li.current ? li.current.offsetHeight : 'auto',
+                  //@ts-ignore
+                  top: li.current ? li.current.offsetTop : 'auto'
+                }} />
+            )}
             {tabs.map((tab: any) => (
               <li
                 key={tab.props.name}
                 className={styles.menuItem}
                 onClick={() => setTarget(tab.props.name)}
                 ref={tab.props.name === target ? li : null}
+                style={{
+                  width: itemWidth ? itemWidth : 'auto',
+                  height: itemHeight ? itemHeight : 'auto'
+                }}
               >
                 {tab.props.title}
               </li>

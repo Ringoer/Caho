@@ -24,7 +24,6 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
         Swal.success('签到成功！')
           .then(() => {
             setSign(true)
-            location.href = '/'
           })
       }
     })

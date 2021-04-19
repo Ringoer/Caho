@@ -48,6 +48,20 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       })
   }
 
+  function onCheckOwner(flag: boolean) {
+    if (!topic || !(topic.replies instanceof Array)) {
+      return
+    }
+    const data: any[] = []
+    data.push(topic)
+    data.push(...topic.replies)
+    if (flag) {
+      setFloors(data.filter(floor => floor.userId === topic.userId))
+    } else {
+      setFloors(data)
+    }
+  }
+
   function onSubmit(content: string) {
     if (!topic) {
       return
@@ -122,10 +136,12 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                 index={index + 10 * +selectedPage - 9}
                 onReply={onReply}
                 onReport={onReport}
+                onCheckOwner={onCheckOwner}
+                ownerId={floors[0].userId}
               />
             ))
           }
-          <Pagination selectedPage={selectedPage} maxPage={parseInt(((floors.length + 9) / 10).toString()) || -1} action={(target: string) => setPage(target)} />
+          <Pagination selectedPage={selectedPage} count={floors.length} action={(target: string) => setPage(target)} />
           <br />
           <Editor
             disabled={

@@ -15,7 +15,10 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
     request('/user/logout', {
       method: 'post'
     }).then(() => {
-      history.push('/')
+      Swal.info('您已退出')
+        .then(() => {
+          history.push('/')
+        })
     })
   }
 
@@ -34,7 +37,6 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
         Swal.success('签到成功！')
           .then(() => {
             setSign(true)
-            location.reload()
           })
       }
     })
@@ -51,7 +53,7 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
           if (!data) {
             return
           }
-          request(`/score?userid=${data.id}`)
+          request(`/score?userId=${data.id}`)
             .then(result => {
               if (result.errno === 0) {
                 const { data: score } = result

@@ -4,6 +4,7 @@ import Loading from '@/components/Loading'
 import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
+import Note from '@/components/Note';
 
 export default connect(({ user, login }: { user: User, login: string }) => ({ user, login }))((props: any) => {
   const { user, login } = props
@@ -34,7 +35,7 @@ export default connect(({ user, login }: { user: User, login: string }) => ({ us
   return (
     <div className={styles.main}>
       {props.children}
-      <div className={styles.sidebar}>
+      <div className={[styles.sidebar, location.pathname === '/forum' ? styles.index : ''].join(' ')}>
         {flag ? (
           <>
             <Section color="#FFCF4B" title="个人信息">
@@ -66,7 +67,11 @@ export default connect(({ user, login }: { user: User, login: string }) => ({ us
                   <li>暂无推荐内容</li> :
                   recommends.map(recommend => (
                     <li className={styles.recommend} key={recommend.id}>
-                      <Link to={`/forum/topic/${recommend.id}`}>{recommend.title}</Link>
+                      <Link to={`/forum/topic/${recommend.id}`}>
+                        <Note>
+                          {recommend.title}
+                        </Note>
+                      </Link>
                     </li>
                   ))}
               </ul>

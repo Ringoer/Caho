@@ -10,6 +10,7 @@ import Loading from '@/components/Loading'
 import { changeTime } from '@/util/time';
 import Editor from '@/components/Editor';
 import { Swal } from '@/util/swal';
+import Label from '@/components/Label';
 
 const parts = {
   'share': '分享',
@@ -94,7 +95,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
     if (!user) {
       return
     }
-    request(`/forum/collect?userid=${user.id}`)
+    request(`/forum/collect?userId=${user.id}`)
       .then(result => {
         if (!forum) {
           return
@@ -211,58 +212,60 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         <>
           <div className={styles.topics}>
             {topics.map((topic: Topic) => (
-              <Note key={topic.id}>
-                <div className={styles.topic}>
-                  <Link to={'/user/' + topic.userId} className={styles.img}>
-                    <img src={topic.userAvatarUrl} alt="楼主头像" />
-                  </Link>
-                  <div className={styles.title}>
-                    <div className={styles.tags}>
-                      {topic.top ?
-                        (<span className={styles.isTop}>置顶</span>) :
-                        undefined}
-                      <span className={styles.part}>{parts[topic.tab] || '其它'}</span>
+              <div className={styles.noteWrapper} key={topic.id}>
+                <Note>
+                  <div className={styles.topic}>
+                    <Link to={'/user/' + topic.userId} className={styles.img}>
+                      <img src={topic.userAvatarUrl} alt="楼主头像" />
+                    </Link>
+                    <div className={styles.title}>
+                      <div className={styles.tags}>
+                        {topic.top ?
+                          (<Label>置顶</Label>) :
+                          undefined}
+                        <Label backgroundColor='#95BE3E'>{parts[topic.tab] || '其它'}</Label>
+                      </div>
+                      <Link to={'/forum/topic/' + topic.id} className={styles.link} >
+                        {topic.title}
+                      </Link>
                     </div>
-                    <Link to={'/forum/topic/' + topic.id} className={styles.link} >
-                      {topic.title}
-                    </Link>
-                  </div>
-                  <div className={styles.content} dangerouslySetInnerHTML={{ __html: topic.content }} />
-                  <div className={styles.date}>
-                    <Link to={'/user/' + topic.userId}>
-                      <svg className="icon" aria-hidden="true">
-                        <use xlinkHref="#icon-person"></use>
-                      </svg>
-                      {topic.userNickname}
-                    </Link>
-                    <span>
-                      <svg className="icon" aria-hidden="true">
-                        <use xlinkHref="#icon-date"></use>
-                      </svg>
+                    <div className={styles.content} dangerouslySetInnerHTML={{ __html: topic.content }} />
+                    <div className={styles.date}>
+                      <Link to={'/user/' + topic.userId}>
+                        <svg className="icon" aria-hidden="true">
+                          <use xlinkHref="#icon-person"></use>
+                        </svg>
+                        {topic.userNickname}
+                      </Link>
+                      <span>
+                        <svg className="icon" aria-hidden="true">
+                          <use xlinkHref="#icon-date"></use>
+                        </svg>
                   回复于{topic.lastReplyAt}
-                    </span>
+                      </span>
+                    </div>
+                    <div className={styles.comment}>
+                      <span>
+                        <svg className="icon" aria-hidden="true">
+                          <use xlinkHref="#icon-comment"></use>
+                        </svg>
+                        {topic.replyCount}
+                      </span>
+                      <span>
+                        <svg className="icon" aria-hidden="true">
+                          <use xlinkHref="#icon-view"></use>
+                        </svg>
+                        {topic.visitCount}
+                      </span>
+                    </div>
                   </div>
-                  <div className={styles.comment}>
-                    <span>
-                      <svg className="icon" aria-hidden="true">
-                        <use xlinkHref="#icon-comment"></use>
-                      </svg>
-                      {topic.replyCount}
-                    </span>
-                    <span>
-                      <svg className="icon" aria-hidden="true">
-                        <use xlinkHref="#icon-view"></use>
-                      </svg>
-                      {topic.visitCount}
-                    </span>
-                  </div>
-                </div>
-              </Note>
+                </Note>
+              </div>
             ))}
           </div>
           <div className={styles.pagination}>
             <Pagination
-              maxPage={topicsCount > 1 ? (topicsCount + 9) / 10 : undefined}
+              count={topicsCount}
               selectedPage={selectedPage}
               action={(target: string) => {
                 history.push('?page=' + target)
