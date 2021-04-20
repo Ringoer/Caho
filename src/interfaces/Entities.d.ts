@@ -20,10 +20,10 @@ interface Forum {
 }
 interface Message {
   id: number;
-  sendTime: string;
   title: string;
   content: string;
   type: string;
+  tab: number;
   beRead: boolean;
   fromId: number;
   fromUsername: string;
@@ -33,6 +33,14 @@ interface Message {
   toNickname: string;
   gmtCreate: string;
   gmtModified: string;
+  beDeleted: boolean;
+}
+interface Picture {
+  id: number;
+  userId: number;
+  url: string;
+  gmtCreate: Date;
+  gmtModified: Date;
   beDeleted: boolean;
 }
 interface Reply {
@@ -65,6 +73,7 @@ interface Topic {
   gmtCreate: string;
   gmtModified: string;
   beDeleted: boolean;
+  forum?: Forum;
 }
 interface User {
   id: number;

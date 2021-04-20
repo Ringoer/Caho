@@ -118,6 +118,12 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
                     <span>{sign ? '已签到' : '签到'}</span>
                   </a>
                 </li>
+                <li className={styles.menuItem}>
+                  <Link to='/message' className={styles.link}>
+                    <div className={styles.mask}></div>
+                    <span>消息</span>
+                  </Link>
+                </li>
                 {/* <li className={styles.menuItem}>
                   <Link to='/settings' className={styles.link}>
                     <div className={styles.mask}></div>

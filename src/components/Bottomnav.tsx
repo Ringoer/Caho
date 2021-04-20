@@ -62,13 +62,13 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
               </svg>
             </a>
           </li>
-          {/* <li className={styles.menuItem}>
+          <li className={styles.menuItem}>
             <Link to="/message" className={styles.link}>
               <svg className="icon" aria-hidden="true">
                 <use xlinkHref="#icon-ring"></use>
               </svg>
             </Link>
-          </li> */}
+          </li>
           <li className={styles.menuItem}>
             <Link to={user ? `/user/${user.id}` : '/login'} className={styles.link}>
               <svg className="icon" aria-hidden="true">

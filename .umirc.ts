@@ -22,8 +22,10 @@ export default defineConfig({
         ]
       },
       {
-        exact: false, path: '/user', component: '@/pages/user/_layout', routes: [
-          { exact: true, path: '/user/:id', component: '@/pages/user/_layout' },
+        exact: false, path: '/message', component: '@/pages/message/_layout', routes: [
+          { exact: true, path: '/message', component: '@/pages/message/index' },
+          { exact: true, path: '/message/add', component: '@/pages/message/add' },
+          { exact: true, path: '/message/:id', component: '@/pages/message/[id]' },
           { component: '@/pages/404' },
         ]
       },
@@ -33,6 +35,7 @@ export default defineConfig({
           { component: '@/pages/404' },
         ]
       },
+      { exact: false, path: '/user/:id', component: '@/pages/user/_layout' },
       { exact: true, path: '/login', component: '@/pages/action/login' },
       { exact: true, path: '/register', component: '@/pages/action/register' },
       { exact: true, path: '/register/verify', component: '@/pages/action/register.verify' },

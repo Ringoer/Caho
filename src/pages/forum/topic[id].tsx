@@ -70,7 +70,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       method: 'post',
       body: JSON.stringify({
         topicId: topic.id,
-        content: content.split('\n').join('\n\n')
+        content
       })
     }).then(result => {
       if (result.errno === 0) {
@@ -87,29 +87,24 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   useEffect(() => {
     request(`/topic/${topicId}`)
       .then(result => {
-        const { data } = result
-        if (!data) {
+        if (result.errno !== 0) {
           history.push('/404')
           return
         }
-        if (breadcrumb.length < 2) {
-          request(`/forum/${data.forumId}`)
-            .then(result => {
-              const { data: forum }: { data: Forum } = result
-              if (!forum) {
-                history.push('/404')
-                return
-              }
-              props.dispatch(
-                {
-                  type: 'breadcrumb/info',
-                  payload: [
-                    { index: 1, pathname: `/forum/${forum.id}`, name: `[版块] ${forum.forumName}` },
-                    { index: 2, pathname: location.pathname, name: `[主题] ${data.title}` }
-                  ]
-                })
-            })
+        const { data } = result
+        if (!data || !data.forum) {
+          history.push('/404')
+          return
         }
+        const { forum } = data
+        props.dispatch(
+          {
+            type: 'breadcrumb/info',
+            payload: [
+              { index: 1, pathname: `/forum/${forum.id}`, name: `[版块] ${forum.forumName}` },
+              { index: 2, pathname: location.pathname, name: `[主题] ${data.title}` }
+            ]
+          })
         data.gmtCreate = changeTime(data.gmtCreate)
         data.replies = (data.replies || []).map((reply: Reply) => {
           reply.gmtCreate = changeTime(reply.gmtCreate)
@@ -143,17 +138,27 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           }
           <Pagination selectedPage={selectedPage} count={floors.length} action={(target: string) => setPage(target)} />
           <br />
-          <Editor
-            disabled={
-              user ? (
-                topic.forumId === 1 ? true : false
-              ) : true
-            }
-            key={defaultValue}
-            defaultValue={defaultValue}
-            description='发表新回复'
-            onSubmit={onSubmit}
-          />
+          <div style={{
+            backgroundColor: 'white',
+            paddingTop: '12px',
+            borderRadius: '4px'
+          }}>
+            <p style={{
+              fontSize: '20px',
+              fontWeight: 'bold',
+              marginLeft: '12px',
+            }}>发表新回复</p>
+            <Editor
+              disabled={
+                user ? (
+                  topic.forumId === 1 ? true : false
+                ) : true
+              }
+              key={defaultValue}
+              defaultValue={defaultValue}
+              onSubmit={onSubmit}
+            />
+          </div>
         </>
       )}
     </div>

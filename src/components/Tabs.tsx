@@ -3,7 +3,7 @@ import styles from './Tabs.less'
 import Tab from './Tab'
 
 export default (props: any) => {
-  const { selected, direction = 'row', itemWidth, itemHeight } = props
+  const { selected, direction = 'row', itemWidth, itemHeight, onChange } = props
   const [flag, setFlag] = useState(false)
   const [tabs, setTabs] = useState<any[]>([])
   const [target, setTarget] = useState<string>(selected)
@@ -35,6 +35,9 @@ export default (props: any) => {
     setTabs(tabs)
     setFlag(true)
     fresh(Math.random())
+    if (target && typeof onChange === 'function') {
+      onChange(target)
+    }
   }, [target])
 
   return (

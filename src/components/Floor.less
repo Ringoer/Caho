@@ -23,8 +23,9 @@
     >.authorInfo{
       grid-area: author;
       display: flex;
-      justify-content: center;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
       >.authorNicknameWrapper{
         >.authorNickname{
           text-overflow: ellipsis;
@@ -78,9 +79,15 @@
     a{
       color: #4ac4e6;
     }
+    ul{
+      list-style: disc;
+    }
+    ol{
+      list-style: decimal;
+    }
   }
   .hide{
-    height: 212px;
+    height: 228px;
   }
   .replyAction{
     position: absolute;

@@ -7,6 +7,7 @@ import request from '@/util/request';
 import Index from './index';
 import Profile from './profile';
 import Follow from './follow';
+import Album from './album';
 
 const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
 
@@ -76,9 +77,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
                   </div>
                 ) : undefined}
                 {option === '相册' ? (
-                  <div className={styles.album}>
-                    <p>这里是{option}功能的子页面，敬请期待！</p>
-                  </div>
+                  <Album userId={location.pathname.substring('/user/'.length)} />
                 ) : undefined}
                 {option === '留言板' ? (
                   <div className={styles.board}>

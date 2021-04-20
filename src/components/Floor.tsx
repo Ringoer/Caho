@@ -7,6 +7,8 @@ import request from '@/util/request'
 import { Swal } from '@/util/swal'
 import Label from './Label'
 
+import 'github-markdown-css/github-markdown.css'
+
 export default (props: any) => {
   const { reply, index, onReply, onReport, onCheckOwner, ownerId }: { reply: Reply, index: number, onReply: Function, onReport: Function, onCheckOwner: Function, ownerId: number } = props
   const [hide, setHide] = useState(false)
@@ -69,8 +71,8 @@ export default (props: any) => {
           <span className={styles.sign}>{index + '#'}</span>
           <span className={styles.createTime}>发表于：{reply.gmtCreate}</span>
         </div>
-        <div
-          className={[styles.content, hide ? styles.hide : null].join(' ')}
+        <article
+          className={[styles.content, 'markdown-body', hide ? styles.hide : null].join(' ')}
           dangerouslySetInnerHTML={{ __html: reply.content }}
         />
         <div className={styles.replyAction}>

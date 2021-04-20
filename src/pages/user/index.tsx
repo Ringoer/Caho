@@ -15,43 +15,48 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
   const [_, fresh] = useState(0)
 
   useEffect(() => {
-    if (userId === '0') {
-      return
-    }
-    if (!Number.isInteger(+userId)) {
-      return
+    if (userId === '0' || !Number.isInteger(+userId)) {
+      setForums([])
+      setTopics([])
+      setReplyTo([])
     }
     request(`/forum/collect?userId=${userId}`)
       .then(result => {
-        if (result.errno === 0) {
-          const { data } = result
-          if (!data) {
-            setForums([])
-          } else {
-            setForums(data)
-          }
+        if (result.errno !== 0) {
+          setForums([])
+          return
+        }
+        const { data } = result
+        if (!data) {
+          setForums([])
+        } else {
+          setForums(data)
         }
       })
     request(`/topic/latest?userId=${userId}`)
       .then(result => {
-        if (result.errno === 0) {
-          const { data } = result
-          if (!data) {
-            setTopics([])
-          } else {
-            setTopics(data)
-          }
+        if (result.errno !== 0) {
+          setTopics([])
+          return
+        }
+        const { data } = result
+        if (!data) {
+          setTopics([])
+        } else {
+          setTopics(data)
         }
       })
     request(`/topic/reply/latest?userId=${userId}`)
       .then(result => {
-        if (result.errno === 0) {
-          const { data } = result
-          if (!data) {
-            setReplyTo([])
-          } else {
-            setReplyTo(data)
-          }
+        if (result.errno !== 0) {
+          setReplyTo([])
+          return
+        }
+        const { data } = result
+        if (!data) {
+          setReplyTo([])
+        } else {
+          setReplyTo(data)
         }
       })
   }, [])

@@ -87,6 +87,11 @@
         position: relative;
         display: grid;
         grid-template-columns: auto 1fr;
+        >.tags{
+          >*{
+            margin-right: 4px;
+          }
+        }
         >.link{
           text-overflow: ellipsis;
           overflow: hidden;
@@ -131,6 +136,27 @@
   >.pagination{
     padding: 16px;
     padding-top: 0;
+  }
+  >.editorWrapper{
+    background-color: white;
+    padding-top: 12px;
+    >.editorTitleWrapper{
+      margin: 0 12px;
+      display: flex;
+      justify-content: space-between;
+      >.editorTitle{
+        font-size: 20px;
+        font-weight: bold;
+      }
+      >.actions{
+        >*{
+          margin: 0 4px;
+        }
+        >select{
+          padding: 4px 8px;
+        }
+      }
+    }
   }
 }
 @media (max-width: 500px) {

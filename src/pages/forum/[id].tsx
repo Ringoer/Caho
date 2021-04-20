@@ -12,14 +12,7 @@ import Editor from '@/components/Editor';
 import { Swal } from '@/util/swal';
 import Label from '@/components/Label';
 
-const parts = {
-  'share': '分享',
-  'ask': '问答',
-  'job': '招聘',
-  'good': '精华',
-  'dev': '测试',
-  'test': '测试',
-}
+const tabs = ['日常', '文章', '活动', '新闻', '测试', '其它']
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user } = props
@@ -29,6 +22,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   const [forum, setForum] = useState<Forum>()
   const [collected, setCollected] = useState<boolean>()
   const [sign, setSign] = useState(true)
+  const [tab, setTab] = useState(tabs[0])
 
   function collectForum() {
     if (!forum) {
@@ -58,7 +52,8 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       body: JSON.stringify({
         forumId: forum.id,
         title,
-        content: content.split('\n').join('\n\n')
+        content,
+        tab,
       })
     }).then(result => {
       if (result.errno === 0) {
@@ -223,7 +218,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                         {topic.top ?
                           (<Label>置顶</Label>) :
                           undefined}
-                        <Label backgroundColor='#95BE3E'>{parts[topic.tab] || '其它'}</Label>
+                        <Label backgroundColor='#95BE3E'>{topic.tab || '其它'}</Label>
                       </div>
                       <Link to={'/forum/topic/' + topic.id} className={styles.link} >
                         {topic.title}
@@ -273,16 +268,33 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
             />
           </div>
           <br />
-          <Editor
-            disabled={
-              user ? (
-                forum.id === 1 ? true : false
-              ) : true
-            }
-            description='发表新主题'
-            hasTitle
-            onSubmit={onSubmit}
-          />
+          <div className={styles.editorWrapper}>
+            <div className={styles.editorTitleWrapper}>
+              <span className={styles.editorTitle}>发表新主题</span>
+              <div className={styles.actions}>
+                <label htmlFor="selectTab">分区</label>
+                <select name="selectTab" id="selectTab" defaultValue={tabs[0]}
+                  onChange={
+                    (event) => {
+                      setTab(event.target.value)
+                    }
+                  }>
+                  {tabs.map(tab => (
+                    <option key={tab} value={tab}>{tab}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <Editor
+              disabled={
+                user ? (
+                  forum.id === 1 ? true : false
+                ) : true
+              }
+              hasTitle
+              onSubmit={onSubmit}
+            />
+          </div>
         </>
       )}
     </div>

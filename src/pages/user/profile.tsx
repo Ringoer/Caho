@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './profile.less';
 import request from '@/util/request'
-import { connect, Link, history } from 'umi'
+import { connect } from 'umi'
 import Section from '@/components/Section';
 import Loading from '@/components/Loading';
 
@@ -12,18 +12,17 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
   const [_, fresh] = useState(0)
 
   useEffect(() => {
-    if (userId === '0') {
+    if (userId === '0' || !Number.isInteger(+userId)) {
+      setProfile('暂无更多')
       return
     }
-    if (!Number.isInteger(+userId)) {
-      return
-    }
-    request(`${location.pathname}/profile`).then(result => {
-      const { data } = result
-      if (!data || !data.profile) {
+    request(`/user/${userId}/profile`).then(result => {
+      if (result.errno !== 0) {
+        setProfile('暂无更多')
         return
       }
-      if (data.profile) {
+      const { data } = result
+      if (data && data.profile) {
         setProfile(data.profile)
       } else {
         setProfile('暂无更多')

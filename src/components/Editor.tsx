@@ -1,18 +1,19 @@
 import { useRef, useState } from 'react';
 import styles from './Editor.less'
-import ReactMarkdown from 'react-markdown';
 import Button from './Button'
 import Tabs from './Tabs'
 import Tab from './Tab'
 
+import marked from 'marked'
+import 'github-markdown-css/github-markdown.css'
+
 export default (props: any) => {
-  const { disabled, description, hasTitle, onSubmit, defaultValue, wordsLimit = 4095 } = props
+  const { disabled, hasTitle, onSubmit, defaultValue, wordsLimit = 4095 } = props
   const [title, setTitle] = useState('')
   const [text, setText] = useState<string>(defaultValue || '')
   const textarea = useRef<HTMLTextAreaElement>(null)
   return (
     <div className={styles.editor}>
-      <p className={styles.description}>{description}</p>
       {hasTitle ? (
         <div className={styles.title}>
           <p>标题</p>
@@ -23,8 +24,9 @@ export default (props: any) => {
         <span>正文</span>
         &nbsp;
         <span style={{ color: '#acacac' }}>支持Markdown文本</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <span>您还可以输入&nbsp;{wordsLimit - text.split('\n').join('\n\n').length}&nbsp;字</span>
+      </p>
+      <p>
+        <span>您还可以输入&nbsp;{wordsLimit - text.length}&nbsp;字</span>
       </p>
       <Tabs>
         <Tab title="编辑" name="edit">
@@ -38,9 +40,10 @@ export default (props: any) => {
           />
         </Tab>
         <Tab title="预览" name="preview">
-          <div className={styles.md}>
-            <ReactMarkdown children={text.split('\n').join('\n\n')} />
-          </div>
+          <article
+            className={[styles.md, 'markdown-body'].join(' ')}
+            dangerouslySetInnerHTML={{ __html: marked(text) }}
+          />
         </Tab>
       </Tabs>
       <div className={styles.action}>
