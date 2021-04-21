@@ -8,7 +8,7 @@ interface Response {
   errmsg: string;
 }
 
-function myFetch(uri: string, options?: RequestInit): Promise<Response> {
+export default (uri: string, options?: RequestInit): Promise<Response> => {
   return fetch(baseUrl + uri, {
     // headers,
     // body,
@@ -31,10 +31,6 @@ function myFetch(uri: string, options?: RequestInit): Promise<Response> {
         return errResponse
       }
     )
-}
-
-export default (uri: string, options?: RequestInit): Promise<Response> => {
-  return myFetch(uri, options)
     .then(result => {
       if (result.errno !== 0) {
         console.error(result.errmsg)

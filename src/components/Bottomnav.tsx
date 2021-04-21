@@ -1,48 +1,8 @@
 import styles from './Bottomnav.less'
-import { connect, history, Link } from 'umi';
-import { useEffect, useState } from 'react';
-import request from '@/util/request';
-import Loading from './Loading';
-import { Swal } from '@/util/swal';
+import { connect, Link } from 'umi';
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user } = props
-  const [sign, setSign] = useState(false)
-
-  function onSign() {
-    if (!user) {
-      return
-    }
-    if (sign) {
-      Swal.info('您今天已经签过到了')
-      return
-    }
-    request('/score/sign', {
-      method: 'post',
-    }).then(result => {
-      if (result.errno === 0) {
-        Swal.success('签到成功！')
-          .then(() => {
-            setSign(true)
-          })
-      }
-    })
-  }
-
-  useEffect(() => {
-    if (!user) {
-      return
-    }
-    request('/score/sign')
-      .then(result => {
-        if (result.errno === 0) {
-          const { data } = result
-          if (typeof data === 'boolean') {
-            setSign(data)
-          }
-        }
-      })
-  }, [user])
 
   return (
     <div className={styles.bottom}>
@@ -56,14 +16,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
             </Link>
           </li>
           <li className={styles.menuItem}>
-            <a className={styles.link} onClick={onSign}>
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#icon-sign"></use>
-              </svg>
-            </a>
-          </li>
-          <li className={styles.menuItem}>
-            <Link to="/message" className={styles.link}>
+            <Link to={user ? "/message" : '/login'} className={styles.link}>
               <svg className="icon" aria-hidden="true">
                 <use xlinkHref="#icon-ring"></use>
               </svg>

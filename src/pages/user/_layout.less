@@ -22,11 +22,12 @@
       padding: 40px;
       width: 100%;
       display: grid;
-      grid-template-columns: 180px auto;
-      grid-template-rows: 1fr auto auto;
-      grid-template-areas: "avatar _"
-      "avatar nickname"
-      "avatar signature";
+      grid-template-columns: 180px auto 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+      "avatar nickname _"
+      "avatar signature _"
+      "avatar action _";
       >.avatar{
         grid-area: avatar;
         border-radius: 50%;
@@ -46,6 +47,16 @@
         display: flex;
         align-items: center;
       }
+      >.actionWrapper{
+        grid-area: action;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        >.action{
+          width: 80px;
+          margin-right: 8px;
+        }
+      }
     }
     >.options{
       position: relative;
@@ -55,7 +66,7 @@
       display: flex;
       >.option{
         flex-grow: 1;
-        >.action{
+        >.tab{
           width: 100%;
           outline: none;
           background: none;
@@ -88,10 +99,12 @@
       >.userInfo{
         color: black;
         grid-template-columns: auto;
-        grid-template-rows: 110px auto auto;
-        grid-template-areas: "avatar"
+        grid-template-rows: 110px auto auto auto;
+        grid-template-areas:
+        "avatar"
         "nickname"
-        "signature";
+        "signature"
+        "action";
         padding-bottom: 0;
         >*{
           justify-content: center;

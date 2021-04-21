@@ -13,7 +13,7 @@ export default (props: any) => {
   const [text, setText] = useState<string>(defaultValue || '')
   const textarea = useRef<HTMLTextAreaElement>(null)
   return (
-    <div className={styles.editor}>
+    <form className={styles.editor} onSubmit={event => event.preventDefault()}>
       {hasTitle ? (
         <div className={styles.title}>
           <p>标题</p>
@@ -74,6 +74,6 @@ export default (props: any) => {
           您在当前环境下没有权限进行编辑
         </div>
       ) : undefined}
-    </div>
+    </form>
   )
 }

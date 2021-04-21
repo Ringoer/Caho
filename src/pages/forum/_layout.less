@@ -25,15 +25,36 @@
       >.info{
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-around;
+        .sign{
+          display: flex;
+          justify-content: space-around;
+          >svg{
+            height: 24px;
+            width: 24px;
+          }
+        }
       }
     }
     .recommends{
       margin: 0;
-      >.recommend{
+      >.recommendWrapper{
         outline: none;
         &:hover{
-          color: #008CFF;
+          .recommend{
+            >.title{
+              color: #008CFF;
+            }
+          }
+        }
+        .recommend{
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          >.lastReplyAt{
+            color: #acacac;
+            white-space: nowrap;
+          }
         }
       }
     }

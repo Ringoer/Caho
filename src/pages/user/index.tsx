@@ -5,6 +5,7 @@ import { connect, Link } from 'umi'
 import Section from '@/components/Section';
 import Loading from '@/components/Loading';
 import Note from '@/components/Note';
+import { changeTime } from '@/util/time';
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user, userId } = props
@@ -86,10 +87,13 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
               {topics.length === 0 ? '暂无更多' :
                 <ul>
                   {topics.map(topic => (
-                    <li key={topic.id}>
+                    <li key={topic.id} className={styles.topicWrapper}>
                       <Link to={`/forum/topic/${topic.id}`}>
                         <Note>
-                          {topic.title}
+                          <div className={styles.topicInfo}>
+                            <span className={styles.title}>{topic.title}</span>
+                            <span className={styles.lastReplyAt}>{changeTime(topic.lastReplyAt)}</span>
+                          </div>
                         </Note>
                       </Link>
                     </li>
@@ -101,10 +105,13 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
               {replyTo.length === 0 ? '暂无更多' :
                 <ul>
                   {replyTo.map(topic => (
-                    <li key={topic.id}>
+                    <li key={topic.id} className={styles.topicWrapper}>
                       <Link to={`/forum/topic/${topic.id}`}>
                         <Note>
-                          {topic.title}
+                          <div className={styles.topicInfo}>
+                            <span className={styles.title}>{topic.title}</span>
+                            <span className={styles.lastReplyAt}>{changeTime(topic.lastReplyAt)}</span>
+                          </div>
                         </Note>
                       </Link>
                     </li>

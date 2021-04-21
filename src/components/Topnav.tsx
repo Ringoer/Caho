@@ -7,7 +7,6 @@ import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
   const { user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string } = props
-  const [sign, setSign] = useState(false)
 
   function logout() {
     props.dispatch({ type: 'user/info', payload: null })
@@ -15,30 +14,10 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
     request('/user/logout', {
       method: 'post'
     }).then(() => {
-      Swal.info('您已退出')
+      Swal.success('您已退出')
         .then(() => {
           history.push('/')
         })
-    })
-  }
-
-  function onSign() {
-    if (sign) {
-      Swal.info('您今天已经签过到了！')
-      return
-    }
-    if (!user) {
-      return
-    }
-    request('/score/sign', {
-      method: 'post',
-    }).then(result => {
-      if (result.errno === 0) {
-        Swal.success('签到成功！')
-          .then(() => {
-            setSign(true)
-          })
-      }
     })
   }
 
@@ -68,21 +47,6 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
       })
   }, [login])
 
-  useEffect(() => {
-    if (!user) {
-      return
-    }
-    request('/score/sign')
-      .then(result => {
-        if (result.errno === 0) {
-          const { data } = result
-          if (typeof data === 'boolean') {
-            setSign(data)
-          }
-        }
-      })
-  }, [user])
-
   return (
     <header className={styles.header}>
       <div className={styles.topnav}>
@@ -111,12 +75,6 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
                     <div className={styles.mask}></div>
                     <span>{user.nickname}</span>
                   </Link>
-                </li>
-                <li className={styles.menuItem}>
-                  <a className={styles.link} onClick={onSign}>
-                    <div className={styles.mask}></div>
-                    <span>{sign ? '已签到' : '签到'}</span>
-                  </a>
                 </li>
                 <li className={styles.menuItem}>
                   <Link to='/message' className={styles.link}>

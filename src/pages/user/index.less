@@ -33,9 +33,22 @@
     >*:first-child{
       margin-right: 20px;
     }
-    a{
+    .topicWrapper{
       &:hover{
-        color: #008CFF;
+        .topicInfo{
+          >.title{
+            color: #008CFF;
+          }
+        }
+      }
+      .topicInfo{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        >.lastReplyAt{
+          color: #acacac;
+          white-space: nowrap;
+        }
       }
     }
   }

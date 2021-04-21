@@ -1,0 +1,44 @@
+.messageWrapper{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 8px 4px;
+  >.message{
+    margin-right: 8px;
+    >.titleWrapper{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      >.title{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+      >.time{
+        width: 68px;
+        color: #ACACAC;
+      }
+    }
+    >.content{
+      overflow: hidden;
+      min-height: 24px;
+    }
+    >.hide{
+      height: 24px;
+    }
+  }
+}
+@media (max-width:500px){
+  .messageWrapper{
+    >.message{
+      >.content{
+        min-height: 48px;
+      }
+      >.hide{
+        height: 48px;
+      }
+    }
+  }
+}

@@ -32,13 +32,19 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
   return (
     <div className={styles.album}>
       {album instanceof Array ? (
-        <ul className={styles.pictures}>
-          {album.map(picture => (
-            <li key={picture.id} className={styles.pictureWrapper}>
-              <img src={picture.url} alt="图片" className={styles.picture} />
-            </li>
-          ))}
-        </ul>
+        album.length === 0 ? (
+          <ul className={styles.pictures}>
+            <li>暂无更多</li>
+          </ul>
+        ) : (
+          <ul className={styles.pictures}>
+            {album.map(picture => (
+              <li key={picture.id} className={styles.pictureWrapper}>
+                <img src={picture.url} alt="图片" className={styles.picture} />
+              </li>
+            ))}
+          </ul>
+        )
       ) : <Loading />}
     </div>
   )

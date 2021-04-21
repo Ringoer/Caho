@@ -8,6 +8,8 @@ import Index from './index';
 import Profile from './profile';
 import Follow from './follow';
 import Album from './album';
+import Button from '@/components/Button';
+import { Swal } from '@/util/swal';
 
 const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
 
@@ -15,6 +17,31 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   const [option, setOption] = useState(options[0])
   const [user, setUser] = useState<User>()
   const [userId, setUserId] = useState<string>()
+
+  function follow() {
+    if (!userId) {
+      return
+    }
+    Swal.confirm('您真的要关注该用户吗')
+      .then((res) => {
+        if (!res) {
+          return
+        }
+        request('/user/follow', {
+          method: 'post',
+          body: JSON.stringify({
+            followId: userId
+          })
+        }).then(res => {
+          if (res.errno === 0) {
+            Swal.success('关注成功！')
+          } else {
+            Swal.error(`关注失败！\n原因：${res.errmsg}`)
+          }
+        })
+      })
+  }
+
   useEffect(() => {
     const userId = location.pathname.substring('/user/'.length)
     if (userId === '0') {
@@ -50,11 +77,23 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
               <span className={styles.signature}>
                 {user.signature || '这个人很懒，什么也没写...'}
               </span>
+              <div className={styles.actionWrapper}>
+                <div className={styles.action}>
+                  <Button onClick={follow}>
+                    关注
+                </Button>
+                </div>
+                <div className={styles.action}>
+                  <Button onClick={() => history.push('/message/add', user)}>
+                    私信
+                </Button>
+                </div>
+              </div>
             </div>
             <ul className={styles.options}>
               {options.map(item => (
                 <li className={styles.option} key={item}>
-                  <button className={[styles.action, (item === option ? styles.active : '')].join(' ')} onClick={() => setOption(item)}>{item}</button>
+                  <button className={[styles.tab, (item === option ? styles.active : '')].join(' ')} onClick={() => setOption(item)}>{item}</button>
                 </li>
               ))}
             </ul>

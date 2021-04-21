@@ -5,11 +5,36 @@ import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 import Note from '@/components/Note';
+import { changeTime } from '@/util/time';
+import Button from '@/components/Button';
+import { Swal } from '@/util/swal';
 
 export default connect(({ user, login }: { user: User, login: string }) => ({ user, login }))((props: any) => {
   const { user, login } = props
   const [recommends, setRecommends] = useState<Topic[]>([])
   const [flag, setFlag] = useState(false)
+
+  const [sign, setSign] = useState(true)
+
+  function onSign() {
+    if (!user) {
+      return
+    }
+    if (sign) {
+      Swal.info('您今天已经签过到了')
+      return
+    }
+    request('/score/sign', {
+      method: 'post',
+    }).then(result => {
+      if (result.errno === 0) {
+        Swal.success('签到成功！')
+          .then(() => {
+            setSign(true)
+          })
+      }
+    })
+  }
 
   useEffect(() => {
     if (!login) {
@@ -25,10 +50,20 @@ export default connect(({ user, login }: { user: User, login: string }) => ({ us
     request('/topic/recommend')
       .then(res => {
         setFlag(true)
-        if (res.errno === 0) {
-          setRecommends(res.data)
-        } else {
-          console.error(res.errmsg)
+        if (res.errno !== 0) {
+          return
+        }
+        setRecommends(res.data)
+      })
+
+    request('/score/sign')
+      .then(result => {
+        if (result.errno !== 0) {
+          return
+        }
+        const { data } = result
+        if (typeof data === 'boolean') {
+          setSign(data)
         }
       })
   }, [user, login])
@@ -56,8 +91,21 @@ export default connect(({ user, login }: { user: User, login: string }) => ({ us
                     <Link to={`/user/${user.id}`}>
                       <span>{user.nickname}</span>
                     </Link>
-                    <br />
                     <span>积分：{user.score}</span>
+                    {sign ? (
+                      <Button backgroundColor='white' color='black'>
+                        已签到
+                      </Button>
+                    ) : (
+                      <Button onClick={onSign}>
+                        <div className={styles.sign}>
+                          <svg className="icon" aria-hidden="true">
+                            <use xlinkHref="#icon-sign"></use>
+                          </svg>
+                          <span>签到</span>
+                        </div>
+                      </Button>
+                    )}
                   </div>
                 </div>)}
             </Section>
@@ -66,10 +114,13 @@ export default connect(({ user, login }: { user: User, login: string }) => ({ us
                 {recommends.length === 0 ?
                   <li>暂无推荐内容</li> :
                   recommends.map(recommend => (
-                    <li className={styles.recommend} key={recommend.id}>
+                    <li className={styles.recommendWrapper} key={recommend.id}>
                       <Link to={`/forum/topic/${recommend.id}`}>
                         <Note>
-                          {recommend.title}
+                          <div className={styles.recommend}>
+                            <span className={styles.title}>{recommend.title}</span>
+                            <span className={styles.lastReplyAt}>{changeTime(recommend.lastReplyAt)}</span>
+                          </div>
                         </Note>
                       </Link>
                     </li>
