@@ -43,7 +43,7 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }
 
   useEffect(() => {
-    const userId = location.pathname.substring('/user/'.length)
+    const { id: userId } = props.match.params
     if (userId === '0') {
       history.push('/404')
       return

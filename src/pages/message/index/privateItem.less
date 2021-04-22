@@ -1,0 +1,35 @@
+.messageWrapper{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 8px 4px;
+  >.message{
+    margin-right: 8px;
+    >.titleWrapper{
+      >.info{
+        display: flex;
+        justify-content: space-between;
+        >a>.sender{
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+        }
+        >.time{
+          width: 68px;
+          color: #ACACAC;
+          white-space: nowrap;
+        }
+      }
+      >.title{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
+}

@@ -8,11 +8,12 @@ import Displayer from './displayer'
 
 import 'github-markdown-css'
 
-const options = ['通知', '提及', '私信']
+const options = ['通知', '提及', '私信', '发件',]
 const tabHash = {
   '私信': 0,
   '通知': 1,
   '提及': 2,
+  '发件': 3,
 }
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
@@ -39,7 +40,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
 
   return (
     <div className={styles.container}>
-      <Tabs itemWidth='33.33%' itemHeight='32px' onChange={
+      <Tabs itemWidth='25%' itemHeight='32px' onChange={
         (tab: string) => {
           setOption(tab)
         }

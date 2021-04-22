@@ -72,8 +72,12 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                               <div className={styles.img}>
                                 <img src={follow.avatarUrl} alt="用户头像" />
                               </div>
-                              <span className={styles.nickname}>{follow.nickname}</span>
-                              <span className={styles.signature}>{follow.signature || '这个人很懒，什么也没写...'}</span>
+                              <div className={styles.nickname}>
+                                <span>{follow.nickname}</span>
+                              </div>
+                              <div className={styles.signature}>
+                                <span>{follow.signature || '这个人很懒，什么也没写...'}</span>
+                              </div>
                               <div className={styles.action}>
                                 {user && user.id === userId ? (
                                   <Button backgroundColor='white' color='black' onClick={(event: Event) => {
@@ -154,8 +158,12 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                               <div className={styles.img}>
                                 <img src={follow.avatarUrl} alt="用户头像" />
                               </div>
-                              <span className={styles.nickname}>{follow.nickname}</span>
-                              <span className={styles.signature}>{follow.signature || '这个人很懒，什么也没写...'}</span>
+                              <div className={styles.nickname}>
+                                <span>{follow.nickname}</span>
+                              </div>
+                              <div className={styles.signature}>
+                                <span>{follow.signature || '这个人很懒，什么也没写...'}</span>
+                              </div>
                               <div className={styles.action}>
                                 {user && user.id === userId ? (
                                   <Button backgroundColor='white' color='black' onClick={(event: Event) => {

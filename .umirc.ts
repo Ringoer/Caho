@@ -25,7 +25,7 @@ export default defineConfig({
         exact: false, path: '/message', component: '@/pages/message/_layout', routes: [
           { exact: true, path: '/message', component: '@/pages/message/index/_layout' },
           { exact: true, path: '/message/add', component: '@/pages/message/add' },
-          { exact: true, path: '/message/:id', component: '@/pages/message/[id]' },
+          { exact: true, path: '/message/view', component: '@/pages/message/view' },
           { component: '@/pages/404' },
         ]
       },
