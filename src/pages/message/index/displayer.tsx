@@ -34,7 +34,7 @@ export default (props: any) => {
           <ul>
             {messages.map(message => (
               <li key={message.id}>
-                <Item message={message} />
+                <Item message={message} hasAuthor={tab === 0} />
               </li>
             ))}
           </ul>
