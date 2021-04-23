@@ -16,7 +16,7 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
     }).then(() => {
       Swal.success('您已退出')
         .then(() => {
-          history.push('/')
+          location.reload()
         })
     })
   }
@@ -82,12 +82,12 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
                     <span>消息</span>
                   </Link>
                 </li>
-                {/* <li className={styles.menuItem}>
+                <li className={styles.menuItem}>
                   <Link to='/settings' className={styles.link}>
                     <div className={styles.mask}></div>
                     <span>设置</span>
                   </Link>
-                </li> */}
+                </li>
                 <li className={styles.menuItem}>
                   <a className={styles.link} onClick={logout}>
                     <div className={styles.mask}></div>

@@ -36,7 +36,10 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
       })
     }).then(result => {
       if (result.errno === 0) {
-        location.reload()
+        Swal.success('关注成功！')
+          .then(() => {
+            location.reload()
+          })
       } else {
         Swal.error(`操作失败，请先登录！`)
       }

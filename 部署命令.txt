@@ -1,0 +1,1 @@
+docker run -d --name caho-umi -p 6055:6055 -v /root/caho/umi/dist:/usr/share/nginx/html caho-umi

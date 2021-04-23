@@ -27,7 +27,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   }, [])
 
   useEffect(() => {
-    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: '/register/verify', name: '注册验证' }] })
+    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: '/register/verify', name: '[功能] 注册验证' }] })
   }, [])
 
   return (

@@ -8,6 +8,7 @@ import Loading from '@/components/Loading';
 import Note from '@/components/Note';
 import Button from '@/components/Button';
 import Pagination from '@/components/Pagination';
+import { Swal } from '@/util/swal';
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user, userId } = props
@@ -15,6 +16,30 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
   const [fansSelectedPage, setFansSelectedPage] = useState('1')
   const [follows, setFollows] = useState<User[]>()
   const [fans, setFans] = useState<User[]>()
+
+  function unfollow(followId: number) {
+    Swal.confirm('您真的要取消关注该用户吗？')
+      .then(res => {
+        if (!res) {
+          return
+        }
+        request('/user/unfollow', {
+          method: 'post',
+          body: JSON.stringify({
+            followId
+          })
+        }).then(result => {
+          if (result.errno === 0) {
+            Swal.success('取消关注成功！')
+              .then(() => {
+                location.reload()
+              })
+          } else {
+            Swal.error(`取消注失败！\n原因：${res.errmsg}`)
+          }
+        })
+      })
+  }
 
   const [_, fresh] = useState(0)
   const [clientWidth, setClientWidth] = useState(document.body.clientWidth)
@@ -79,11 +104,11 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                                 <span>{follow.signature || '这个人很懒，什么也没写...'}</span>
                               </div>
                               <div className={styles.action}>
-                                {user && user.id === userId ? (
+                                {user && user.id === +userId ? (
                                   <Button backgroundColor='white' color='black' onClick={(event: Event) => {
                                     event.preventDefault()
                                     event.stopPropagation()
-                                    console.log(event)
+                                    unfollow(follow.id)
                                   }}>取消关注</Button>
                                 ) : undefined}
                               </div>
@@ -118,13 +143,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                               <span className={styles.nickname}>{follow.nickname}</span>
                               <span className={styles.signature}>{follow.signature || '这个人很懒，什么也没写...'}</span>
                               <div className={styles.action}>
-                                {user && user.id === userId ? (
-                                  <Button backgroundColor='white' color='black' onClick={(event: Event) => {
-                                    event.preventDefault()
-                                    event.stopPropagation()
-                                    console.log(event)
-                                  }}>取消关注</Button>
-                                ) : undefined}
+
                               </div>
                             </Link>
                           </div>
@@ -165,11 +184,11 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                                 <span>{follow.signature || '这个人很懒，什么也没写...'}</span>
                               </div>
                               <div className={styles.action}>
-                                {user && user.id === userId ? (
+                                {user && user.id === +userId ? (
                                   <Button backgroundColor='white' color='black' onClick={(event: Event) => {
                                     event.preventDefault()
                                     event.stopPropagation()
-                                    console.log(event)
+                                    unfollow(follow.id)
                                   }}>取消关注</Button>
                                 ) : undefined}
                               </div>
@@ -204,13 +223,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                               <span className={styles.nickname}>{follow.nickname}</span>
                               <span className={styles.signature}>{follow.signature || '这个人很懒，什么也没写...'}</span>
                               <div className={styles.action}>
-                                {user && user.id === userId ? (
-                                  <Button backgroundColor='white' color='black' onClick={(event: Event) => {
-                                    event.preventDefault()
-                                    event.stopPropagation()
-                                    console.log(event)
-                                  }}>取消关注</Button>
-                                ) : undefined}
+
                               </div>
                             </Link>
                           </div>

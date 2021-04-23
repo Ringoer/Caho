@@ -13,9 +13,11 @@ import { Swal } from '@/util/swal';
 
 const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
 
-export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
+export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
+  const { user } = props
+
   const [option, setOption] = useState(options[0])
-  const [user, setUser] = useState<User>()
+  const [currentUser, setUser] = useState<User>()
   const [userId, setUserId] = useState<string>()
 
   function follow() {
@@ -65,29 +67,39 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
   }, [])
   return (
     <div className={styles.main}>
-      {!user ? <Loading /> : (
+      {!currentUser ? <Loading /> : (
         <>
           <div className={styles.topbar}>
             <div className={styles.banner}>
               <img src={require('@/assets/user_banner.jpg')} alt="用户头图" />
             </div>
             <div className={styles.userInfo}>
-              <img src={user.avatarUrl} alt="用户头像" className={styles.avatar} />
-              <span className={styles.nickname}>{user.nickname}</span>
+              <img src={currentUser.avatarUrl} alt="用户头像" className={styles.avatar} />
+              <span className={styles.nickname}>{currentUser.nickname}</span>
               <span className={styles.signature}>
-                {user.signature || '这个人很懒，什么也没写...'}
+                {currentUser.signature || '这个人很懒，什么也没写...'}
               </span>
               <div className={styles.actionWrapper}>
-                <div className={styles.action}>
-                  <Button onClick={follow}>
-                    关注
+                {user && user.id === currentUser.id ? (
+                  <div className={styles.action}>
+                    <Button onClick={() => history.push('/settings')}>
+                      设置
                 </Button>
-                </div>
-                <div className={styles.action}>
-                  <Button onClick={() => history.push('/message/add', user)}>
-                    私信
+                  </div>
+                ) : (
+                  <>
+                    <div className={styles.action}>
+                      <Button onClick={follow}>
+                        关注
                 </Button>
-                </div>
+                    </div>
+                    <div className={styles.action}>
+                      <Button onClick={() => history.push('/message/add', currentUser)}>
+                        私信
+                </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <ul className={styles.options}>

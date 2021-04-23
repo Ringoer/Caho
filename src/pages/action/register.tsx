@@ -5,12 +5,14 @@ import request from '@/util/request';
 import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
+  const { user } = props
+
   useEffect(() => {
-    if (props.user) {
+    if (user) {
       history.push('/')
       return
     }
-  }, [props.user])
+  }, [user])
 
   const username = useRef<HTMLInputElement>(null)
   const nickname = useRef<HTMLInputElement>(null)
@@ -19,7 +21,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   const email = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: '/register', name: '注册新用户' }] })
+    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: '/register', name: '[功能] 注册新用户' }] })
   }, [])
   const [flag, setFlag] = useState(false)
   const [state, fresh] = useState(0)

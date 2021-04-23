@@ -7,6 +7,7 @@ const actions: { name: string, path: string }[] = [
   { name: '查看日志', path: '/admin/log' },
   { name: '查看主题', path: '/admin/topic' },
   { name: '查看用户', path: '/admin/user' },
+  { name: '访问接口', path: '/admin/execute' },
 ]
 
 export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb, login: string }) => ({ user, breadcrumb, login }))((props: any) => {

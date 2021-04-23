@@ -8,13 +8,13 @@ interface Response {
   errmsg: string;
 }
 
-export default (uri: string, options?: RequestInit): Promise<Response> => {
+export default (uri: string, options?: RequestInit, isFile: boolean = false): Promise<Response> => {
   return fetch(baseUrl + uri, {
     // headers,
     // body,
     // method,
     ...options,
-    headers: {
+    headers: isFile ? undefined : {
       'content-type': 'application/json'
     },
     credentials: 'include'

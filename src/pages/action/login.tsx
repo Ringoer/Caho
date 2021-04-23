@@ -5,12 +5,14 @@ import request from '@/util/request';
 import { Swal } from '@/util/swal';
 
 export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
+  const { user } = props
+
   useEffect(() => {
-    if (props.user) {
+    if (user) {
       history.push('/')
       return
     }
-  }, [props.user])
+  }, [user])
 
   const username = useRef<HTMLInputElement>(null)
   const password = useRef<HTMLInputElement>(null)
@@ -18,7 +20,7 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
   const [flag, setFlag] = useState(false)
   const [state, fresh] = useState(0)
   useEffect(() => {
-    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: '/login', name: '用户登录' }] })
+    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: '/login', name: '[功能] 用户登录' }] })
   }, [])
   useEffect(() => {
     if (!flag) {

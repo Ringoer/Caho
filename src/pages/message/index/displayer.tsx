@@ -66,7 +66,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           ) : undefined}
           <ul>
             {messages.map(message => (
-              <li key={message.id} style={{ backgroundColor: message.beRead ? '#eefbff' : 'white' }}>
+              <li key={message.id} style={{ backgroundColor: message.beRead ? 'white' : '#eefbff' }}>
                 <Message message={message} />
               </li>
             ))}
