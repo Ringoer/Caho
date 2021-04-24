@@ -18,7 +18,11 @@ const formatSize = (size: number) => {
 }
 
 export default (props: any) => {
-  const { src = 'https://ali.ringoer.com/cdn/caho/avatar/default_forum_avatar.png', scale = '200px', onSubmit = () => { } } = props
+  const {
+    src = '',
+    scale = '200px',
+    onSubmit = () => { },
+  } = props
 
   const image = useRef<HTMLInputElement>(null)
 
@@ -34,13 +38,15 @@ export default (props: any) => {
           setPreviewUrl(URL.createObjectURL(image.current.files[0]))
         }} />
       <div className={styles.action}>
-        <Button onClick={() => {
+        <Button onClick={(event: Event) => {
+          event.preventDefault()
           if (!image.current) {
             return
           }
           image.current.click()
         }}>选择图片</Button>
-        <Button onClick={() => {
+        <Button backgroundColor='#84D65D' onClick={(event: Event) => {
+          event.preventDefault()
           if (!image.current || !image.current.files || image.current.files.length === 0) {
             Swal.error('您尚未选择图片！')
             return
@@ -51,7 +57,9 @@ export default (props: any) => {
       {image.current && image.current.files && image.current.files[0] ? (
         <p>您选择的图片大小为 {formatSize(image.current.files[0].size)}</p>
       ) : undefined}
-      <Image src={previewUrl} scale={scale} />
+      { previewUrl === '' ? undefined : (
+        <Image src={previewUrl} scale={scale} />
+      )}
     </div>
   )
 }

@@ -23,16 +23,11 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
 
   const [messagess, setMessagess] = useState<Message[][]>()
 
-  const [_, fresh] = useState(0)
   const [clientWidth, setClientWidth] = useState(document.body.clientWidth)
 
   useEffect(() => {
     props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 1, pathname: location.pathname, name: '[功能] 消息列表' }] })
   }, [])
-
-  useEffect(() => {
-    fresh(Math.random())
-  }, [clientWidth])
 
   window.onresize = () => {
     setClientWidth(document.body.clientWidth)

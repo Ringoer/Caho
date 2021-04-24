@@ -11,6 +11,8 @@ import { changeTime } from '@/util/time';
 import Editor from '@/components/Editor';
 import { Swal } from '@/util/swal';
 import Label from '@/components/Label';
+import Album from '../user/album';
+import Popup from '@/components/Popup';
 
 const tabs = ['日常', '文章', '活动', '新闻', '测试', '其它']
 
@@ -23,6 +25,9 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   const [collected, setCollected] = useState<boolean>()
   const [sign, setSign] = useState(true)
   const [tab, setTab] = useState(tabs[0])
+
+  const [hide, setHide] = useState(true)
+  const [insertValue, setInsertValue] = useState('')
 
   function collectForum() {
     if (!forum) {
@@ -274,19 +279,40 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           <div className={styles.editorWrapper}>
             <div className={styles.editorTitleWrapper}>
               <span className={styles.editorTitle}>发表新主题</span>
-              <div className={styles.actions}>
-                <label htmlFor="selectTab">分区</label>
-                <select name="selectTab" id="selectTab" defaultValue={tabs[0]}
-                  onChange={
-                    (event) => {
-                      setTab(event.target.value)
-                    }
-                  }>
-                  {tabs.map(tab => (
-                    <option key={tab} value={tab}>{tab}</option>
-                  ))}
-                </select>
-              </div>
+              {user ? (
+                <div className={styles.actions}>
+                  <div className={styles.action}>
+                    <div className={styles.fromAlbum}>
+                      <Button onClick={() => setHide(!hide)}>
+                        <span>插入图片</span>
+                        <Popup hide={hide}>
+                          <div onClick={(event) => {
+                            event.stopPropagation()
+                          }}>
+                            <Album userId={user.id} onClick={(src: string) => {
+                              setInsertValue(`![图片](${src})`)
+                              setHide(true)
+                            }} />
+                          </div>
+                        </Popup>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={styles.action}>
+                    <label htmlFor="selectTab">分区</label>
+                    <select name="selectTab" id="selectTab" defaultValue={tabs[0]}
+                      onChange={
+                        (event) => {
+                          setTab(event.target.value)
+                        }
+                      }>
+                      {tabs.map(tab => (
+                        <option key={tab} value={tab}>{tab}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ) : undefined}
             </div>
             <Editor
               disabled={
@@ -296,6 +322,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
               }
               hasTitle
               onSubmit={onSubmit}
+              insertValue={insertValue}
             />
           </div>
         </>

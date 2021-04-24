@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import styles from './Pagination.less'
 
 export default (props: any) => {
-  const { selectedPage = 1, action, count = 0 } = props
+  const { selectedPage = 1, action, count = 0, perPage = 10 } = props
   if (!(typeof parseInt(selectedPage) === 'number' && selectedPage % 1 === 0 && selectedPage > 0)) {
     return (<div>页码错误</div>)
   }
@@ -10,7 +10,7 @@ export default (props: any) => {
   const [maxPage, setMaxPage] = useState(0)
   useEffect(() => {
     const maxPage = (Number.isInteger(+count) && +count > 0 ? (
-      parseInt(((+count + 9) / 10).toString())
+      parseInt(((+count + perPage - 1) / perPage).toString())
     ) : 0)
     setMaxPage(maxPage)
     const start: number = (selectedPage > 2) ? -2 : ((selectedPage > 1) ? -1 : 0)

@@ -149,11 +149,22 @@
         font-weight: bold;
       }
       >.actions{
+        display: flex;
         >*{
           margin: 0 4px;
         }
-        >select{
-          padding: 4px 8px;
+        >.action{
+          display: flex;
+          align-items: center;
+          >*{
+            margin: 0 4px;
+          }
+          >select{
+            padding: 4px 8px;
+          }
+          >.fromAlbum{
+            width: 80px;
+          }
         }
       }
     }

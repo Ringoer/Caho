@@ -8,13 +8,13 @@ import Image from '@/components/Image';
 import { Swal } from '@/util/swal';
 import Pagination from '@/components/Pagination';
 
+const perPage = 10
+
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
-  const { user, userId } = props
+  const { user, userId, onClick } = props
   const [album, setAlbum] = useState<Picture[]>()
   const [pictures, setPictures] = useState<Picture[]>()
   const [selectedPage, setPage] = useState('1')
-
-  const [_, fresh] = useState(0)
 
   function onSubmit(files: FileList) {
     const file = files[0]
@@ -37,7 +37,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
               }
               const { data } = result
               if (data) {
-                setAlbum(data)
+                setAlbum(data.reverse())
               } else {
                 setAlbum([])
               }
@@ -51,6 +51,32 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
     })
   }
 
+  function onDelete(id: number) {
+    Swal.confirm('您确定要删除这张图片吗？')
+      .then(res => {
+        if (!res) {
+          return
+        }
+        request('/file/image', {
+          method: 'delete',
+          body: JSON.stringify({
+            ids: [id]
+          })
+        }).then(result => {
+          if (result.errno !== 0) {
+            Swal.error('删除失败！')
+            return
+          }
+          if (!album) {
+            return
+          }
+          const newAlbum = album.filter(item => item.id !== id)
+          setAlbum(newAlbum)
+          Swal.success('删除成功！')
+        })
+      })
+  }
+
   useEffect(() => {
     if (userId === '0') {
       return
@@ -62,9 +88,9 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
       if (result.errno !== 0) {
         return
       }
-      const { data } = result
+      const { data }: { data: Picture[] } = result
       if (data) {
-        setAlbum(data)
+        setAlbum(data.reverse())
       } else {
         setAlbum([])
       }
@@ -75,7 +101,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
     if (!album) {
       return
     }
-    setPictures(album.slice(10 * (+selectedPage - 1), 10 * +selectedPage))
+    setPictures(album.slice(perPage * (+selectedPage - 1), perPage * +selectedPage))
   }, [album, selectedPage])
 
   return (
@@ -90,16 +116,34 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
             <ul className={styles.pictures}>
               {pictures.map(picture => (
                 <li key={picture.id} className={styles.pictureWrapper}>
-                  <Image src={picture.url} />
+                  <button onClick={(event) => {
+                    event.preventDefault()
+                    onDelete(picture.id)
+                  }}>
+                    <svg className="icon" aria-hidden="true">
+                      <use xlinkHref="#icon-delete"></use>
+                    </svg>
+                  </button>
+                  <Image src={picture.url} onClick={onClick} />
                 </li>
               ))}
             </ul>
-            <Pagination selectedPage={selectedPage} count={album.length} action={(target: string) => setPage(target)} />
+            <br />
+            <Pagination
+              selectedPage={selectedPage}
+              count={album.length}
+              action={(target: string) => setPage(target)}
+              perPage={perPage}
+            />
           </>
         )
       ) : <Loading />}
-      <br />
-      <ImageUploader onSubmit={onSubmit} />
+      {user && user.id === +userId ? (
+        <>
+          <br />
+          <ImageUploader onSubmit={onSubmit} />
+        </>
+      ) : undefined}
     </div>
   )
 })

@@ -55,6 +55,15 @@ interface Reply {
   gmtModified: string;
   beDeleted: boolean;
 }
+interface Score {
+  id: number;
+  userId: number;
+  action: string;
+  point: number;
+  gmtCreate: Date;
+  gmtModified: Date;
+  beDeleted: boolean;
+}
 interface Topic {
   id: string;
   title: string;

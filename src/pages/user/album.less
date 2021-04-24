@@ -4,13 +4,49 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  background-color: white;
+  color: black;
+  border-radius: 8px;
   >.pictures{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     >.pictureWrapper{
-      max-width: 30vw;
-      max-height: 30vw;
+      max-width: 25vw;
+      max-height: 25vw;
+      position: relative;
+      >button{
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 1;
+        background: none;
+        outline: none;
+        &:hover{
+          outline: none;
+        }
+        border: none;
+        >svg{
+          height: 20px;
+          width: 20px;
+        }
+      }
+    }
+  }
+}
+@media (max-width:500px) {
+  .album{
+    >.pictures{
+      >.pictureWrapper{
+        >button{
+          top: 4px;
+          right: 4px;
+          >svg{
+            height: 12px;
+            width: 12px;
+          }
+        }
+      }
     }
   }
 }

@@ -3,7 +3,7 @@ import styles from './Image.less';
 import Popup from './Popup';
 
 export default (props: any) => {
-  const { src, scale = '200px', } = props
+  const { src, scale = '200px', onClick, } = props
 
   const [hide, setHide] = useState(true)
 
@@ -11,7 +11,19 @@ export default (props: any) => {
     <div
       className={styles.container}
       style={{ width: scale, height: scale }}
-      onClick={() => setHide(!hide)}
+      onClick={
+        onClick
+          ?
+          (event) => {
+            event.preventDefault()
+            onClick(src)
+          }
+          :
+          (event) => {
+            event.preventDefault()
+            setHide(!hide)
+          }
+      }
     >
       <img src={src} alt="图片展示" />
       <Popup hide={hide}>

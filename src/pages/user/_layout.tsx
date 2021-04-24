@@ -11,7 +11,8 @@ import Album from './album';
 import Button from '@/components/Button';
 import { Swal } from '@/util/swal';
 
-const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
+// const options = ['主页', '资料', '关注', '动态', '相册', '留言板']
+const options = ['主页', '资料', '关注', '相册',]
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user } = props

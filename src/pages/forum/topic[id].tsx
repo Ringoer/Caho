@@ -9,6 +9,9 @@ import Editor from '@/components/Editor'
 import { connect, history } from 'umi';
 import { changeTime } from '@/util/time';
 import { Swal } from '@/util/swal';
+import Button from '@/components/Button';
+import Popup from '@/components/Popup';
+import Album from '../user/album';
 
 export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcrumb[] }) => ({ user, breadcrumb }))((props: any) => {
   const { user, breadcrumb } = props
@@ -17,6 +20,9 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
   const [floors, setFloors] = useState<Reply[]>([])
   const [selectedPage, setPage] = useState((history.location.query && history.location.query.page) || 1)
   const [defaultValue, setDefaultValue] = useState('')
+
+  const [hide, setHide] = useState(true)
+  const [insertValue, setInsertValue] = useState('')
 
   function onReply(userId: number, userNickname: string) {
     setDefaultValue(`[@${userNickname}](/user/${userId}) `)
@@ -138,16 +144,31 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
           }
           <Pagination selectedPage={selectedPage} count={floors.length} action={(target: string) => setPage(target)} />
           <br />
-          <div style={{
-            backgroundColor: 'white',
-            paddingTop: '12px',
-            borderRadius: '4px'
-          }}>
-            <p style={{
-              fontSize: '20px',
-              fontWeight: 'bold',
-              marginLeft: '12px',
-            }}>发表新回复</p>
+          <div className={styles.editorWrapper}>
+            <div className={styles.editorTitleWrapper}>
+              <span className={styles.editorTitle}>发表新回复</span>
+              {user ? (
+                <div className={styles.actions}>
+                  <div className={styles.action}>
+                    <div className={styles.fromAlbum}>
+                      <Button onClick={() => setHide(!hide)}>
+                        <span>插入图片</span>
+                        <Popup hide={hide}>
+                          <div onClick={(event) => {
+                            event.stopPropagation()
+                          }}>
+                            <Album userId={user.id} onClick={(src: string) => {
+                              setInsertValue(`![图片](${src})`)
+                              setHide(true)
+                            }} />
+                          </div>
+                        </Popup>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : undefined}
+            </div>
             <Editor
               disabled={
                 user ? (
@@ -157,6 +178,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
               key={defaultValue}
               defaultValue={defaultValue}
               onSubmit={onSubmit}
+              insertValue={insertValue}
             />
           </div>
         </>

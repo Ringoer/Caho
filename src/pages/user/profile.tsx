@@ -4,6 +4,8 @@ import request from '@/util/request'
 import { connect } from 'umi'
 import Section from '@/components/Section';
 import Loading from '@/components/Loading';
+import marked from 'marked';
+import 'github-markdown-css/github-markdown.css'
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user, userId } = props
@@ -36,7 +38,8 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
           <div className={styles.first}>
             <Section title="个人介绍">
               <article
-                dangerouslySetInnerHTML={{ __html: profile }}
+                className='markdown-body'
+                dangerouslySetInnerHTML={{ __html: marked(profile || '暂无更多') }}
                 style={{ padding: '8px' }}
               />
             </Section>

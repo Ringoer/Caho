@@ -36,10 +36,10 @@ export default defineConfig({
         ]
       },
       { exact: false, path: '/user/:id', component: '@/pages/user/_layout' },
+      { exact: true, path: '/settings', component: '@/pages/settings/_layout' },
       { exact: true, path: '/login', component: '@/pages/action/login' },
       { exact: true, path: '/register', component: '@/pages/action/register' },
       { exact: true, path: '/register/verify', component: '@/pages/action/register.verify' },
-      { exact: true, path: '/settings', component: '@/pages/action/settings' },
       { exact: true, path: '/404', component: '@/pages/404' },
       { component: '@/pages/404' },
     ]

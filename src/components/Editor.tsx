@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Editor.less'
 import Button from './Button'
 import Tabs from './Tabs'
@@ -6,12 +6,23 @@ import Tab from './Tab'
 
 import marked from 'marked'
 import 'github-markdown-css/github-markdown.css'
+import { Swal } from '@/util/swal';
 
 export default (props: any) => {
-  const { disabled, hasTitle, onSubmit, defaultValue, wordsLimit = 4095 } = props
+  const { disabled, hasTitle, onSubmit, defaultValue = '', wordsLimit = 4095, insertValue } = props
   const [title, setTitle] = useState('')
-  const [text, setText] = useState<string>(defaultValue || '')
+  const [text, setText] = useState<string>(defaultValue)
   const textarea = useRef<HTMLTextAreaElement>(null)
+
+  const [_, fresh] = useState(0)
+
+  useEffect(() => {
+    if (insertValue) {
+      setText(`${text}${insertValue}`)
+      fresh(Math.random())
+    }
+  }, [insertValue])
+
   return (
     <form className={styles.editor} onSubmit={event => event.preventDefault()}>
       {hasTitle ? (
@@ -28,7 +39,7 @@ export default (props: any) => {
       <p>
         <span>您还可以输入&nbsp;{wordsLimit - text.length}&nbsp;字</span>
       </p>
-      <Tabs>
+      <Tabs key={_}>
         <Tab title="编辑" name="edit">
           <textarea
             className={styles.textarea}
@@ -47,6 +58,24 @@ export default (props: any) => {
         </Tab>
       </Tabs>
       <div className={styles.action}>
+        <Button
+          backgroundColor="white"
+          color="black"
+          onClick={() => {
+            Swal.confirm('即将对每个换行进行扩增，每 1 个扩增为 2 个\n您确定要这样做吗？')
+              .then(res => {
+                if (!res) {
+                  return
+                }
+                const value = text.split('\n').join('\n\n')
+                setText(value)
+                if (!textarea.current) {
+                  return
+                }
+                textarea.current.value = value
+              })
+          }}
+        >换行</Button>
         <Button
           backgroundColor="white"
           color="black"
