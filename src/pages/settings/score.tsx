@@ -51,14 +51,20 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                   </tr>
                 </thead>
                 <tbody>
-                  {logs.map(log => (
-                    <tr key={log.id}>
-                      <td>{log.gmtCreate.toString().substr(0, 10)}</td>
-                      <td>{log.gmtCreate.toString().substr(11, 8)}</td>
-                      <td>{log.action}</td>
-                      <td>{log.point}</td>
-                    </tr>
-                  ))}
+                  {logs.map(log => {
+                    // const t = new Date(log.gmtCreate)
+                    const t = new Date(new Date(log.gmtCreate).getTime() + 8 * 1000 * 60 * 60).toISOString()
+                    return (
+                      (
+                        <tr key={log.id}>
+                          <td>{t.substr(0, 10)}</td>
+                          <td>{t.substr(11, 8)}</td>
+                          <td>{log.action}</td>
+                          <td>{log.point}</td>
+                        </tr>
+                      )
+                    )
+                  })}
                 </tbody>
               </table>
               <Pagination selectedPage={selectedPage} count={count} action={(target: string) => setPage(target)} />

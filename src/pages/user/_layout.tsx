@@ -72,7 +72,7 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
         <>
           <div className={styles.topbar}>
             <div className={styles.banner}>
-              <img src={require('@/assets/user_banner.jpg')} alt="用户头图" />
+              <img src='https://ali.ringoer.com/cdn/caho/banner/user_banner.jpg' alt="用户头图" />
             </div>
             <div className={styles.userInfo}>
               <img src={currentUser.avatarUrl} alt="用户头像" className={styles.avatar} />
@@ -129,7 +129,14 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
                   </div>
                 ) : undefined}
                 {option === '相册' ? (
-                  <Album userId={location.pathname.substring('/user/'.length)} />
+                  <>
+                    {user && user.id === +userId ? (
+                      <p style={{ display: 'flex', justifyContent: 'center' }}>
+                        您可以上传最大10M的图片，上传速度大概为1M/5s，请耐心等待
+                      </p>
+                    ) : undefined}
+                    <Album userId={location.pathname.substring('/user/'.length)} />
+                  </>
                 ) : undefined}
                 {option === '留言板' ? (
                   <div className={styles.board}>

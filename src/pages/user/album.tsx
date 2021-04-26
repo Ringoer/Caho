@@ -8,7 +8,7 @@ import Image from '@/components/Image';
 import { Swal } from '@/util/swal';
 import Pagination from '@/components/Pagination';
 
-const perPage = 10
+const perPage = 15
 
 export default connect(({ user }: { user: User }) => ({ user }))((props: any) => {
   const { user, userId, onClick } = props
@@ -18,10 +18,32 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
 
   function onSubmit(files: FileList) {
     const file = files[0]
-    if (file.size > 1024 * 1024) {
-      Swal.error('您只能上传不大于 1MB 的图片')
+    if (file.size > 10 * 1024 * 1024) {
+      Swal.error('您只能上传不大于 10MB 的图片')
       return
     }
+    let seconds = file.size * 6 / 1024 / 1024, count = 100
+    Swal.info(`正在上传图片，请耐心等待...\n已上传约 0%`, {
+      buttons: {
+        cancel: {
+          closeModal: false
+        }
+      }
+    })
+    let timer = setInterval(() => {
+      let number = parseInt((count / seconds).toFixed())
+      if (number > 99) {
+        number = 99
+      }
+      Swal.info(`正在上传图片，请耐心等待...\n已上传约 ${number}%`, {
+        buttons: {
+          cancel: {
+            closeModal: false
+          }
+        }
+      })
+      count += 100
+    }, 1000)
     const body = new FormData()
     body.append('file', file)
     request('/file/image', {
@@ -29,6 +51,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
       body,
     }, true).then(result => {
       if (result.errno === 0) {
+        clearInterval(timer)
         Swal.success('上传成功！')
           .then(() => {
             request(`/user/${userId}/album`).then(result => {
@@ -116,14 +139,16 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
             <ul className={styles.pictures}>
               {pictures.map(picture => (
                 <li key={picture.id} className={styles.pictureWrapper}>
-                  <button onClick={(event) => {
-                    event.preventDefault()
-                    onDelete(picture.id)
-                  }}>
-                    <svg className="icon" aria-hidden="true">
-                      <use xlinkHref="#icon-delete"></use>
-                    </svg>
-                  </button>
+                  {user && user.id === +userId ? (
+                    <button onClick={(event) => {
+                      event.preventDefault()
+                      onDelete(picture.id)
+                    }}>
+                      <svg className="icon" aria-hidden="true">
+                        <use xlinkHref="#icon-delete"></use>
+                      </svg>
+                    </button>
+                  ) : undefined}
                   <Image src={picture.url} onClick={onClick} />
                 </li>
               ))}

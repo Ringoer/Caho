@@ -29,38 +29,38 @@ export default connect(({ user, breadcrumb }: { user: User, breadcrumb: Breadcru
     if (!flag) {
       return
     }
-    if (flag) {
-      if (!username.current || !nickname.current || !password.current || !verify.current || !email.current) {
-        setFlag(false)
-        return
-      }
-      if (!username.current.value || !nickname.current.value || !password.current.value || !verify.current.value || !email.current.value ||
-        !(password.current.value === verify.current.value)) {
-        fresh(Math.random())
-        setFlag(false)
-        return
-      }
-      request('/user/register', {
-        method: 'post',
-        body: JSON.stringify({
-          username: username.current.value,
-          nickname: nickname.current.value,
-          password: password.current.value,
-          email: email.current.value,
-        })
-      }).then(result => {
-        if (result.errno === 0) {
-          Swal.success('提交注册成功！\n请前往邮箱，点击注册链接以进行注册验证')
-            .then(() => {
-              history.push('/login')
-            })
-          return
-        } else {
-          Swal.error(result.errmsg)
-        }
-      })
+
+    if (!username.current || !nickname.current || !password.current || !verify.current || !email.current) {
       setFlag(false)
+      return
     }
+    if (!username.current.value || !nickname.current.value || !password.current.value || !verify.current.value || !email.current.value ||
+      !(password.current.value === verify.current.value) || !email.current.value.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
+      fresh(Math.random())
+      setFlag(false)
+      Swal.error('参数错误')
+      return
+    }
+    request('/user/register', {
+      method: 'post',
+      body: JSON.stringify({
+        username: username.current.value,
+        nickname: nickname.current.value,
+        password: password.current.value,
+        email: email.current.value,
+      })
+    }).then(result => {
+      if (result.errno === 0) {
+        Swal.success('提交注册成功！\n请前往邮箱，点击注册链接以进行注册验证')
+          .then(() => {
+            history.push('/login')
+          })
+        return
+      } else {
+        Swal.error(result.errmsg)
+      }
+    })
+    setFlag(false)
   }, [flag])
   return (
     <div className={styles.container}>

@@ -39,8 +39,8 @@ interface Picture {
   id: number;
   userId: number;
   url: string;
-  gmtCreate: Date;
-  gmtModified: Date;
+  gmtCreate: string;
+  gmtModified: string;
   beDeleted: boolean;
 }
 interface Reply {
@@ -60,8 +60,8 @@ interface Score {
   userId: number;
   action: string;
   point: number;
-  gmtCreate: Date;
-  gmtModified: Date;
+  gmtCreate: string;
+  gmtModified: string;
   beDeleted: boolean;
 }
 interface Topic {

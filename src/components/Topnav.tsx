@@ -52,7 +52,7 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
       <div className={styles.topnav}>
         <div className={styles.goto}>
           <a href="/" className={styles.logo}>
-            <img src={require('@/assets/logo.png')} alt="logo" />
+            <img src='https://ali.ringoer.com/cdn/caho/banner/logo.png' alt="logo" />
           </a>
           {breadcrumb.length > 1 ? (
             <Link to={breadcrumb[breadcrumb.length - 2].pathname} className={styles.back}>
@@ -117,7 +117,7 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
         </div>
       </div>
       <div className={styles.banner}>
-        <img src={require('@/assets/bg_pic.jpg')} alt="首页头图" />
+        <img src='https://ali.ringoer.com/cdn/caho/banner/bg_pic.jpg' alt="首页头图" />
       </div>
     </header>
   )

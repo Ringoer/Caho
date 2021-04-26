@@ -216,7 +216,7 @@ export default connect(({ user }: { user: User }) => ({ user }))((props: any) =>
                 <span></span>
               </div>
               <div className={styles.wrapper}>
-                <label htmlFor="signature">新个性签名</label>
+                <label htmlFor="signature" style={{ whiteSpace: 'nowrap' }}>新个性签名</label>
                 &nbsp;
                 <input type="text" name="signature" id="signature" defaultValue={user.signature} ref={signature} />
               </div>
