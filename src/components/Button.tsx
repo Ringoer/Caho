@@ -1,27 +1,39 @@
-import styles from './Button.less'
+import styles from './Button.less';
 
-export default (props: any) => {
-  const { backgroundColor, color, onClick, type } = props
-  return (
-    <>
-      {type === 'plain' ?
-        <button className={styles.button} onClick={onClick} style={{
-          backgroundColor: 'white',
-          color: 'grey',
-          border: 'none'
-        }}>
-          <div className={styles.mask} />
-          {props.children}
-        </button>
-        :
-        <button className={styles.button} onClick={onClick} style={{
-          backgroundColor: backgroundColor ? backgroundColor : '#5CD1F0',
-          color: color ? color : 'white'
-        }}>
-          <div className={styles.mask} />
-          {props.children}
-        </button>
-      }
-    </>
-  )
+interface ButtonProps {
+  backgroundColor?: string;
+  color?: string;
+  onClick?: (event: any) => void;
+  type?: string;
+  children: any;
+  className?: any;
 }
+
+export default (props: ButtonProps) => {
+  const {
+    backgroundColor = '#5CD1F0',
+    color = 'white',
+    onClick = () => {},
+    type,
+  } = props;
+  return (
+    <button
+      className={styles.button}
+      onClick={onClick}
+      style={{
+        backgroundColor: backgroundColor,
+        color: color,
+        ...(type === 'plain'
+          ? {
+              backgroundColor: 'white',
+              color: 'grey',
+              border: 'none',
+            }
+          : {}),
+      }}
+    >
+      <div className={styles.mask} />
+      {props.children}
+    </button>
+  );
+};

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import styles from './topic[id].less';
 import request from '@/util/request';
 
@@ -15,13 +15,26 @@ import Album from '../user/album';
 import marked from 'marked';
 
 export default connect(
-  ({ user, breadcrumb }: { user: User; breadcrumb: Breadcrumb[] }) => ({
+  ({
     user,
+    follow,
+    breadcrumb,
+  }: {
+    user: User;
+    follow: User[];
+    breadcrumb: Breadcrumb[];
+  }) => ({
+    user,
+    follow,
     breadcrumb,
   }),
 )((props: any) => {
-  const { user, breadcrumb } = props;
+  const { user, follow, breadcrumb } = props;
   const { id: topicId } = props.match.params;
+  const follows = useMemo<number[]>(
+    () => (follow ? follow.map(({ id }: { id: string }) => id) : undefined),
+    [follow],
+  );
   const [topic, setTopic] = useState<Topic>();
   const [floors, setFloors] = useState<Reply[]>([]);
   const [selectedPage, setPage] = useState(
@@ -144,7 +157,7 @@ export default connect(
   }, []);
   return (
     <div className={styles.container}>
-      {!topic ? (
+      {!topic || !follows ? (
         <Loading />
       ) : (
         <>
@@ -154,9 +167,10 @@ export default connect(
             .slice(10 * (+selectedPage - 1), 10 * +selectedPage)
             .map((floor: Reply, index: number) => (
               <Floor
-                reply={floor}
                 key={floor.id}
+                reply={floor}
                 index={index + 10 * +selectedPage - 9}
+                isFollowed={follows.includes(floor.userId)}
                 onReply={onReply}
                 onReport={onReport}
                 onCheckOwner={onCheckOwner}

@@ -1,74 +1,102 @@
-import styles from './Topnav.less'
+import styles from './Topnav.less';
 import { connect, history, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 import Loading from './Loading';
 import { Swal } from '@/util/swal';
 
-export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
-  const { user, breadcrumb, login }: { user: User, breadcrumb: Breadcrumb[], login: string } = props
+export default connect(
+  ({
+    user,
+    breadcrumb,
+    login,
+  }: {
+    user: User;
+    breadcrumb: Breadcrumb[];
+    login: string;
+  }) => ({ user, breadcrumb, login }),
+)((props: any) => {
+  const {
+    user,
+    breadcrumb,
+    login,
+  }: { user: User; breadcrumb: Breadcrumb[]; login: string } = props;
 
   function logout() {
-    props.dispatch({ type: 'user/info', payload: null })
-    props.dispatch({ type: 'login/info', payload: 'unlogin' })
+    props.dispatch({ type: 'user/info', payload: null });
+    props.dispatch({ type: 'follow/info', payload: null });
+    props.dispatch({ type: 'login/info', payload: 'unlogin' });
     request('/user/logout', {
-      method: 'post'
+      method: 'post',
     }).then(() => {
-      Swal.success('您已退出')
-        .then(() => {
-          location.reload()
-        })
-    })
+      Swal.success('您已退出').then(() => {
+        location.reload();
+      });
+    });
   }
 
   useEffect(() => {
     if (!user) {
-      console.log(`no cookie found`)
+      console.log(`no cookie found`);
     }
-    request('/user/info')
-      .then(result => {
-        if (result.errno === 0) {
-          const { data } = result
-          if (!data) {
-            return
-          }
-          request(`/score?userId=${data.id}`)
-            .then(result => {
-              if (result.errno === 0) {
-                const { data: score } = result
-                data.score = score || 0
-                props.dispatch({ type: 'user/info', payload: data })
-                props.dispatch({ type: 'login/info', payload: 'login' })
-              }
-            })
-        } else {
-          props.dispatch({ type: 'login/info', payload: 'unlogin' })
+    request('/user/info').then((result) => {
+      if (result.errno === 0) {
+        const { data } = result;
+        if (!data) {
+          return;
         }
-      })
-  }, [login])
+        request(`/score?userId=${data.id}`).then((result) => {
+          if (result.errno === 0) {
+            const { data: score } = result;
+            data.score = score || 0;
+            props.dispatch({ type: 'user/info', payload: data });
+            props.dispatch({ type: 'login/info', payload: 'login' });
+          }
+        });
+        request(`/user/${data.id}/follow`).then((result) => {
+          if (result.errno === 0) {
+            const { follows } = result.data;
+            console.log(result);
+            props.dispatch({ type: 'follow/info', payload: follows });
+          }
+        });
+      } else {
+        props.dispatch({ type: 'login/info', payload: 'unlogin' });
+      }
+    });
+  }, [login]);
 
   return (
     <header className={styles.header}>
       <div className={styles.topnav}>
         <div className={styles.goto}>
           <a href="/" className={styles.logo}>
-            <img src='https://ali.ringoer.com/cdn/caho/banner/logo.png' alt="logo" />
+            <img
+              src="https://ali.ringoer.com/cdn/caho/banner/logo.png"
+              alt="logo"
+            />
           </a>
           {breadcrumb.length > 1 ? (
-            <Link to={breadcrumb[breadcrumb.length - 2].pathname} className={styles.back}>
+            <Link
+              to={breadcrumb[breadcrumb.length - 2].pathname}
+              className={styles.back}
+            >
               <svg className="icon" aria-hidden="true">
                 <use xlinkHref="#icon-left"></use>
               </svg>
-            </Link>) : undefined}
+            </Link>
+          ) : undefined}
         </div>
         <div className={styles.forumName}>
-          {!breadcrumb[breadcrumb.length - 1] ? <Loading /> : (
+          {!breadcrumb[breadcrumb.length - 1] ? (
+            <Loading />
+          ) : (
             <span>{breadcrumb[breadcrumb.length - 1].name}</span>
           )}
         </div>
         <div className={styles.menu}>
           <ul className={styles.pcMenu}>
-            {user ?
+            {user ? (
               <>
                 <li className={styles.menuItem}>
                   <Link to={`/user/${user.id}`} className={styles.link}>
@@ -77,13 +105,13 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
                   </Link>
                 </li>
                 <li className={styles.menuItem}>
-                  <Link to='/message' className={styles.link}>
+                  <Link to="/message" className={styles.link}>
                     <div className={styles.mask}></div>
                     <span>消息</span>
                   </Link>
                 </li>
                 <li className={styles.menuItem}>
-                  <Link to='/settings' className={styles.link}>
+                  <Link to="/settings" className={styles.link}>
                     <div className={styles.mask}></div>
                     <span>设置</span>
                   </Link>
@@ -95,30 +123,34 @@ export default connect(({ user, breadcrumb, login }: { user: User, breadcrumb: B
                   </a>
                 </li>
               </>
-              :
+            ) : (
               <li className={styles.menuItem}>
-                <Link to='/login' className={styles.link}>
+                <Link to="/login" className={styles.link}>
                   <div className={styles.mask}></div>
                   <span>登录</span>
                 </Link>
               </li>
-            }
+            )}
           </ul>
           <ul className={styles.mobileMenu}>
-            {user ?
+            {user ? (
               <li className={styles.menuItem}>
                 <a className={styles.link} onClick={logout}>
                   <svg className="icon" aria-hidden="true">
                     <use xlinkHref="#icon-exit"></use>
                   </svg>
                 </a>
-              </li> : undefined}
+              </li>
+            ) : undefined}
           </ul>
         </div>
       </div>
       <div className={styles.banner}>
-        <img src='https://ali.ringoer.com/cdn/caho/banner/bg_pic.jpg' alt="首页头图" />
+        <img
+          src="https://ali.ringoer.com/cdn/caho/banner/bg_pic.jpg"
+          alt="首页头图"
+        />
       </div>
     </header>
-  )
-})
+  );
+});
