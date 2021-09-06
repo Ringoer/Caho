@@ -1,4 +1,4 @@
-import styles from './register.less';
+import styles from './forgot.less';
 import { useEffect, useRef, useState } from 'react';
 import { connect, history, Link } from 'umi';
 import request from '@/util/request';
@@ -21,15 +21,13 @@ export default connect(
   }, [user]);
 
   const username = useRef<HTMLInputElement>(null);
-  const nickname = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const verify = useRef<HTMLInputElement>(null);
-  const email = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     props.dispatch({
       type: 'breadcrumb/info',
-      payload: [{ index: 1, pathname: '/register', name: '[功能] 注册新用户' }],
+      payload: [{ index: 1, pathname: '/forgot', name: '[功能] 找回账户' }],
     });
   }, []);
   const [flag, setFlag] = useState(false);
@@ -39,44 +37,31 @@ export default connect(
       return;
     }
 
-    if (
-      !username.current ||
-      !nickname.current ||
-      !password.current ||
-      !verify.current ||
-      !email.current
-    ) {
+    if (!username.current || !password.current || !verify.current) {
       setFlag(false);
       return;
     }
     if (
       !username.current.value ||
-      !nickname.current.value ||
       !password.current.value ||
       !verify.current.value ||
-      !email.current.value ||
-      !(password.current.value === verify.current.value) ||
-      !email.current.value.match(
-        /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-      )
+      !(password.current.value === verify.current.value)
     ) {
       fresh(Math.random());
       setFlag(false);
       Swal.error('参数错误');
       return;
     }
-    request('/user/register', {
+    request('/user/forgot', {
       method: 'post',
       body: JSON.stringify({
         username: username.current.value,
-        nickname: nickname.current.value,
         password: password.current.value,
-        email: email.current.value,
       }),
     }).then((result) => {
       if (result.errno === 0) {
         Swal.success(
-          '提交注册成功！\n请前往邮箱，点击注册链接以进行注册验证',
+          '提交找回密码请求成功！\n请前往邮箱，点击注册链接以进行验证',
         ).then(() => {
           history.push('/login');
         });
@@ -106,16 +91,7 @@ export default connect(
           ) : undefined}
         </div>
         <div className={styles.wrapper}>
-          <label htmlFor="nickname">昵称</label>
-          <input type="text" name="nickname" id="nickname" ref={nickname} />
-          {state !== 0 && !(nickname.current && nickname.current.value) ? (
-            <label htmlFor="nickname" className={styles.warning}>
-              昵称不能为空！
-            </label>
-          ) : undefined}
-        </div>
-        <div className={styles.wrapper}>
-          <label htmlFor="password">密码</label>
+          <label htmlFor="password">新密码</label>
           <input
             type="password"
             name="password"
@@ -150,27 +126,11 @@ export default connect(
             </label>
           ) : undefined}
         </div>
-        <div className={styles.wrapper}>
-          <label htmlFor="email">电子邮件</label>
-          <input type="email" name="email" id="email" ref={email} />
-          {state !== 0 &&
-          !(
-            email.current &&
-            email.current.value &&
-            email.current.value.match(
-              /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-            )
-          ) ? (
-            <label htmlFor="email" className={styles.warning}>
-              电子邮件格式错误！
-            </label>
-          ) : undefined}
-        </div>
         <Link to="/login" className={styles.login}>
           已有账号？立即登录&gt;&gt;
         </Link>
         <div className={styles.action}>
-          <Button>注册</Button>
+          <Button>发送邮件</Button>
           <Button
             backgroundColor="white"
             color="black"
@@ -179,17 +139,11 @@ export default connect(
               if (username.current) {
                 username.current.value = '';
               }
-              if (nickname.current) {
-                nickname.current.value = '';
-              }
               if (password.current) {
                 password.current.value = '';
               }
               if (verify.current) {
                 verify.current.value = '';
-              }
-              if (email.current) {
-                email.current.value = '';
               }
             }}
           >

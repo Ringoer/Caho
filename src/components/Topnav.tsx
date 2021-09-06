@@ -56,7 +56,6 @@ export default connect(
         request(`/user/${data.id}/follow`).then((result) => {
           if (result.errno === 0) {
             const { follows } = result.data;
-            console.log(result);
             props.dispatch({ type: 'follow/info', payload: follows });
           }
         });

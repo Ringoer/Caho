@@ -1,7 +1,7 @@
 .container {
   display: flex;
   justify-content: center;
-  > .loginForm {
+  > .registerForm {
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -26,7 +26,7 @@
         text-align: right;
       }
     }
-    > .forgot {
+    > .login {
       display: flex;
       justify-content: flex-end;
       margin-bottom: 8px;
@@ -42,24 +42,6 @@
         outline: none;
         padding: 8px;
         border-radius: 4px;
-      }
-      > .loginButton {
-        background: #39cbf3;
-        border: 1px solid #ececec;
-        color: white;
-        &:hover {
-          transition: background-color 250ms;
-          background-color: #5cd1f0;
-        }
-      }
-      > .registerButton {
-        background: white;
-        border: 1px solid #acacac;
-        &:hover {
-          transition: all 250ms;
-          color: #5cd1f0;
-          border-color: #5cd1f0;
-        }
       }
     }
   }
