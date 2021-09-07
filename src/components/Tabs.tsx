@@ -15,14 +15,14 @@ const Tabs = (props: TabsProps) => {
   const {
     selected,
     direction = 'row',
-    itemWidth,
-    itemHeight,
-    onChange,
+    itemWidth = 'auto',
+    itemHeight = 'auto',
+    onChange = () => {},
   } = props;
   const [flag, setFlag] = useState(false);
   const [tabs, setTabs] = useState<any[]>([]);
   const [target, setTarget] = useState<string>(selected || '');
-  const li = useRef(null);
+  const li = useRef<HTMLLIElement>(null);
 
   const [_, fresh] = useState(0);
 
@@ -50,10 +50,32 @@ const Tabs = (props: TabsProps) => {
     setTabs(tabs);
     setFlag(true);
     fresh(Math.random());
-    if (target && typeof onChange === 'function') {
+    if (target) {
       onChange(target);
     }
   }, [target]);
+
+  useEffect(() => {
+    let tabs = props.children;
+    if (!(tabs instanceof Array)) {
+      tabs = [tabs];
+    }
+    for (let i = 0; i < tabs.length; i++) {
+      const tab = tabs[i];
+      if (!(tab.type === Tab)) {
+        console.error('Tabs 的直接子标签必须是 Tab');
+        return;
+      } else if (!tab.props.title) {
+        console.error('Tab 标签不能没有 title 属性');
+        return;
+      } else if (!tab.props.name) {
+        console.error('Tab 标签不能没有 name 属性');
+        return;
+      }
+    }
+    setTabs(tabs);
+    fresh(Math.random());
+  }, [props.children]);
 
   return (
     <div
@@ -69,9 +91,7 @@ const Tabs = (props: TabsProps) => {
               <li
                 className={styles.indicator}
                 style={{
-                  //@ts-ignore
                   width: li.current ? li.current.offsetWidth : 'auto',
-                  //@ts-ignore
                   left: li.current ? li.current.offsetLeft : 'auto',
                 }}
               />
@@ -79,9 +99,7 @@ const Tabs = (props: TabsProps) => {
               <li
                 className={styles.indicator}
                 style={{
-                  //@ts-ignore
                   height: li.current ? li.current.offsetHeight : 'auto',
-                  //@ts-ignore
                   top: li.current ? li.current.offsetTop : 'auto',
                 }}
               />
@@ -93,8 +111,8 @@ const Tabs = (props: TabsProps) => {
                 onClick={() => setTarget(tab.props.name)}
                 ref={tab.props.name === target ? li : null}
                 style={{
-                  width: itemWidth ? itemWidth : 'auto',
-                  height: itemHeight ? itemHeight : 'auto',
+                  width: itemWidth,
+                  height: itemHeight,
                 }}
               >
                 {tab.props.title}

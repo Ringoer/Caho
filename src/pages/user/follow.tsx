@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import styles from './follow.less';
 import request from '@/util/request';
 import { connect, Link } from 'umi';
@@ -69,254 +69,150 @@ export default connect(({ user }: { user: User }) => ({ user }))(
 
     useEffect(() => {
       fresh(Math.random());
-    }, [followsSelectedPage, fansSelectedPage]);
-
-    useEffect(() => {
-      fresh(Math.random());
     }, [clientWidth]);
 
     window.onresize = () => {
       setClientWidth(document.body.clientWidth);
     };
 
+    const FollowTab = useMemo(
+      () =>
+        follows ? (
+          <>
+            {follows.length === 0 ? (
+              '暂无更多'
+            ) : (
+              <ul>
+                {follows
+                  .slice(
+                    10 * (+followsSelectedPage - 1),
+                    10 * +followsSelectedPage,
+                  )
+                  .map((follow) => (
+                    <li key={follow.id}>
+                      <Note>
+                        <div className={styles.follow}>
+                          <Link to={`/user/${follow.id}`}>
+                            <div className={styles.img}>
+                              <img src={follow.avatarUrl} alt="用户头像" />
+                            </div>
+                            <div className={styles.nickname}>
+                              <span>{follow.nickname}</span>
+                            </div>
+                            <div className={styles.signature}>
+                              <span>
+                                {follow.signature ||
+                                  '这个人很懒，什么也没写...'}
+                              </span>
+                            </div>
+                            <div className={styles.action}>
+                              {user && user.id === +userId ? (
+                                <Button
+                                  backgroundColor="white"
+                                  color="black"
+                                  onClick={(event: Event) => {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    unfollow(follow.id);
+                                  }}
+                                >
+                                  取消关注
+                                </Button>
+                              ) : undefined}
+                            </div>
+                          </Link>
+                        </div>
+                      </Note>
+                    </li>
+                  ))}
+              </ul>
+            )}
+            <div className={styles.paginationWrapper}>
+              {+follows.length > 0 ? (
+                <Pagination
+                  count={follows.length}
+                  selectedPage={followsSelectedPage}
+                  action={(target: string) => setFollowsSelectedPage(target)}
+                />
+              ) : undefined}
+            </div>
+          </>
+        ) : undefined,
+      [follows, followsSelectedPage],
+    );
+
+    const FanTab = useMemo(
+      () =>
+        fans ? (
+          <>
+            {fans.length === 0 ? (
+              '暂无更多'
+            ) : (
+              <ul>
+                {fans
+                  .slice(10 * (+fansSelectedPage - 1), 10 * +fansSelectedPage)
+                  .map((follow) => (
+                    <li key={follow.id}>
+                      <Note>
+                        <div className={styles.follow}>
+                          <Link to={`/user/${follow.id}`}>
+                            <div className={styles.img}>
+                              <img src={follow.avatarUrl} alt="用户头像" />
+                            </div>
+                            <span className={styles.nickname}>
+                              {follow.nickname}
+                            </span>
+                            <span className={styles.signature}>
+                              {follow.signature || '这个人很懒，什么也没写...'}
+                            </span>
+                            <div className={styles.action}></div>
+                          </Link>
+                        </div>
+                      </Note>
+                    </li>
+                  ))}
+              </ul>
+            )}
+            <div className={styles.paginationWrapper}>
+              {+fans.length > 0 ? (
+                <Pagination
+                  count={fans.length}
+                  selectedPage={fansSelectedPage}
+                  action={(target: string) => setFansSelectedPage(target)}
+                />
+              ) : undefined}
+            </div>
+          </>
+        ) : undefined,
+      [fans, fansSelectedPage],
+    );
+
     return (
       <div className={styles.collect}>
         {follows && fans ? (
-          <>
-            <div className={styles.row}>
-              <Tabs direction="row" itemWidth="50%" itemHeight="48px" key={_}>
-                <Tab title={`关注 (${follows.length})`} name="follows">
-                  {follows.length === 0 ? (
-                    '暂无更多'
-                  ) : (
-                    <ul>
-                      {follows
-                        .slice(
-                          10 * (+followsSelectedPage - 1),
-                          10 * +followsSelectedPage,
-                        )
-                        .map((follow) => (
-                          <li key={follow.id}>
-                            <Note>
-                              <div className={styles.follow}>
-                                <Link to={`/user/${follow.id}`}>
-                                  <div className={styles.img}>
-                                    <img
-                                      src={follow.avatarUrl}
-                                      alt="用户头像"
-                                    />
-                                  </div>
-                                  <div className={styles.nickname}>
-                                    <span>{follow.nickname}</span>
-                                  </div>
-                                  <div className={styles.signature}>
-                                    <span>
-                                      {follow.signature ||
-                                        '这个人很懒，什么也没写...'}
-                                    </span>
-                                  </div>
-                                  <div className={styles.action}>
-                                    {user && user.id === +userId ? (
-                                      <Button
-                                        backgroundColor="white"
-                                        color="black"
-                                        onClick={(event: Event) => {
-                                          event.preventDefault();
-                                          event.stopPropagation();
-                                          unfollow(follow.id);
-                                        }}
-                                      >
-                                        取消关注
-                                      </Button>
-                                    ) : undefined}
-                                  </div>
-                                </Link>
-                              </div>
-                            </Note>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
-                  <div className={styles.paginationWrapper}>
-                    {+follows.length > 0 ? (
-                      <Pagination
-                        count={follows.length}
-                        selectedPage={followsSelectedPage}
-                        action={(target: string) =>
-                          setFollowsSelectedPage(target)
-                        }
-                      />
-                    ) : undefined}
-                  </div>
-                </Tab>
-                <Tab title={`粉丝 (${fans.length})`} name="fans">
-                  {fans.length === 0 ? (
-                    '暂无更多'
-                  ) : (
-                    <ul>
-                      {fans
-                        .slice(
-                          10 * (+fansSelectedPage - 1),
-                          10 * +fansSelectedPage,
-                        )
-                        .map((follow) => (
-                          <li key={follow.id}>
-                            <Note>
-                              <div className={styles.follow}>
-                                <Link to={`/user/${follow.id}`}>
-                                  <div className={styles.img}>
-                                    <img
-                                      src={follow.avatarUrl}
-                                      alt="用户头像"
-                                    />
-                                  </div>
-                                  <span className={styles.nickname}>
-                                    {follow.nickname}
-                                  </span>
-                                  <span className={styles.signature}>
-                                    {follow.signature ||
-                                      '这个人很懒，什么也没写...'}
-                                  </span>
-                                  <div className={styles.action}></div>
-                                </Link>
-                              </div>
-                            </Note>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
-                  <div className={styles.paginationWrapper}>
-                    {+fans.length > 0 ? (
-                      <Pagination
-                        count={fans.length}
-                        selectedPage={fansSelectedPage}
-                        action={(target: string) => setFansSelectedPage(target)}
-                      />
-                    ) : undefined}
-                  </div>
-                </Tab>
-              </Tabs>
-            </div>
+          clientWidth > 500 ? (
             <div className={styles.column}>
-              <Tabs
-                direction="column"
-                itemWidth="100px"
-                itemHeight="48px"
-                key={_}
-              >
+              <Tabs direction="column" itemWidth="100px" itemHeight="48px">
                 <Tab title={`关注 (${follows.length})`} name="follows">
-                  {follows.length === 0 ? (
-                    '暂无更多'
-                  ) : (
-                    <ul>
-                      {follows
-                        .slice(
-                          10 * (+followsSelectedPage - 1),
-                          10 * +followsSelectedPage,
-                        )
-                        .map((follow) => (
-                          <li key={follow.id}>
-                            <Note>
-                              <div className={styles.follow}>
-                                <Link to={`/user/${follow.id}`}>
-                                  <div className={styles.img}>
-                                    <img
-                                      src={follow.avatarUrl}
-                                      alt="用户头像"
-                                    />
-                                  </div>
-                                  <div className={styles.nickname}>
-                                    <span>{follow.nickname}</span>
-                                  </div>
-                                  <div className={styles.signature}>
-                                    <span>
-                                      {follow.signature ||
-                                        '这个人很懒，什么也没写...'}
-                                    </span>
-                                  </div>
-                                  <div className={styles.action}>
-                                    {user && user.id === +userId ? (
-                                      <Button
-                                        backgroundColor="white"
-                                        color="black"
-                                        onClick={(event: Event) => {
-                                          event.preventDefault();
-                                          event.stopPropagation();
-                                          unfollow(follow.id);
-                                        }}
-                                      >
-                                        取消关注
-                                      </Button>
-                                    ) : undefined}
-                                  </div>
-                                </Link>
-                              </div>
-                            </Note>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
-                  <div className={styles.paginationWrapper}>
-                    {+follows.length > 0 ? (
-                      <Pagination
-                        count={follows.length}
-                        selectedPage={followsSelectedPage}
-                        action={(target: string) =>
-                          setFollowsSelectedPage(target)
-                        }
-                      />
-                    ) : undefined}
-                  </div>
+                  {FollowTab}
                 </Tab>
                 <Tab title={`粉丝 (${fans.length})`} name="fans">
-                  {fans.length === 0 ? (
-                    '暂无更多'
-                  ) : (
-                    <ul>
-                      {fans
-                        .slice(
-                          10 * (+fansSelectedPage - 1),
-                          10 * +fansSelectedPage,
-                        )
-                        .map((follow) => (
-                          <li key={follow.id}>
-                            <Note>
-                              <div className={styles.follow}>
-                                <Link to={`/user/${follow.id}`}>
-                                  <div className={styles.img}>
-                                    <img
-                                      src={follow.avatarUrl}
-                                      alt="用户头像"
-                                    />
-                                  </div>
-                                  <span className={styles.nickname}>
-                                    {follow.nickname}
-                                  </span>
-                                  <span className={styles.signature}>
-                                    {follow.signature ||
-                                      '这个人很懒，什么也没写...'}
-                                  </span>
-                                  <div className={styles.action}></div>
-                                </Link>
-                              </div>
-                            </Note>
-                          </li>
-                        ))}
-                    </ul>
-                  )}
-                  <div className={styles.paginationWrapper}>
-                    {+fans.length > 0 ? (
-                      <Pagination
-                        count={fans.length}
-                        selectedPage={fansSelectedPage}
-                        action={(target: string) => setFansSelectedPage(target)}
-                      />
-                    ) : undefined}
-                  </div>
+                  {FanTab}
                 </Tab>
               </Tabs>
             </div>
-          </>
+          ) : (
+            <div className={styles.row}>
+              <Tabs direction="row" itemWidth="50%" itemHeight="48px">
+                <Tab title={`关注 (${follows.length})`} name="follows">
+                  {FollowTab}
+                </Tab>
+                <Tab title={`粉丝 (${fans.length})`} name="fans">
+                  {FanTab}
+                </Tab>
+              </Tabs>
+            </div>
+          )
         ) : (
           <Loading />
         )}
