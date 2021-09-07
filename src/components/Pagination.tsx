@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import styles from './Pagination.less';
 
 interface PaginationProps {
-  selectedPage?: number;
+  selectedPage?: string | number;
   action?: (page: string) => void;
   count?: number;
   perPage?: number;
@@ -10,11 +10,14 @@ interface PaginationProps {
 
 const Pagination = (props: PaginationProps) => {
   const {
-    selectedPage = 1,
+    selectedPage: defaultPage = 1,
     action = () => {},
     count = 0,
     perPage = 10,
   } = props;
+
+  const selectedPage = useMemo(() => +defaultPage, [defaultPage]);
+
   if (!(+selectedPage && selectedPage % 1 === 0 && selectedPage > 0)) {
     return <div>页码错误</div>;
   }

@@ -3,7 +3,7 @@ import styles from './Tab.less';
 interface TabProps {
   title: string;
   name: string;
-  children: any;
+  children?: any;
 }
 
 const Tab = (props: TabProps) => {

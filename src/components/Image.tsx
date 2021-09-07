@@ -4,7 +4,7 @@ import Popup from './Popup';
 
 interface ImageProps {
   src: string;
-  scale?: number;
+  scale?: number | string;
   onClick?: (src: string) => void;
 }
 
