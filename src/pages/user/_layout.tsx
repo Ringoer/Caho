@@ -116,7 +116,7 @@ export default connect(
   }, []);
   return (
     <div className={styles.main}>
-      {!currentUser || !follows ? (
+      {!currentUser || (user && !follows) ? (
         <Loading />
       ) : (
         <>
@@ -138,34 +138,36 @@ export default connect(
                 {currentUser.signature || '这个人很懒，什么也没写...'}
               </span>
               <div className={styles.actionWrapper}>
-                {user && user.id === currentUser.id ? (
-                  <div className={styles.action}>
-                    <Button onClick={() => history.push('/settings')}>
-                      设置
-                    </Button>
-                  </div>
-                ) : (
-                  <>
+                {user ? (
+                  user.id === currentUser.id ? (
                     <div className={styles.action}>
-                      {follows.includes(currentUser.id) ? (
-                        <Button onClick={() => unfollow(currentUser.id)}>
-                          取关
-                        </Button>
-                      ) : (
-                        <Button onClick={follow}>关注</Button>
-                      )}
-                    </div>
-                    <div className={styles.action}>
-                      <Button
-                        onClick={() =>
-                          history.push('/message/add', currentUser)
-                        }
-                      >
-                        私信
+                      <Button onClick={() => history.push('/settings')}>
+                        设置
                       </Button>
                     </div>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <div className={styles.action}>
+                        {follows.includes(currentUser.id) ? (
+                          <Button onClick={() => unfollow(currentUser.id)}>
+                            取关
+                          </Button>
+                        ) : (
+                          <Button onClick={follow}>关注</Button>
+                        )}
+                      </div>
+                      <div className={styles.action}>
+                        <Button
+                          onClick={() =>
+                            history.push('/message/add', currentUser)
+                          }
+                        >
+                          私信
+                        </Button>
+                      </div>
+                    </>
+                  )
+                ) : undefined}
               </div>
             </div>
             <ul className={styles.options}>

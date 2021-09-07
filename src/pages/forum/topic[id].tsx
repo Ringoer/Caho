@@ -138,6 +138,7 @@ export default connect(
       data.content = marked(data.content);
       data.gmtCreate = changeTime(data.gmtCreate);
       data.replies = (data.replies || []).map((reply: Reply) => {
+        reply.content = marked(reply.content);
         reply.gmtCreate = changeTime(reply.gmtCreate);
         return reply;
       });
@@ -157,7 +158,7 @@ export default connect(
   }, []);
   return (
     <div className={styles.container}>
-      {!topic || !follows ? (
+      {!topic || (user && !follows) ? (
         <Loading />
       ) : (
         <>
@@ -170,7 +171,7 @@ export default connect(
                 key={floor.id}
                 reply={floor}
                 index={index + 10 * +selectedPage - 9}
-                isFollowed={follows.includes(floor.userId)}
+                isFollowed={follows && follows.includes(floor.userId)}
                 onReply={onReply}
                 onReport={onReport}
                 onCheckOwner={onCheckOwner}

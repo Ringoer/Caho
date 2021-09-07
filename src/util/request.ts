@@ -1,6 +1,6 @@
 const baseUrl = 'http://localhost:7001';
 // const baseUrl = 'http://192.168.1.105:7001'
-// const baseUrl = '/api'
+// const baseUrl = '/api';
 
 interface Response {
   errno: number;

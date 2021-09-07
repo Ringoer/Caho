@@ -105,7 +105,7 @@ const Floor = connect(({ user }: { user: User }) => ({
           >
             {hide ? '展开' : '收起'}
           </Button>
-          {user.id === reply.userId ? undefined : isFollowed ? (
+          {!user || user.id === reply.userId ? undefined : isFollowed ? (
             <Button onClick={() => unfollow(reply.userId)}>取关</Button>
           ) : (
             <Button onClick={follow}>关注</Button>
