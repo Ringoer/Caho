@@ -109,6 +109,7 @@ export default connect(({ user }: { user: User }) => ({ user }))(
         return;
       }
       if (!Number.isInteger(+userId)) {
+        setAlbum([]);
         return;
       }
       request(`/user/${userId}/album`).then((result) => {
