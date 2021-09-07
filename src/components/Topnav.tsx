@@ -1,26 +1,23 @@
 import styles from './Topnav.less';
-import { connect, history, Link } from 'umi';
-import { useEffect, useState } from 'react';
+import { connect, Link } from 'umi';
+import { useEffect } from 'react';
 import request from '@/util/request';
 import Loading from './Loading';
 import { Swal } from '@/util/swal';
 
-export default connect(
-  ({
-    user,
-    breadcrumb,
-    login,
-  }: {
-    user: User;
-    breadcrumb: Breadcrumb[];
-    login: string;
-  }) => ({ user, breadcrumb, login }),
-)((props: any) => {
-  const {
-    user,
-    breadcrumb,
-    login,
-  }: { user: User; breadcrumb: Breadcrumb[]; login: string } = props;
+interface TopnavProps {
+  user: User;
+  breadcrumb: Breadcrumb[];
+  login: string;
+  dispatch: (option: { type: string; payload: any }) => void;
+}
+
+const Topnav = connect(({ user, breadcrumb, login }: TopnavProps) => ({
+  user,
+  breadcrumb,
+  login,
+}))((props: TopnavProps) => {
+  const { user, breadcrumb, login } = props;
 
   function logout() {
     props.dispatch({ type: 'user/info', payload: null });
@@ -153,3 +150,5 @@ export default connect(
     </header>
   );
 });
+
+export default Topnav;

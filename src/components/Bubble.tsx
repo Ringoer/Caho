@@ -1,12 +1,23 @@
-import styles from './Bubble.less'
-export default (props: any) => {
-  const { color } = props
+import styles from './Bubble.less';
+
+interface BubbleProps {
+  color?: string;
+  children: any;
+}
+
+const Bubble = (props: BubbleProps) => {
+  const { color = 'white' } = props;
   return (
-    <div className={styles.bubble} style={{
-      backgroundColor: color ? color : 'white',
-      borderColor: color ? color : 'white'
-    }}>
+    <div
+      className={styles.bubble}
+      style={{
+        backgroundColor: color,
+        borderColor: color,
+      }}
+    >
       {props.children}
     </div>
-  )
-}
+  );
+};
+
+export default Bubble;

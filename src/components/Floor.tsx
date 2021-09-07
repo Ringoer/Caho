@@ -125,30 +125,32 @@ const Floor = connect(({ user }: { user: User }) => ({
           ].join(' ')}
           dangerouslySetInnerHTML={{ __html: reply.content }}
         />
-        <div className={styles.replyAction}>
-          {index === 1 ? (
-            <>
-              <Button type="plain" onClick={() => onCheckOwner(true)}>
-                只看楼主
-              </Button>
-              <Button type="plain" onClick={() => onCheckOwner(false)}>
-                查看全部
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                type="plain"
-                onClick={() => onReply(reply.userId, reply.userNickname)}
-              >
-                回复
-              </Button>
-              <Button type="plain" onClick={() => onReport(reply.id)}>
-                举报
-              </Button>
-            </>
-          )}
-        </div>
+        {user ? (
+          <div className={styles.replyAction}>
+            {index === 1 ? (
+              <>
+                <Button type="plain" onClick={() => onCheckOwner(true)}>
+                  只看楼主
+                </Button>
+                <Button type="plain" onClick={() => onCheckOwner(false)}>
+                  查看全部
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  type="plain"
+                  onClick={() => onReply(reply.userId, reply.userNickname)}
+                >
+                  回复
+                </Button>
+                <Button type="plain" onClick={() => onReport(reply.id)}>
+                  举报
+                </Button>
+              </>
+            )}
+          </div>
+        ) : undefined}
       </Bubble>
     </div>
   );

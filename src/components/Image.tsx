@@ -2,10 +2,16 @@ import { useState } from 'react';
 import styles from './Image.less';
 import Popup from './Popup';
 
-export default (props: any) => {
-  const { src, scale = '200px', onClick, } = props
+interface ImageProps {
+  src: string;
+  scale?: number;
+  onClick?: (src: string) => void;
+}
 
-  const [hide, setHide] = useState(true)
+const Image = (props: ImageProps) => {
+  const { src, scale = 200, onClick } = props;
+
+  const [hide, setHide] = useState(true);
 
   return (
     <div
@@ -13,16 +19,14 @@ export default (props: any) => {
       style={{ width: scale, height: scale }}
       onClick={
         onClick
-          ?
-          (event) => {
-            event.preventDefault()
-            onClick(src)
-          }
-          :
-          (event) => {
-            event.preventDefault()
-            setHide(!hide)
-          }
+          ? (event) => {
+              event.preventDefault();
+              onClick(src);
+            }
+          : (event) => {
+              event.preventDefault();
+              setHide(!hide);
+            }
       }
     >
       <img src={src} alt="图片展示" />
@@ -30,5 +34,7 @@ export default (props: any) => {
         <img src={src} alt="图片" />
       </Popup>
     </div>
-  )
-}
+  );
+};
+
+export default Image;

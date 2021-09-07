@@ -1,40 +1,60 @@
-import { useEffect, useState } from 'react'
-import styles from './Pagination.less'
+import { useEffect, useState } from 'react';
+import styles from './Pagination.less';
 
-export default (props: any) => {
-  const { selectedPage = 1, action, count = 0, perPage = 10 } = props
-  if (!(typeof parseInt(selectedPage) === 'number' && selectedPage % 1 === 0 && selectedPage > 0)) {
-    return (<div>页码错误</div>)
+interface PaginationProps {
+  selectedPage?: number;
+  action?: (page: string) => void;
+  count?: number;
+  perPage?: number;
+}
+
+const Pagination = (props: PaginationProps) => {
+  const {
+    selectedPage = 1,
+    action = () => {},
+    count = 0,
+    perPage = 10,
+  } = props;
+  if (!(+selectedPage && selectedPage % 1 === 0 && selectedPage > 0)) {
+    return <div>页码错误</div>;
   }
-  const [pages, setPages] = useState<number[]>([])
-  const [maxPage, setMaxPage] = useState(0)
+  const [pages, setPages] = useState<number[]>([]);
+  const [maxPage, setMaxPage] = useState(0);
   useEffect(() => {
-    const maxPage = (Number.isInteger(+count) && +count > 0 ? (
-      parseInt(((+count + perPage - 1) / perPage).toString())
-    ) : 0)
-    setMaxPage(maxPage)
-    const start: number = (selectedPage > 2) ? -2 : ((selectedPage > 1) ? -1 : 0)
-    const end = maxPage || -1
-    const currentMaxPage = 4 + start + +selectedPage
-    const beta = (currentMaxPage - end < 0) ? 0 : currentMaxPage - end
+    const maxPage =
+      Number.isInteger(+count) && +count > 0
+        ? parseInt(((+count + perPage - 1) / perPage).toString())
+        : 0;
+    setMaxPage(maxPage);
+    const start: number = selectedPage > 2 ? -2 : selectedPage > 1 ? -1 : 0;
+    const end = maxPage || -1;
+    const currentMaxPage = 4 + start + +selectedPage;
+    const beta = currentMaxPage - end < 0 ? 0 : currentMaxPage - end;
     const tmp: number[] =
-      (end < 6 && end !== -1) ?
-        [1, 2, 3, 4, 5].slice(0, end) :
-        (end === -1 || beta === 0) ?
-          [0, 1, 2, 3, 4].map((item: number) => (item + start + +selectedPage)) :
-          [0, 1, 2, 3, 4]
-            .map((item: number) => (item + start + +selectedPage))
-            .map((item: number) => (item - beta))
-    setPages(tmp)
-  }, [selectedPage, count])
-  const [target, setTarget] = useState('')
+      end < 6 && end !== -1
+        ? [1, 2, 3, 4, 5].slice(0, end)
+        : end === -1 || beta === 0
+        ? [0, 1, 2, 3, 4].map((item: number) => item + start + +selectedPage)
+        : [0, 1, 2, 3, 4]
+            .map((item: number) => item + start + +selectedPage)
+            .map((item: number) => item - beta);
+    setPages(tmp);
+  }, [selectedPage, count]);
+  const [target, setTarget] = useState('');
   const turnTo = (page: string | number) => {
-    let target = parseInt(page.toString())
-    if (!(typeof target === 'number' && target % 1 === 0 && target > 0 && (!maxPage || target <= maxPage))) {
-      return
+    let target = parseInt(page.toString());
+    if (
+      !(
+        typeof target === 'number' &&
+        target % 1 === 0 &&
+        target > 0 &&
+        (!maxPage || target <= maxPage)
+      )
+    ) {
+      return;
     }
-    action(target.toString())
-  }
+    action(target.toString());
+  };
   return (
     <ul className={styles.pagination}>
       <li>
@@ -52,17 +72,20 @@ export default (props: any) => {
         跳转到
         <input
           type="text"
-          onChange={event => { setTarget(event.target.value) }}
-          onKeyDown={event => {
-            const { key } = event
+          onChange={(event) => {
+            setTarget(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            const { key } = event;
             if (key === 'Enter') {
-              turnTo(target)
+              turnTo(target);
             }
           }}
         />
-        页
-        <button onClick={() => turnTo(target)}>确定</button>
+        页<button onClick={() => turnTo(target)}>确定</button>
       </li>
     </ul>
-  )
-}
+  );
+};
+
+export default Pagination;

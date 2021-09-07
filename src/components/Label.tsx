@@ -1,16 +1,24 @@
-import styles from './Label.less'
+import styles from './Label.less';
 
-export default (props: any) => {
-  const { color = 'white', backgroundColor = "#5CD1F0" } = props
+interface LabelProps {
+  color?: string;
+  backgroundColor?: string;
+  children: any;
+}
+
+const Label = (props: LabelProps) => {
+  const { color = 'white', backgroundColor = '#5CD1F0' } = props;
   return (
     <div
       className={styles.label}
       style={{
         color,
-        backgroundColor
+        backgroundColor,
       }}
     >
       {props.children}
     </div>
-  )
-}
+  );
+};
+
+export default Label;

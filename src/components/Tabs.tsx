@@ -1,66 +1,90 @@
 import { useEffect, useRef, useState } from 'react';
-import styles from './Tabs.less'
-import Tab from './Tab'
+import styles from './Tabs.less';
+import Tab from './Tab';
 
-export default (props: any) => {
-  const { selected, direction = 'row', itemWidth, itemHeight, onChange } = props
-  const [flag, setFlag] = useState(false)
-  const [tabs, setTabs] = useState<any[]>([])
-  const [target, setTarget] = useState<string>(selected)
-  const li = useRef(null)
+interface TabsProps {
+  selected?: string;
+  direction?: 'row' | 'column';
+  itemWidth?: number | string;
+  itemHeight?: number | string;
+  onChange?: (target: string) => void;
+  children: any;
+}
 
-  const [_, fresh] = useState(0)
+const Tabs = (props: TabsProps) => {
+  const {
+    selected,
+    direction = 'row',
+    itemWidth,
+    itemHeight,
+    onChange,
+  } = props;
+  const [flag, setFlag] = useState(false);
+  const [tabs, setTabs] = useState<any[]>([]);
+  const [target, setTarget] = useState<string>(selected || '');
+  const li = useRef(null);
+
+  const [_, fresh] = useState(0);
 
   useEffect(() => {
-    let tabs = props.children
+    let tabs = props.children;
     if (!(tabs instanceof Array)) {
-      tabs = [tabs]
+      tabs = [tabs];
     }
     for (let i = 0; i < tabs.length; i++) {
-      const tab = tabs[i]
+      const tab = tabs[i];
       if (!(tab.type === Tab)) {
-        console.error('Tabs 的直接子标签必须是 Tab')
-        return
+        console.error('Tabs 的直接子标签必须是 Tab');
+        return;
       } else if (!tab.props.title) {
-        console.error('Tab 标签不能没有 title 属性')
-        return
+        console.error('Tab 标签不能没有 title 属性');
+        return;
       } else if (!tab.props.name) {
-        console.error('Tab 标签不能没有 name 属性')
-        return
+        console.error('Tab 标签不能没有 name 属性');
+        return;
       }
     }
     if (!flag && !selected) {
-      setTarget(tabs[0].props.name)
+      setTarget(tabs[0].props.name);
     }
-    setTabs(tabs)
-    setFlag(true)
-    fresh(Math.random())
+    setTabs(tabs);
+    setFlag(true);
+    fresh(Math.random());
     if (target && typeof onChange === 'function') {
-      onChange(target)
+      onChange(target);
     }
-  }, [target])
+  }, [target]);
 
   return (
-    <div className={[styles.tabs, direction === 'row' ? styles.row : styles.column].join(' ')}>
+    <div
+      className={[
+        styles.tabs,
+        direction === 'row' ? styles.row : styles.column,
+      ].join(' ')}
+    >
       {flag ? (
         <>
           <ul className={styles.menu}>
             {direction === 'row' ? (
-              <li className={styles.indicator}
+              <li
+                className={styles.indicator}
                 style={{
                   //@ts-ignore
                   width: li.current ? li.current.offsetWidth : 'auto',
                   //@ts-ignore
-                  left: li.current ? li.current.offsetLeft : 'auto'
-                }} />
+                  left: li.current ? li.current.offsetLeft : 'auto',
+                }}
+              />
             ) : (
-              <li className={styles.indicator}
+              <li
+                className={styles.indicator}
                 style={{
                   //@ts-ignore
                   height: li.current ? li.current.offsetHeight : 'auto',
                   //@ts-ignore
-                  top: li.current ? li.current.offsetTop : 'auto'
-                }} />
+                  top: li.current ? li.current.offsetTop : 'auto',
+                }}
+              />
             )}
             {tabs.map((tab: any) => (
               <li
@@ -70,7 +94,7 @@ export default (props: any) => {
                 ref={tab.props.name === target ? li : null}
                 style={{
                   width: itemWidth ? itemWidth : 'auto',
-                  height: itemHeight ? itemHeight : 'auto'
+                  height: itemHeight ? itemHeight : 'auto',
                 }}
               >
                 {tab.props.title}
@@ -81,5 +105,7 @@ export default (props: any) => {
         </>
       ) : undefined}
     </div>
-  )
-}
+  );
+};
+
+export default Tabs;

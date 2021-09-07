@@ -8,10 +8,19 @@ import marked from 'marked';
 import 'github-markdown-css/github-markdown.css';
 import { Swal } from '@/util/swal';
 
-export default (props: any) => {
+interface EditorProps {
+  disabled?: boolean;
+  hasTitle?: boolean;
+  onSubmit: (text: string, title: string) => void;
+  defaultValue?: string;
+  wordsLimit?: number;
+  insertValue?: string;
+}
+
+const Editor = (props: EditorProps) => {
   const {
-    disabled,
-    hasTitle,
+    disabled = false,
+    hasTitle = false,
     onSubmit,
     defaultValue = '',
     wordsLimit = 4000,
@@ -126,3 +135,5 @@ export default (props: any) => {
     </form>
   );
 };
+
+export default Editor;

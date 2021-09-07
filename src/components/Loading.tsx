@@ -1,11 +1,13 @@
-import styles from './Loading.less'
+import styles from './Loading.less';
 
-export default () => {
+const Loading = () => {
   return (
     <div className={styles.loading}>
       <svg className="icon" aria-hidden="true">
         <use xlinkHref="#icon-loading"></use>
       </svg>
     </div>
-  )
-}
+  );
+};
+
+export default Loading;

@@ -1,12 +1,14 @@
-import { useEffect } from 'react'
-import { connect, Link } from 'umi'
-import styles from './Breadcrumb.less'
+import { useEffect } from 'react';
+import { connect, Link } from 'umi';
+import styles from './Breadcrumb.less';
 
-export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ breadcrumb }))((props: any) => {
-  const { breadcrumb }: { breadcrumb: Breadcrumb[] } = props
+const BreadCrumb = connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({
+  breadcrumb,
+}))((props: any) => {
+  const { breadcrumb }: { breadcrumb: Breadcrumb[] } = props;
   useEffect(() => {
-    console.log(breadcrumb)
-  }, [])
+    console.log(breadcrumb);
+  }, []);
   return (
     <ul className={styles.breadcrumb}>
       <li className={styles.breadcrumbItem}>
@@ -16,14 +18,14 @@ export default connect(({ breadcrumb }: { breadcrumb: Breadcrumb[] }) => ({ brea
           </svg>
         </a>
       </li>
-      {
-        breadcrumb.map(item => (
-          <li className={styles.breadcrumbItem} key={item.index}>
-            <span className={styles.separator}>/</span>
-            <Link to={item.pathname}>{item.name}</Link>
-          </li>
-        ))
-      }
+      {breadcrumb.map((item) => (
+        <li className={styles.breadcrumbItem} key={item.index}>
+          <span className={styles.separator}>/</span>
+          <Link to={item.pathname}>{item.name}</Link>
+        </li>
+      ))}
     </ul>
-  )
-})
+  );
+});
+
+export default BreadCrumb;

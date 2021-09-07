@@ -1,9 +1,7 @@
-import styles from './Note.less'
+import styles from './Note.less';
 
-export default (props: any) => {
-  return (
-    <div className={styles.note}>
-      {props.children}
-    </div>
-  )
-}
+const Note = (props: any) => {
+  return <div className={styles.note}>{props.children}</div>;
+};
+
+export default Note;

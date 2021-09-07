@@ -302,7 +302,7 @@ export default connect(
           <div className={styles.pagination}>
             <Pagination
               count={topicsCount}
-              selectedPage={selectedPage}
+              selectedPage={+selectedPage}
               action={(target: string) => {
                 history.push('?page=' + target);
               }}
@@ -315,25 +315,28 @@ export default connect(
               {user ? (
                 <div className={styles.actions}>
                   <div className={styles.action}>
-                    <div className={styles.fromAlbum}>
-                      <Button onClick={() => setHide(!hide)}>
+                    <div
+                      className={styles.fromAlbum}
+                      onClick={() => setHide(!hide)}
+                    >
+                      <Button>
                         <span>插入图片</span>
-                        <Popup hide={hide}>
-                          <div
-                            onClick={(event) => {
-                              event.stopPropagation();
-                            }}
-                          >
-                            <Album
-                              userId={user.id}
-                              onClick={(src: string) => {
-                                setInsertValue(`![图片](${src})`);
-                                setHide(true);
-                              }}
-                            />
-                          </div>
-                        </Popup>
                       </Button>
+                      <Popup hide={hide}>
+                        <div
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                        >
+                          <Album
+                            userId={user.id}
+                            onClick={(src: string) => {
+                              setInsertValue(`![图片](${src})`);
+                              setHide(true);
+                            }}
+                          />
+                        </div>
+                      </Popup>
                     </div>
                   </div>
                   <div className={styles.action}>

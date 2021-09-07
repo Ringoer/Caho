@@ -1,13 +1,17 @@
-import styles from './Popup.less'
+import styles from './Popup.less';
 
-export default (props: any) => {
-  const { hide = false } = props
+interface PopupProps {
+  hide?: boolean;
+  children: any;
+}
+
+const Popup = (props: PopupProps) => {
+  const { hide = false } = props;
   return (
-    <div
-      className={styles.popup}
-      style={{ display: hide ? 'none' : 'flex' }}
-    >
+    <div className={styles.popup} style={{ display: hide ? 'none' : 'flex' }}>
       {props.children}
     </div>
-  )
-}
+  );
+};
+
+export default Popup;

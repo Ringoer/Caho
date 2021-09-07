@@ -9,7 +9,7 @@ interface ButtonProps {
   className?: any;
 }
 
-export default (props: ButtonProps) => {
+const Button = (props: ButtonProps) => {
   const {
     backgroundColor = '#5CD1F0',
     color = 'white',
@@ -37,3 +37,5 @@ export default (props: ButtonProps) => {
     </button>
   );
 };
+
+export default Button;

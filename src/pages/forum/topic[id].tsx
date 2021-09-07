@@ -179,7 +179,7 @@ export default connect(
               />
             ))}
           <Pagination
-            selectedPage={selectedPage}
+            selectedPage={+selectedPage}
             count={floors.length}
             action={(target: string) => setPage(target)}
           />
@@ -190,25 +190,28 @@ export default connect(
               {user ? (
                 <div className={styles.actions}>
                   <div className={styles.action}>
-                    <div className={styles.fromAlbum}>
-                      <Button onClick={() => setHide(!hide)}>
+                    <div
+                      className={styles.fromAlbum}
+                      onClick={() => setHide(!hide)}
+                    >
+                      <Button>
                         <span>插入图片</span>
-                        <Popup hide={hide}>
-                          <div
-                            onClick={(event) => {
-                              event.stopPropagation();
-                            }}
-                          >
-                            <Album
-                              userId={user.id}
-                              onClick={(src: string) => {
-                                setInsertValue(`![图片](${src})`);
-                                setHide(true);
-                              }}
-                            />
-                          </div>
-                        </Popup>
                       </Button>
+                      <Popup hide={hide}>
+                        <div
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                        >
+                          <Album
+                            userId={user.id}
+                            onClick={(src: string) => {
+                              setInsertValue(`![图片](${src})`);
+                              setHide(true);
+                            }}
+                          />
+                        </div>
+                      </Popup>
                     </div>
                   </div>
                 </div>
