@@ -1,16 +1,16 @@
-.container{
+.container {
   width: 900px;
   background: white;
   max-width: 90vw;
-  >.forumTop{
+  > .forumTop {
     position: relative;
-    >.banner{
+    > .banner {
       width: 100%;
     }
-    >.forumInfoWrapper{
+    > .forumInfoWrapper {
       position: relative;
       height: 80px;
-      >.forumInfo{
+      > .forumInfo {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -19,20 +19,22 @@
         width: 100%;
         display: grid;
         grid-template-areas:
-        "avatar space space space"
-        "avatar forumName collect sign"
-        "avatar description collect sign";
-        grid-template-columns: 160px 1fr 120px 120px;
+          'avatar _ space space space'
+          'avatar _ forumName collect sign'
+          'avatar _ description collect sign';
+        grid-template-columns: 140px 20px 1fr 120px 120px;
         grid-template-rows: 2fr 1fr 1fr;
-        >.avatar{
+        > .avatar {
           cursor: pointer;
           grid-area: avatar;
           height: 100%;
-          border: 1px solid #DCDCDC;
+          width: 100%;
+          border: 1px solid #dcdcdc;
           background: white;
           padding: 4px;
         }
-        >.forumName,>.description{
+        > .forumName,
+        > .description {
           margin-top: 8px;
           height: 20px;
           text-overflow: ellipsis;
@@ -41,58 +43,59 @@
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
         }
-        >.forumName{
+        > .forumName {
           grid-area: forumName;
           font-weight: bold;
         }
-        >.description{
+        > .description {
           grid-area: description;
         }
-        >.collect,>.sign{
+        > .collect,
+        > .sign {
           display: flex;
           align-items: center;
           padding-left: 20px;
         }
-        >.collect{
+        > .collect {
           grid-area: collect;
         }
-        >.sign{
+        > .sign {
           grid-area: sign;
         }
       }
     }
   }
-  >.topics{
+  > .topics {
     padding: 16px;
-    .topic{
+    .topic {
       width: 100%;
       display: grid;
       grid-template-columns: auto auto auto 1fr;
       grid-template-rows: 48px 1fr;
-      grid-template-areas: 
-      "avatar title title title"
-      "avatar date comment other";
-      >.img{
+      grid-template-areas:
+        'avatar title title title'
+        'avatar date comment other';
+      > .img {
         grid-area: avatar;
         margin-right: 8px;
-        >img{
+        > img {
           height: 80px;
           width: 80px;
         }
       }
-      >.title{
+      > .title {
         font-weight: bold;
         padding: 8px;
         grid-area: title;
         position: relative;
         display: grid;
         grid-template-columns: auto 1fr;
-        >.tags{
-          >*{
+        > .tags {
+          > * {
             margin-right: 4px;
           }
         }
-        >.link{
+        > .link {
           text-overflow: ellipsis;
           overflow: hidden;
           display: -webkit-box;
@@ -100,13 +103,13 @@
           -webkit-box-orient: vertical;
           width: 100%;
           padding-top: 6px;
-          &:hover{
+          &:hover {
             transition: color 250ms;
-            color:#018DFF;
+            color: #018dff;
           }
         }
       }
-      >.content{
+      > .content {
         display: none;
         grid-area: content;
         padding: 8px;
@@ -114,8 +117,9 @@
         height: 32px;
         overflow: hidden;
       }
-      >.date,>.comment{
-        >*{
+      > .date,
+      > .comment {
+        > * {
           margin-right: 4px;
         }
         text-overflow: ellipsis;
@@ -124,45 +128,45 @@
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
       }
-      >.date{
+      > .date {
         margin-left: 8px;
         grid-area: date;
       }
-      >.comment{
+      > .comment {
         grid-area: comment;
       }
     }
   }
-  >.pagination{
+  > .pagination {
     padding: 16px;
     padding-top: 0;
   }
-  >.editorWrapper{
+  > .editorWrapper {
     background-color: white;
     padding-top: 12px;
-    >.editorTitleWrapper{
+    > .editorTitleWrapper {
       margin: 0 12px;
       display: flex;
       justify-content: space-between;
-      >.editorTitle{
+      > .editorTitle {
         font-size: 20px;
         font-weight: bold;
       }
-      >.actions{
+      > .actions {
         display: flex;
-        >*{
+        > * {
           margin: 0 4px;
         }
-        >.action{
+        > .action {
           display: flex;
           align-items: center;
-          >*{
+          > * {
             margin: 0 4px;
           }
-          >select{
+          > select {
             padding: 4px 8px;
           }
-          >.fromAlbum{
+          > .fromAlbum {
             width: 80px;
           }
         }
@@ -171,80 +175,81 @@
   }
 }
 @media (max-width: 500px) {
-  .container{
+  .container {
     background: none;
     padding-bottom: 8px;
     max-width: 100vw;
-    >.forumTop{
-      >.forumInfoWrapper{
+    > .forumTop {
+      > .forumInfoWrapper {
         height: 60px;
-        >.forumInfo{
+        > .forumInfo {
           display: flex;
           padding: 0 20px;
           height: 100%;
-          >.avatar{
+          > .avatar {
             display: none;
           }
-          >.forumName{
+          > .forumName {
             display: none;
           }
-          >.description{
+          > .description {
             display: none;
           }
-          >.collect,>.sign{
+          > .collect,
+          > .sign {
             width: 40vw;
           }
         }
       }
     }
-    >.topics{
+    > .topics {
       padding: 4px;
-      >.noteWrapper{
-        border-radius:16px;
+      > .noteWrapper {
+        border-radius: 16px;
         margin-bottom: 6px;
         background: white;
       }
-      .topic{
+      .topic {
         margin-top: 8px;
         grid-template-columns: auto 1fr;
-        grid-template-areas: 
-        "avatar date"
-        "title title"
-        "content content"
-        "comment comment";
-        >.img{
+        grid-template-areas:
+          'avatar date'
+          'title title'
+          'content content'
+          'comment comment';
+        > .img {
           margin-left: 8px;
-          >img{
+          > img {
             border-radius: 50%;
             height: 48px;
             width: 48px;
           }
         }
-        >.title{
+        > .title {
           grid-template-columns: auto 1fr;
         }
-        >.content{
+        > .content {
           display: block;
         }
-        >.date{
+        > .date {
           display: flex;
           flex-direction: column;
-          >*{
-            svg{
+          > * {
+            svg {
               display: none;
             }
-            &:nth-child(2){
-              color:#ACACAC;
+            &:nth-child(2) {
+              color: #acacac;
             }
           }
         }
-        >.comment{
+        > .comment {
           display: flex;
           justify-content: space-around;
         }
       }
     }
-    >.pagination{
+    > .pagination {
       padding: 0;
     }
   }
