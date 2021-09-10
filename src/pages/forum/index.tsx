@@ -1,40 +1,52 @@
 import styles from './index.less';
-import Section from '@/components/Section'
-import Loading from '@/components/Loading'
+import Section from '@/components/Section';
+import Loading from '@/components/Loading';
 import { connect, Link } from 'umi';
 import { useEffect, useState } from 'react';
 import request from '@/util/request';
 
-export default connect(({ user, breadcrumb, login }: { user: any, breadcrumb: Breadcrumb[], login: string }) => ({ user, breadcrumb, login }))((props: any) => {
-  const { user, login } = props
-  const [forums, setForums] = useState<Forum[]>([])
-  const [flag, setFlag] = useState(false)
+export default connect(
+  ({
+    user,
+    breadcrumb,
+    login,
+  }: {
+    user: any;
+    breadcrumb: Breadcrumb[];
+    login: string;
+  }) => ({ user, breadcrumb, login }),
+)((props: any) => {
+  const { user, login } = props;
+  const [forums, setForums] = useState<Forum[]>([]);
+  const [flag, setFlag] = useState(false);
 
   useEffect(() => {
-    props.dispatch({ type: 'breadcrumb/info', payload: [{ index: 0, pathname: '/', name: '首页' }] })
-  }, [])
+    props.dispatch({
+      type: 'breadcrumb/info',
+      payload: [{ index: 0, pathname: '/', name: '首页' }],
+    });
+  }, []);
   useEffect(() => {
     if (!login) {
-      return
+      return;
     }
     if (login === 'unlogin') {
-      setFlag(true)
-      return
+      setFlag(true);
+      return;
     }
     if (!user) {
-      return
+      return;
     }
 
-    request(`/forum/collect?userId=${user.id}`)
-      .then(result => {
-        setFlag(true)
-        if (result.errno === 0) {
-          if (result.data) {
-            setForums(result.data)
-          }
+    request(`/forum/collect?userId=${user.id}`).then((result) => {
+      setFlag(true);
+      if (result.errno === 0) {
+        if (result.data) {
+          setForums(result.data);
         }
-      })
-  }, [user, login])
+      }
+    });
+  }, [user, login]);
   return (
     <div className={styles.content}>
       <Section color="#5CD1F0" title="关注">
@@ -55,7 +67,13 @@ export default connect(({ user, breadcrumb, login }: { user: any, breadcrumb: Br
               {forums.map((forum: Forum) => (
                 <li key={forum.id}>
                   <Link to={`/forum/${forum.id}`} className={styles.forum}>
-                    <img src={forum.avatarUrl} alt="版块头像" />
+                    <div className={styles.avatarWrapper}>
+                      <img
+                        className={styles.avatarImg}
+                        src={forum.avatarUrl || ''}
+                        alt="版块头像"
+                      />
+                    </div>
                     <div>{forum.forumName}</div>
                   </Link>
                 </li>
@@ -82,8 +100,10 @@ export default connect(({ user, breadcrumb, login }: { user: any, breadcrumb: Br
               ) : undefined}
             </ul>
           )
-        ) : <Loading />}
+        ) : (
+          <Loading />
+        )}
       </Section>
     </div>
   );
-})
+});

@@ -194,14 +194,18 @@ export default connect(
           ) : undefined}
           <div className={styles.forumInfoWrapper}>
             <div className={styles.forumInfo}>
-              <img
-                className={styles.avatar}
-                src={forum.avatarUrl || ''}
-                alt="版块头像"
-                onClick={() => {
-                  setPage(1);
-                }}
-              />
+              <div className={styles.avatar}>
+                <div className={styles.avatarWrapper}>
+                  <img
+                    className={styles.avatarImg}
+                    src={forum.avatarUrl || ''}
+                    alt="版块头像"
+                    onClick={() => {
+                      setPage(1);
+                    }}
+                  />
+                </div>
+              </div>
               <span className={styles.forumName}>
                 {forum.forumName || '版块名称'}
               </span>
