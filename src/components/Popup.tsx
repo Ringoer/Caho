@@ -1,3 +1,5 @@
+import { FC, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import styles from './Popup.less';
 
 interface PopupProps {
@@ -5,13 +7,34 @@ interface PopupProps {
   children: any;
 }
 
-const Popup = (props: PopupProps) => {
+const Popup: FC<PopupProps> & {
+  show: (children: any) => void;
+  close: (children: any) => void;
+} = (props: PopupProps) => {
   const { hide = false } = props;
+
   return (
-    <div className={styles.popup} style={{ display: hide ? 'none' : 'flex' }}>
+    <div
+      className={styles.popup}
+      style={{ display: hide ? 'none' : 'flex' }}
+      onClick={Popup.close}
+    >
       {props.children}
     </div>
   );
+};
+
+Popup.show = (children: FC<any>) => {
+  const container = document.createElement('div');
+  container.id = 'popupContainer';
+  document.body.append(container);
+  ReactDOM.render(<Popup>{children}</Popup>, container);
+};
+Popup.close = () => {
+  const container = document.getElementById('popupContainer');
+  if (container) {
+    container.remove();
+  }
 };
 
 export default Popup;
