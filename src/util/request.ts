@@ -26,7 +26,7 @@ export default (
     credentials: 'include',
   })
     .then(
-      (res) => res.json(),
+      (result) => result.json(),
       (err) => {
         console.error(err);
         const errResponse: Response = {

@@ -1,97 +1,99 @@
 @time: 250ms;
-.header{
+.header {
   position: relative;
-  > .topnav{
+  > .topnav {
     color: white;
     position: absolute;
     height: 100%;
-    top:0;
+    top: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    &::after{
+    &::after {
       display: block;
       content: '';
       position: absolute;
-      top:200px;
+      top: 200px;
       height: 5px;
       width: 100%;
-      background: linear-gradient(90deg, 
-      rgb(255,0,0) 0%,
-      rgb(255,0,0) 6%, 
-      rgb(246,145,67) 6%, 
-      rgb(246,145,67) 12%, 
-      rgb(94, 255, 0) 12%, 
-      rgb(94, 255, 0) 18%, 
-      rgb(0, 140, 255) 18%, 
-      rgb(0, 140, 255) 24%, 
-      rgb(234, 0, 255) 24%, 
-      rgb(234, 0, 255) 30%, 
-      rgb(255,0,0) 30%,
-      rgb(255,0,0) 36%, 
-      rgb(246,145,67) 36%, 
-      rgb(246,145,67) 42%, 
-      rgb(94, 255, 0) 42%, 
-      rgb(94, 255, 0) 48%, 
-      rgb(0, 140, 255) 48%, 
-      rgb(0, 140, 255) 54%, 
-      rgb(234, 0, 255) 54%, 
-      rgb(234, 0, 255) 60%, 
-      rgb(255,0,0) 60%,
-      rgb(255,0,0) 66%, 
-      rgb(246,145,67) 66%, 
-      rgb(246,145,67) 72%, 
-      rgb(94, 255, 0) 72%, 
-      rgb(94, 255, 0) 78%, 
-      rgb(0, 140, 255) 78%, 
-      rgb(0, 140, 255) 84%, 
-      rgb(234, 0, 255) 84%, 
-      rgb(234, 0, 255) 90%, 
-      rgb(255,0,0) 90%,
-      rgb(255,0,0) 96%, 
-      rgb(246,145,67) 96%, 
-      rgb(246,145,67) 100%, );
+      background: linear-gradient(
+        90deg,
+        rgb(255, 0, 0) 0%,
+        rgb(255, 0, 0) 6%,
+        rgb(246, 145, 67) 6%,
+        rgb(246, 145, 67) 12%,
+        rgb(94, 255, 0) 12%,
+        rgb(94, 255, 0) 18%,
+        rgb(0, 140, 255) 18%,
+        rgb(0, 140, 255) 24%,
+        rgb(234, 0, 255) 24%,
+        rgb(234, 0, 255) 30%,
+        rgb(255, 0, 0) 30%,
+        rgb(255, 0, 0) 36%,
+        rgb(246, 145, 67) 36%,
+        rgb(246, 145, 67) 42%,
+        rgb(94, 255, 0) 42%,
+        rgb(94, 255, 0) 48%,
+        rgb(0, 140, 255) 48%,
+        rgb(0, 140, 255) 54%,
+        rgb(234, 0, 255) 54%,
+        rgb(234, 0, 255) 60%,
+        rgb(255, 0, 0) 60%,
+        rgb(255, 0, 0) 66%,
+        rgb(246, 145, 67) 66%,
+        rgb(246, 145, 67) 72%,
+        rgb(94, 255, 0) 72%,
+        rgb(94, 255, 0) 78%,
+        rgb(0, 140, 255) 78%,
+        rgb(0, 140, 255) 84%,
+        rgb(234, 0, 255) 84%,
+        rgb(234, 0, 255) 90%,
+        rgb(255, 0, 0) 90%,
+        rgb(255, 0, 0) 96%,
+        rgb(246, 145, 67) 96%,
+        rgb(246, 145, 67) 100%
+      );
       z-index: 10;
     }
-    >.forumName{
+    > .forumName {
       display: none;
     }
-    svg{
+    svg {
       height: 32px;
       width: 32px;
     }
-    > .goto{
+    > .goto {
       width: 96px;
       margin-left: 8px;
       flex-shrink: 0;
-      >.logo{
+      > .logo {
         display: block;
       }
-      >.back{
+      > .back {
         display: none;
       }
     }
-    > .menu{
+    > .menu {
       flex-shrink: 0;
-      > .pcMenu{
+      > .pcMenu {
         display: flex;
       }
-      >.mobileMenu{
+      > .mobileMenu {
         display: none;
       }
-      .link{
+      .link {
         display: block;
         position: relative;
         background: none;
         padding: 16px;
         border: none;
         outline: none;
-        &:hover{
-          >.mask{
-            background: fadeout(white,70%);
+        &:hover {
+          > .mask {
+            background: fadeout(white, 70%);
           }
         }
-        >.mask{
+        > .mask {
           left: 0;
           top: 0;
           position: absolute;
@@ -102,61 +104,71 @@
         }
       }
     }
-    img{
+    img {
       margin: 8px 0;
       height: 42px;
     }
   }
-  > .banner{
+  > .banner {
     width: 100%;
     overflow: hidden;
-    >img{
+    > img {
       height: 200px;
-      margin-left: calc((100vw - 1920px)/2);
+      margin-left: calc((100vw - 1920px) / 2);
     }
-  }  
+  }
+}
+@media (min-width: 1920px) {
+  .header {
+    > .banner {
+      > img {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  }
 }
 @media (max-width: 500px) {
-  .header{
+  .header {
     max-width: 900px;
     height: 60px;
     z-index: 10;
-    @media (min-width:900px) {
+    @media (min-width: 900px) {
       left: calc(50% - 450px);
     }
     background: white;
-    >.banner{
+    > .banner {
       display: none;
     }
-    >.topnav{
+    > .topnav {
       color: black;
       background-color: white;
       position: fixed;
       height: 60px;
-      &::after{
+      &::after {
         display: none;
       }
-      >.goto{
+      > .goto {
         width: 42px;
         display: flex;
         align-items: center;
-        >.logo{
+        > .logo {
           display: none;
         }
-        >.back{
+        > .back {
           display: block;
         }
       }
-      >.forumName{
+      > .forumName {
         position: absolute;
         width: calc(100% - 100px);
         left: 50%;
         top: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         display: flex;
         justify-content: center;
         align-items: center;
-        >*{
+        > * {
           font-size: larger;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -165,15 +177,15 @@
           -webkit-box-orient: vertical;
         }
       }
-      >.menu{
-        >.pcMenu{
+      > .menu {
+        > .pcMenu {
           display: none;
         }
-        >.mobileMenu{
+        > .mobileMenu {
           display: flex;
           margin-right: 4px;
-          .link{
-            padding:16px 4px;
+          .link {
+            padding: 16px 4px;
           }
         }
       }
