@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Popup.less';
 
@@ -25,7 +25,8 @@ const Popup: FC<PopupProps> & {
 };
 
 Popup.show = (children: FC<any>) => {
-  const container = document.createElement('div');
+  const container =
+    document.getElementById('popupContainer') || document.createElement('div');
   container.id = 'popupContainer';
   document.body.append(container);
   ReactDOM.render(<Popup>{children}</Popup>, container);
