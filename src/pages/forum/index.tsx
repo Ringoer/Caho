@@ -74,7 +74,7 @@ export default connect(
                         alt="版块头像"
                       />
                     </div>
-                    <div>{forum.forumName}</div>
+                    <span>{forum.forumName}</span>
                   </Link>
                 </li>
               ))}
