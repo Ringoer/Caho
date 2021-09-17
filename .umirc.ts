@@ -95,4 +95,5 @@ export default defineConfig({
     },
   ],
   fastRefresh: {},
+  hash: true,
 });

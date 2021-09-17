@@ -4,7 +4,7 @@ Ringoer 的毕设项目
 
 前端使用 umi + dva + typescript
 
-后端使用 egg
+后端使用 midway
 
 # 启动项目
 
@@ -17,5 +17,5 @@ $ yarn
 Start the dev server,
 
 ```bash
-$ yarn start
+$ yarn dev
 ```
