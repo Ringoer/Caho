@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './[id].less';
 import request from '@/util/request';
 import { connect, history, Link } from 'umi';
@@ -37,7 +37,7 @@ export default connect(
   const [hide, setHide] = useState(true);
   const [insertValue, setInsertValue] = useState('');
 
-  function collectForum() {
+  const collectForum = useCallback(() => {
     if (!forum) {
       return;
     }
@@ -49,16 +49,28 @@ export default connect(
       }),
     }).then((result) => {
       if (result.errno === 0) {
-        Swal.success('关注成功！').then(() => {
+        Swal.success(collected ? '取消关注成功！' : '关注成功！').then(() => {
           location.reload();
         });
       } else {
         Swal.error(`操作失败，请先登录！`);
       }
     });
-  }
+  }, []);
 
-  function onSubmit(content: string, title: string) {
+  const onCollect = useCallback(() => {
+    if (collected) {
+      Swal.confirm('您真的要取消关注吗？').then((result) => {
+        if (result) {
+          collectForum();
+        }
+      });
+    } else {
+      collectForum();
+    }
+  }, []);
+
+  const onSubmit = useCallback((content: string, title: string) => {
     if (!forum) {
       return;
     }
@@ -77,9 +89,9 @@ export default connect(
         });
       }
     });
-  }
+  }, []);
 
-  function onSign() {
+  const onSign = useCallback(() => {
     if (!forum || !user) {
       return;
     }
@@ -98,7 +110,7 @@ export default connect(
         setSign(true);
       }
     });
-  }
+  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -216,7 +228,7 @@ export default connect(
                 {collected === undefined ? (
                   <Button className={styles.collect}>加载中</Button>
                 ) : (
-                  <Button className={styles.collect} onClick={collectForum}>
+                  <Button className={styles.collect} onClick={onCollect}>
                     {collected ? '取消关注' : '关注'}
                   </Button>
                 )}
