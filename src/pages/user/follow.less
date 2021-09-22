@@ -1,31 +1,33 @@
-.collect{
-  >.row{
+.collect {
+  > .row {
     display: none;
   }
-  .paginationWrapper{
+  .paginationWrapper {
     margin-top: 8px;
   }
-  .follow{
+  .follow {
     width: 100%;
-    >*{
+    > * {
       display: grid;
       grid-template-columns: auto 1fr auto;
       grid-template-rows: 1fr 1fr;
-      grid-template-areas: 
-      "avatar nickname btn"
-      "avatar signature btn";
-      >.img{
+      grid-template-areas:
+        'avatar nickname btn'
+        'avatar signature btn';
+      > .img {
         grid-area: avatar;
         margin-right: 8px;
         border-radius: 50%;
-        >img{
+        > img {
           height: 80px;
           width: 80px;
         }
       }
-      >.nickname,>.signature{
+      > .nickname,
+      > .signature {
         padding: 8px;
-        >span{
+        > span {
+          word-break: break-all;
           text-overflow: ellipsis;
           overflow: hidden;
           display: -webkit-box;
@@ -33,14 +35,14 @@
           -webkit-box-orient: vertical;
         }
       }
-      >.nickname{
+      > .nickname {
         grid-area: nickname;
         color: rgb(251, 114, 153);
       }
-      >.signature{
+      > .signature {
         grid-area: signature;
       }
-      >.action{
+      > .action {
         margin-right: 16px;
         grid-area: btn;
         display: flex;
@@ -50,41 +52,41 @@
     }
   }
 }
-@media (max-width:500px) {
-  .collect{
-    >.row{
+@media (max-width: 500px) {
+  .collect {
+    > .row {
       display: block;
     }
-    >.column{
+    > .column {
       display: none;
     }
-    .follow{
-      >*{
+    .follow {
+      > * {
         display: grid;
         grid-template-columns: auto 1fr auto;
         grid-template-rows: 1fr;
-        grid-template-areas: 
-        "avatar nickname btn";
-        >.img{
+        grid-template-areas: 'avatar nickname btn';
+        > .img {
           grid-area: avatar;
           margin-right: 8px;
           border-radius: 50%;
-          >img{
+          > img {
             height: 80px;
             width: 80px;
           }
         }
-        >.nickname,>.signature{
+        > .nickname,
+        > .signature {
           padding: 8px;
         }
-        >.nickname{
+        > .nickname {
           grid-area: nickname;
         }
-        >.signature{
+        > .signature {
           grid-area: signature;
           display: none;
         }
-        >.action{
+        > .action {
           margin-right: 16px;
           grid-area: btn;
           display: flex;
