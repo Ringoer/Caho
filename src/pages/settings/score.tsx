@@ -4,6 +4,7 @@ import request from '@/util/request';
 import Pagination from '@/components/Pagination';
 import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
+import Table from '@/components/Table';
 
 export default connect(({ user }: { user: User }) => ({ user }))(
   (props: any) => {
@@ -36,31 +37,23 @@ export default connect(({ user }: { user: User }) => ({ user }))(
         <p>当前积分：{user.score}</p>
         {logs.length !== 0 ? (
           <>
-            <table className={styles.scoreTable}>
-              <thead>
-                <tr>
-                  <td>日期</td>
-                  <td>时间</td>
-                  <td>操作</td>
-                  <td>数量</td>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map((log) => {
-                  const t = new Date(
-                    new Date(log.gmtCreate).getTime() + 8 * 1000 * 60 * 60,
-                  ).toISOString();
-                  return (
-                    <tr key={log.id}>
-                      <td>{t.substr(0, 10)}</td>
-                      <td>{t.substr(11, 8)}</td>
-                      <td>{log.action}</td>
-                      <td>{log.point}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <Table
+              columns={[
+                { title: '日期', key: 'date' },
+                { title: '时间', key: 'time' },
+                { title: '操作', key: 'action' },
+                { title: '数量', key: 'point' },
+              ]}
+              data={logs.map((log) => {
+                const t = new Date(
+                  new Date(log.gmtCreate).getTime() + 8 * 1000 * 60 * 60,
+                ).toISOString();
+                const date = t.substr(0, 10),
+                  time = t.substr(11, 8);
+                const { id, action, point } = log;
+                return { id, date, time, action, point };
+              })}
+            />
             <Pagination
               selectedPage={selectedPage}
               count={count}

@@ -2,8 +2,8 @@ import styles from './Section.less';
 
 interface SectionProps {
   color?: string;
-  title: string;
-  children: any;
+  title: string | React.ReactElement;
+  children: string | React.ReactElement | React.ReactElement[];
 }
 
 const Section = (props: SectionProps) => {

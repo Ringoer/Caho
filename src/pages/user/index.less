@@ -1,65 +1,99 @@
-.home{
-  li{
+.title {
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.topicWrapper {
+  &:hover {
+    .topicInfo {
+      > .title {
+        color: #008cff;
+      }
+    }
+  }
+  .topicInfo {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    > .lastReplyAt {
+      color: #acacac;
+      white-space: nowrap;
+    }
+  }
+}
+.home {
+  li {
     outline: none;
   }
-  >.first{
+  > .first {
     margin-bottom: 20px;
-    .forums{
+    .forums {
       display: flex;
       margin: 0;
       flex-wrap: wrap;
-      >.forum{
-        border: 1px solid #ACACAC;
+      > .forum {
+        border: 1px solid #acacac;
         border-radius: 4px;
         margin-right: 4px;
-        >a{
-          display: block;
+        > a {
+          display: flex;
+          justify-content: space-between;
           padding: 8px 12px;
+          > span:nth-child(1) {
+            .title();
+          }
         }
-        .exp{
+        .exp {
           color: chocolate;
-          @media (max-width:500px){
+          @media (max-width: 500px) {
             display: none;
           }
         }
-        .level{
+        .level {
           color: burlywood;
         }
       }
     }
   }
-  >.second{
+  > .second {
     display: flex;
-    >*:first-child{
+    margin-bottom: 20px;
+    > * {
       margin-right: 20px;
     }
-    .topicWrapper{
-      &:hover{
-        .topicInfo{
-          >.title{
-            color: #008CFF;
-          }
-        }
-      }
-      .topicInfo{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        >.lastReplyAt{
-          color: #acacac;
-          white-space: nowrap;
-        }
+    > *:last-child {
+      margin-right: 0;
+    }
+  }
+  > .third {
+    a {
+      width: 100%;
+      &:hover {
+        color: #008cff;
       }
     }
   }
 }
-@media (max-width:500px) {
-  .home{
-    >.second{
+@media (max-width: 500px) {
+  .home {
+    > .first {
+      .forums {
+        > .forum {
+          width: calc(50% - 4px);
+        }
+      }
+    }
+    > .second {
       display: flex;
       flex-direction: column;
-      >*{
+      > * {
         margin-bottom: 20px;
+      }
+      > *:last-child {
+        margin-bottom: 0;
       }
     }
   }
