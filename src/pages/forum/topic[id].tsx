@@ -20,18 +20,21 @@ export default connect(
   ({
     user,
     follow,
+    collectedTopicIds,
     breadcrumb,
   }: {
     user: User;
     follow: User[];
+    collectedTopicIds: number[];
     breadcrumb: Breadcrumb[];
   }) => ({
     user,
     follow,
+    collectedTopicIds,
     breadcrumb,
   }),
 )((props: any) => {
-  const { user, follow, breadcrumb } = props;
+  const { user, follow, collectedTopicIds } = props;
   const { id: topicId } = props.match.params;
   const follows = useMemo<number[]>(
     () => (follow ? follow.map(({ id }: { id: string }) => id) : undefined),
@@ -44,7 +47,8 @@ export default connect(
   );
   const [defaultValue, setDefaultValue] = useState('');
 
-  const [hide, setHide] = useState(true);
+  const [albumHide, setAlbumHide] = useState(true);
+  const [listHide, setListHide] = useState(true);
   const [insertValue, setInsertValue] = useState('');
 
   const [beCheckedOwner, setBeCheckedOwner] = useState(false);
@@ -78,27 +82,61 @@ export default connect(
     });
   }
 
-  function onCheckOwner(flag: boolean) {
+  function onCollect() {
+    if (!topic) {
+      return;
+    }
+    if (typeof +topicId !== 'number') {
+      Swal.error('不可以收藏非本站的帖子！');
+      return;
+    }
+
+    const collected = !collectedTopicIds.includes(+topicId);
+    Swal.confirm(`您确定要${collected ? '' : '取消'}收藏该主题吗？`).then(
+      (res) => {
+        if (!res) {
+          return;
+        }
+        request('/topic/collect', {
+          method: 'post',
+          body: JSON.stringify({
+            topicId: +topicId,
+            collected,
+          }),
+        }).then((result) => {
+          if (result.errno === 0) {
+            Swal.success(collected ? '收藏成功！' : '取消收藏成功！').then(() =>
+              location.reload(),
+            );
+          } else {
+            Swal.error('收藏失败！');
+          }
+        });
+      },
+    );
+  }
+
+  function onCheckOwner() {
     if (!topic || !(topic.replies instanceof Array)) {
       return;
     }
     const data: any[] = [];
     data.push(topic);
     data.push(...topic.replies);
-    if (flag) {
-      setFloors(data.filter((floor) => floor.userId === topic.userId));
-    } else {
+    if (beCheckedOwner) {
       setFloors(data);
+    } else {
+      setFloors(data.filter((floor) => floor.userId === topic.userId));
     }
-    setBeCheckedOwner(flag);
+    setBeCheckedOwner(!beCheckedOwner);
   }
 
-  function onReverse(flag: boolean) {
+  function onReverse() {
     if (!topic || !(topic.replies instanceof Array) || floors.length === 0) {
       return;
     }
     setFloors([floors[0]].concat(floors.slice(1).reverse()));
-    setBeReversed(flag);
+    setBeReversed(!beReversed);
   }
 
   function onSubmit(content: string) {
@@ -176,41 +214,77 @@ export default connect(
         <Loading />
       ) : (
         <>
-          <h1 className={styles.title}>{topic.title}</h1>
-          <hr className={styles.separator} />
-          {floors.length === 0 ? undefined : (
-            <Floor
-              reply={floors[0]}
-              index={1}
-              isFollowed={follows && follows.includes(floors[0].userId)}
-              onCheckOwner={onCheckOwner}
-              onReverse={onReverse}
-              ownerId={floors[0].userId}
-              beCheckedOwner={beCheckedOwner}
-              beReversed={beReversed}
-            />
-          )}
-          {floors
-            .slice(
-              PER_PAGE * (+selectedPage - 1) + 1,
-              PER_PAGE * +selectedPage + 1,
-            )
-            .map((floor: Reply, index: number) => (
+          <div className={styles.content}>
+            <div className={styles.listLocation}>
+              <div className={styles.listWrapper}>
+                <Button
+                  className={styles.listEntry}
+                  onClick={() => setListHide(!listHide)}
+                >
+                  <svg className="icon" aria-hidden="true">
+                    <use xlinkHref="#icon-list"></use>
+                  </svg>
+                </Button>
+                <div
+                  className={[
+                    styles.list,
+                    listHide ? styles.hide : undefined,
+                  ].join(' ')}
+                >
+                  <ul>
+                    <li>
+                      <Button onClick={onCollect}>
+                        {collectedTopicIds.includes(+topicId)
+                          ? '取消收藏'
+                          : '收藏主题'}
+                      </Button>
+                    </li>
+                    <li>
+                      <Button onClick={onReverse}>
+                        {beReversed ? '正' : '倒'}序查看
+                      </Button>
+                    </li>
+                    <li>
+                      <Button onClick={onCheckOwner}>
+                        {beCheckedOwner ? '查看全部' : '只看楼主'}
+                      </Button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <h1 className={styles.title}>{topic.title}</h1>
+            <hr className={styles.separator} />
+            {floors.length === 0 ? undefined : (
               <Floor
-                key={floor.id}
-                reply={floor}
-                index={
-                  beReversed
-                    ? floors.length -
-                      (index + PER_PAGE * +selectedPage - PER_PAGE)
-                    : index + PER_PAGE * +selectedPage - PER_PAGE + 2
-                }
-                isFollowed={follows && follows.includes(floor.userId)}
-                onReply={onReply}
-                onReport={onReport}
+                reply={floors[0]}
+                index={1}
+                isFollowed={follows && follows.includes(floors[0].userId)}
                 ownerId={floors[0].userId}
               />
-            ))}
+            )}
+            {floors
+              .slice(
+                PER_PAGE * (+selectedPage - 1) + 1,
+                PER_PAGE * +selectedPage + 1,
+              )
+              .map((floor: Reply, index: number) => (
+                <Floor
+                  key={floor.id}
+                  reply={floor}
+                  index={
+                    beReversed
+                      ? floors.length -
+                        (index + PER_PAGE * +selectedPage - PER_PAGE)
+                      : index + PER_PAGE * +selectedPage - PER_PAGE + 2
+                  }
+                  isFollowed={follows && follows.includes(floor.userId)}
+                  onReply={onReply}
+                  onReport={onReport}
+                  ownerId={floors[0].userId}
+                />
+              ))}
+          </div>
           <Pagination
             selectedPage={+selectedPage}
             count={floors.length}
@@ -225,12 +299,12 @@ export default connect(
                   <div className={styles.action}>
                     <div
                       className={styles.fromAlbum}
-                      onClick={() => setHide(!hide)}
+                      onClick={() => setAlbumHide(!albumHide)}
                     >
                       <Button>
                         <span>插入图片</span>
                       </Button>
-                      <Popup hide={hide}>
+                      <Popup hide={albumHide}>
                         <div
                           onClick={(event) => {
                             event.stopPropagation();
@@ -240,7 +314,7 @@ export default connect(
                             userId={user.id}
                             onClick={(src: string) => {
                               setInsertValue(`![图片](${src})`);
-                              setHide(true);
+                              setAlbumHide(true);
                             }}
                           />
                         </div>

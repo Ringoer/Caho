@@ -1,32 +1,76 @@
-.container{
+.container {
   width: 900px;
   border-radius: 16px;
   max-width: 90vw;
   padding: 8px;
-  img{
+  img {
     max-width: 100%;
   }
-  >.title{
-    padding: 0 8px;
-    margin: 0;
-    font-weight: bold;
+  > .content {
+    position: relative;
+    > .title {
+      padding: 0 8px;
+      margin: 0;
+      font-weight: bold;
+    }
+    > .listLocation {
+      position: absolute;
+      top: 0;
+      right: 20px;
+      height: calc(100% - 40px);
+      width: 60px;
+      > .listWrapper {
+        position: sticky;
+        top: calc(100vh - 80px);
+        z-index: 10;
+        > .listEntry {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 50%;
+          padding: 8px;
+          width: auto;
+          overflow: hidden;
+          > svg {
+            width: 40px;
+            height: 40px;
+            margin: 0;
+          }
+        }
+        > .list {
+          position: absolute;
+          bottom: 0;
+          right: 64px;
+          transform: rotateY(180deg);
+          padding: 12px;
+          background-color: #ececec;
+          border-radius: 8px;
+          &.hide {
+            display: none;
+          }
+          > ul {
+            transform: rotateY(180deg);
+          }
+        }
+      }
+    }
   }
-  >.editorWrapper{
+  > .editorWrapper {
     background-color: white;
     padding-top: 12px;
     border-radius: 4px;
-    >.editorTitleWrapper{
+    > .editorTitleWrapper {
       margin: 0 12px;
       display: flex;
       justify-content: space-between;
-      >.editorTitle{
+      > .editorTitle {
         font-size: 20px;
         font-weight: bold;
       }
-      >.actions{
+      > .actions {
         display: flex;
-        >.action{
-          >.fromAlbum{
+        > .action {
+          > .fromAlbum {
             width: 80px;
           }
         }
@@ -35,18 +79,25 @@
   }
 }
 @media (max-width: 500px) {
-  .container{
+  .container {
     border-radius: 0;
     max-width: 100vw;
     padding: 0;
     padding-bottom: 8px;
-    >.title{
-      padding: 8px;
-      font-size: 20px;
-      background: white;
-    }
-    >.separator{
-      border-top: none;
+    > .content {
+      > .title {
+        padding: 8px;
+        font-size: 20px;
+        background: white;
+      }
+      > .separator {
+        border-top: none;
+      }
+      > .listLocation {
+        > .listWrapper {
+          top: calc(100vh - 120px);
+        }
+      }
     }
   }
 }

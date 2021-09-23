@@ -15,10 +15,11 @@ const Button = (props: ButtonProps) => {
     color = 'white',
     onClick = () => {},
     type,
+    className = '',
   } = props;
   return (
     <button
-      className={styles.button}
+      className={[styles.button, className].join(' ')}
       onClick={onClick}
       style={{
         backgroundColor: backgroundColor,

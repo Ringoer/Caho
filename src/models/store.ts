@@ -6,3 +6,4 @@ app.model(require('./user').default);
 app.model(require('./breadcrumb').default);
 app.model(require('./login').default);
 app.model(require('./follow').default);
+app.model(require('./collectedTopicIds').default);

@@ -15,12 +15,8 @@ interface FloorProps {
   isFollowed: boolean;
   onReply?: Function;
   onReport?: Function;
-  onCheckOwner?: Function;
-  onReverse?: Function;
   ownerId: number;
   user: User;
-  beCheckedOwner?: boolean;
-  beReversed?: boolean;
 }
 
 const Floor = connect(({ user }: { user: User }) => ({
@@ -32,12 +28,8 @@ const Floor = connect(({ user }: { user: User }) => ({
     isFollowed,
     onReply = () => {},
     onReport = () => {},
-    onCheckOwner = () => {},
-    onReverse = () => {},
     ownerId,
     user,
-    beCheckedOwner,
-    beReversed,
   } = props;
   const [hide, setHide] = useState(false);
 
@@ -136,28 +128,7 @@ const Floor = connect(({ user }: { user: User }) => ({
         />
         {user ? (
           <div className={styles.replyAction}>
-            {index === 1 ? (
-              <>
-                {beReversed ? (
-                  <Button type="plain" onClick={() => onReverse(false)}>
-                    正序查看
-                  </Button>
-                ) : (
-                  <Button type="plain" onClick={() => onReverse(true)}>
-                    倒序查看
-                  </Button>
-                )}
-                {beCheckedOwner ? (
-                  <Button type="plain" onClick={() => onCheckOwner(false)}>
-                    查看全部
-                  </Button>
-                ) : (
-                  <Button type="plain" onClick={() => onCheckOwner(true)}>
-                    只看楼主
-                  </Button>
-                )}
-              </>
-            ) : (
+            {index === 1 ? undefined : (
               <>
                 <Button
                   type="plain"

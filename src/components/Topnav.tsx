@@ -56,6 +56,18 @@ const Topnav = connect(({ user, breadcrumb, login }: TopnavProps) => ({
             props.dispatch({ type: 'follow/info', payload: follows });
           }
         });
+        request(`/topic/collected?userId=${data.id}`).then((result) => {
+          if (result.errno === 0) {
+            const { data: collectedTopics } = result;
+            const collectedTopicIds = collectedTopics.map(
+              ({ id }: { id: number }) => id,
+            );
+            props.dispatch({
+              type: 'collectedTopicIds/info',
+              payload: collectedTopicIds,
+            });
+          }
+        });
       } else {
         props.dispatch({ type: 'login/info', payload: 'unlogin' });
       }
