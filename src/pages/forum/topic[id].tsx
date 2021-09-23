@@ -129,6 +129,7 @@ export default connect(
       setFloors(data.filter((floor) => floor.userId === topic.userId));
     }
     setBeCheckedOwner(!beCheckedOwner);
+    setBeReversed(false);
   }
 
   function onReverse() {
