@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './[id].less';
 import request from '@/util/request';
 import { connect, history, Link } from 'umi';
@@ -37,7 +37,7 @@ export default connect(
   const [hide, setHide] = useState(true);
   const [insertValue, setInsertValue] = useState('');
 
-  const collectForum = useCallback(() => {
+  function collectForum() {
     if (!forum) {
       return;
     }
@@ -56,9 +56,9 @@ export default connect(
         Swal.error(`操作失败，请先登录！`);
       }
     });
-  }, []);
+  }
 
-  const onCollect = useCallback(() => {
+  function onCollect() {
     if (collected) {
       Swal.confirm('您真的要取消关注吗？').then((result) => {
         if (result) {
@@ -68,9 +68,9 @@ export default connect(
     } else {
       collectForum();
     }
-  }, []);
+  }
 
-  const onSubmit = useCallback((content: string, title: string) => {
+  function onSubmit(content: string, title: string) {
     if (!forum) {
       return;
     }
@@ -89,9 +89,9 @@ export default connect(
         });
       }
     });
-  }, []);
+  }
 
-  const onSign = useCallback(() => {
+  function onSign() {
     if (!forum || !user) {
       return;
     }
@@ -110,7 +110,7 @@ export default connect(
         setSign(true);
       }
     });
-  }, []);
+  }
 
   useEffect(() => {
     if (!user) {

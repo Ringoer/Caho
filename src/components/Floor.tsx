@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import styles from './Floor.less';
 import Bubble from './Bubble';
 import Button from './Button';
@@ -13,11 +13,14 @@ interface FloorProps {
   reply: Reply;
   index: number;
   isFollowed: boolean;
-  onReply: Function;
-  onReport: Function;
-  onCheckOwner: Function;
+  onReply?: Function;
+  onReport?: Function;
+  onCheckOwner?: Function;
+  onReverse?: Function;
   ownerId: number;
   user: User;
+  beCheckedOwner?: boolean;
+  beReversed?: boolean;
 }
 
 const Floor = connect(({ user }: { user: User }) => ({
@@ -27,15 +30,18 @@ const Floor = connect(({ user }: { user: User }) => ({
     reply,
     index,
     isFollowed,
-    onReply,
-    onReport,
-    onCheckOwner,
+    onReply = () => {},
+    onReport = () => {},
+    onCheckOwner = () => {},
+    onReverse = () => {},
     ownerId,
     user,
+    beCheckedOwner,
+    beReversed,
   } = props;
   const [hide, setHide] = useState(false);
 
-  function follow() {
+  const follow = useCallback(() => {
     Swal.confirm('您真的要关注该用户吗').then((res) => {
       if (!res) {
         return;
@@ -53,29 +59,32 @@ const Floor = connect(({ user }: { user: User }) => ({
         }
       });
     });
-  }
+  }, [reply]);
 
-  function unfollow(followId: number) {
-    Swal.confirm('您真的要取消关注该用户吗？').then((res) => {
-      if (!res) {
-        return;
-      }
-      request('/user/unfollow', {
-        method: 'post',
-        body: JSON.stringify({
-          followId,
-        }),
-      }).then((result) => {
-        if (result.errno === 0) {
-          Swal.success('取消关注成功！').then(() => {
-            location.reload();
-          });
-        } else {
-          Swal.error(`取消关注失败！\n原因：${res.errmsg}`);
+  const unfollow = useCallback(
+    (followId: number) => {
+      Swal.confirm('您真的要取消关注该用户吗？').then((res) => {
+        if (!res) {
+          return;
         }
+        request('/user/unfollow', {
+          method: 'post',
+          body: JSON.stringify({
+            followId,
+          }),
+        }).then((result) => {
+          if (result.errno === 0) {
+            Swal.success('取消关注成功！').then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.error(`取消关注失败！\n原因：${res.errmsg}`);
+          }
+        });
       });
-    });
-  }
+    },
+    [reply],
+  );
 
   return (
     <div className={styles.floor}>
@@ -129,12 +138,24 @@ const Floor = connect(({ user }: { user: User }) => ({
           <div className={styles.replyAction}>
             {index === 1 ? (
               <>
-                <Button type="plain" onClick={() => onCheckOwner(true)}>
-                  只看楼主
-                </Button>
-                <Button type="plain" onClick={() => onCheckOwner(false)}>
-                  查看全部
-                </Button>
+                {beReversed ? (
+                  <Button type="plain" onClick={() => onReverse(false)}>
+                    正序查看
+                  </Button>
+                ) : (
+                  <Button type="plain" onClick={() => onReverse(true)}>
+                    倒序查看
+                  </Button>
+                )}
+                {beCheckedOwner ? (
+                  <Button type="plain" onClick={() => onCheckOwner(false)}>
+                    查看全部
+                  </Button>
+                ) : (
+                  <Button type="plain" onClick={() => onCheckOwner(true)}>
+                    只看楼主
+                  </Button>
+                )}
               </>
             ) : (
               <>

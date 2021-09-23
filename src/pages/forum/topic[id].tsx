@@ -14,6 +14,8 @@ import Popup from '@/components/Popup';
 import Album from '../user/album';
 import marked from 'marked';
 
+const PER_PAGE = 10;
+
 export default connect(
   ({
     user,
@@ -44,6 +46,9 @@ export default connect(
 
   const [hide, setHide] = useState(true);
   const [insertValue, setInsertValue] = useState('');
+
+  const [beCheckedOwner, setBeCheckedOwner] = useState(false);
+  const [beReversed, setBeReversed] = useState(false);
 
   function onReply(userId: number, userNickname: string) {
     setDefaultValue(`[@${userNickname}](/user/${userId}) `);
@@ -85,6 +90,15 @@ export default connect(
     } else {
       setFloors(data);
     }
+    setBeCheckedOwner(flag);
+  }
+
+  function onReverse(flag: boolean) {
+    if (!topic || !(topic.replies instanceof Array) || floors.length === 0) {
+      return;
+    }
+    setFloors([floors[0]].concat(floors.slice(1).reverse()));
+    setBeReversed(flag);
   }
 
   function onSubmit(content: string) {
@@ -164,17 +178,36 @@ export default connect(
         <>
           <h1 className={styles.title}>{topic.title}</h1>
           <hr className={styles.separator} />
+          {floors.length === 0 ? undefined : (
+            <Floor
+              reply={floors[0]}
+              index={1}
+              isFollowed={follows && follows.includes(floors[0].userId)}
+              onCheckOwner={onCheckOwner}
+              onReverse={onReverse}
+              ownerId={floors[0].userId}
+              beCheckedOwner={beCheckedOwner}
+              beReversed={beReversed}
+            />
+          )}
           {floors
-            .slice(10 * (+selectedPage - 1), 10 * +selectedPage)
+            .slice(
+              PER_PAGE * (+selectedPage - 1) + 1,
+              PER_PAGE * +selectedPage + 1,
+            )
             .map((floor: Reply, index: number) => (
               <Floor
                 key={floor.id}
                 reply={floor}
-                index={index + 10 * +selectedPage - 9}
+                index={
+                  beReversed
+                    ? floors.length -
+                      (index + PER_PAGE * +selectedPage - PER_PAGE)
+                    : index + PER_PAGE * +selectedPage - PER_PAGE + 2
+                }
                 isFollowed={follows && follows.includes(floor.userId)}
                 onReply={onReply}
                 onReport={onReport}
-                onCheckOwner={onCheckOwner}
                 ownerId={floors[0].userId}
               />
             ))}
