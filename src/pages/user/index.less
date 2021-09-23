@@ -69,10 +69,20 @@
     }
   }
   > .third {
-    a {
-      width: 100%;
-      &:hover {
-        color: #008cff;
+    table {
+      td {
+        padding: 0;
+        a {
+          display: block;
+          width: 100%;
+          padding: 8px;
+          > span {
+            .title();
+          }
+          &:hover {
+            color: #008cff;
+          }
+        }
       }
     }
   }

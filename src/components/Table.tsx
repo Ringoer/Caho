@@ -1,8 +1,12 @@
 import styles from './Table.less';
 
 interface TableProps {
-  columns: { title: string; key: string }[];
-  data: Record<string, { id: any } & any>[];
+  columns: {
+    title: string | React.ReactElement;
+    key: string;
+    width?: number;
+  }[];
+  data: Record<string, { id: React.Key } & any>[];
 }
 
 const Table = (props: TableProps) => {
@@ -11,8 +15,10 @@ const Table = (props: TableProps) => {
     <table className={styles.table}>
       <thead>
         <tr>
-          {columns.map(({ title, key }) => (
-            <td key={key}>{title}</td>
+          {columns.map(({ title, key, width }) => (
+            <th key={key} style={width ? { width } : {}}>
+              {title}
+            </th>
           ))}
         </tr>
       </thead>
