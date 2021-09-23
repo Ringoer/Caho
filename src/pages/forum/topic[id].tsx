@@ -209,6 +209,17 @@ export default connect(
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (!topic || !collectedTopicIds.includes(topic.id)) {
+      return;
+    }
+    request('/topic/collected', {
+      method: 'put',
+      body: JSON.stringify({ topicId: +topicId }),
+    });
+  }, [collectedTopicIds, topic]);
+
   return (
     <div className={styles.container}>
       {!topic || (user && !follows) ? (

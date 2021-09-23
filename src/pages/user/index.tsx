@@ -218,8 +218,8 @@ export default connect(({ user }: { user: User }) => ({ user }))(
                                 </Link>
                               ),
                               status:
-                                gmtCreate === lastReplyAt ? (
-                                  '无更新'
+                                new Date(gmtCreate) >= new Date(lastReplyAt) ? (
+                                  <div style={{ padding: 8 }}>无更新</div>
                                 ) : (
                                   <Link to={`/forum/topic/${id}`}>
                                     查看更新
