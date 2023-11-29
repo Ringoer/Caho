@@ -1,26 +1,26 @@
-.app{
+.app {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-image: url('https://ali.ringoer.com/cdn/caho/banner/bg.png');
-  >.breadcrumb{
+  background-image: url('https://static.ringoer.com/cdn/caho/banner/bg.png');
+  > .breadcrumb {
     display: flex;
     margin: 0;
     padding-top: 20px;
     padding-left: calc(50% - 610px);
-    @media (max-width:1300px){
+    @media (max-width: 1300px) {
       padding-left: calc(50% - 440px);
     }
-    @media (max-width:1000px){
+    @media (max-width: 1000px) {
       padding-left: calc(50% - 45vw + 10px);
     }
-    >.breadcrumbItem{
-      >*{
+    > .breadcrumbItem {
+      > * {
         margin: 0 4px;
       }
     }
   }
-  >.main{
+  > .main {
     position: relative;
     flex-grow: 1;
     display: flex;
@@ -29,12 +29,12 @@
   }
 }
 @media (max-width: 500px) {
-  .app{
+  .app {
     background: #f5f5f5;
-    >.breadcrumb{
+    > .breadcrumb {
       display: none;
     }
-    >.main{
+    > .main {
       padding: 0;
     }
   }

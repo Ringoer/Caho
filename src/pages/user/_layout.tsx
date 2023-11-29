@@ -123,7 +123,7 @@ export default connect(
           <div className={styles.topbar}>
             <div className={styles.banner}>
               <img
-                src="https://ali.ringoer.com/cdn/caho/banner/user_banner.jpg"
+                src="https://static.ringoer.com/cdn/caho/banner/user_banner.jpg"
                 alt="用户头图"
               />
             </div>

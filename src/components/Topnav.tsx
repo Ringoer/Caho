@@ -80,7 +80,7 @@ const Topnav = connect(({ user, breadcrumb, login }: TopnavProps) => ({
         <div className={styles.goto}>
           <a href="/" className={styles.logo}>
             <img
-              src="https://ali.ringoer.com/cdn/caho/banner/logo.png"
+              src="https://static.ringoer.com/cdn/caho/banner/logo.png"
               alt="logo"
             />
           </a>
@@ -155,7 +155,7 @@ const Topnav = connect(({ user, breadcrumb, login }: TopnavProps) => ({
       </div>
       <div className={styles.banner}>
         <img
-          src="https://ali.ringoer.com/cdn/caho/banner/bg_pic.jpg"
+          src="https://static.ringoer.com/cdn/caho/banner/bg_pic.jpg"
           alt="首页头图"
         />
       </div>
